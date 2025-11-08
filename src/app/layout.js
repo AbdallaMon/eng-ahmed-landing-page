@@ -1,12 +1,13 @@
 import "./globals.css";
 import MUIProviders from "./providers/MUIProvider";
 
-import { Noto_Kufi_Arabic } from "next/font/google";
+import { Rubik } from "next/font/google";
 
-const noto = Noto_Kufi_Arabic({
-  weight: ["400", "500", "700"],
+const rubic = Rubik({
+  weight: ["400", "500", "600", "700"],
   style: ["normal"],
-  subsets: ["arabic"],
+  // subsets: ["arabic"],,
+  subsets: ["latin", "arabic"],
   display: "swap",
 });
 
@@ -21,7 +22,7 @@ export default async function RootLayout({ children, params }) {
   return (
     <html lang={lng} dir={lng === "ar" ? "rtl" : "ltr"}>
       <MUIProviders lng={lng}>
-        <body className={noto.className}>{children}</body>
+        <body className={rubic.className}>{children}</body>
       </MUIProviders>
     </html>
   );

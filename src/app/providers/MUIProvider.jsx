@@ -1,20 +1,12 @@
 "use client";
-import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import rtlPlugin from "stylis-plugin-rtl";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme, alpha, darken, lighten } from "@mui/material/styles";
-
-const BASE = {
-  primary: "#594534", // اللون الرئيسي
-  secondary: "#A4978D", // اللون الثانوي
-  highlight: "#D7CCC4", // هايت لايت
-  highlightDark: "#C19877", // هايت لايت غامق
-  white: "#EBE7DF", // الأبيض (أوف وايت دافئ)
-  solidWhite: "#FFFFFF", // الأبيض الصافي
-};
+import { colors } from "../data/constants";
 
 function buildTheme({ dir = "ltr", mode = "light" } = {}) {
+  const BASE = colors;
   const primaryMain = BASE.primary;
   const secondaryMain = BASE.secondary;
 
@@ -26,11 +18,11 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
 
   const bgDefault = mode === "light" ? BASE.solidWhite : "#1E1A16";
   const paperBg = mode === "light" ? alpha(BASE.white, 0.96) : "#2A241F";
-  const textPrimary = mode === "light" ? "#3a3028" : "#f2eee8";
+  const textPrimary = mode === "light" ? primaryMain : "#f2eee8";
   const textSecondary = mode === "light" ? "#6d6259" : alpha("#f2eee8", 0.7);
-
+  // dir = dir === "rtl" ? "ltr" : dir;
   return createTheme({
-    direction: dir,
+    // direction: dir,
     palette: {
       mode,
       primary: {
@@ -76,11 +68,12 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
     spacing: 8,
     zIndex: { modal: 1300, snackbar: 1500 },
     typography: {
-      fontFamily: ["Noto Kufi Arabic", "system-ui", "sans-serif"].join(","),
+      fontFamily: ["Rubik", "system-ui", "sans-serif"].join(","),
       h1: { fontWeight: 700, letterSpacing: "-.02em", color: textPrimary },
       h2: { fontWeight: 700, letterSpacing: "-.02em", color: textPrimary },
       h3: { fontWeight: 600, color: textPrimary },
-      body1: { color: textPrimary },
+      h4: { fontWeight: 600, color: textPrimary },
+      body1: { color: BASE.secondary },
       body2: { color: textSecondary },
       button: { textTransform: "none", fontWeight: 600 },
     },
@@ -111,6 +104,11 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
       },
       MuiContainer: {
         defaultProps: { maxWidth: "lg" },
+        styleOverrides: {
+          maxWidthXl: ({ theme }) => ({
+            [theme.breakpoints.up("xl")]: { maxWidth: 1600 }, // any px you want
+          }),
+        },
       },
       MuiPaper: {
         styleOverrides: {
@@ -128,19 +126,11 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
       MuiButton: {
         defaultProps: { disableElevation: true },
         styleOverrides: {
-          root: { borderRadius: 12, paddingInline: 20, paddingBlock: 10 },
-          containedPrimary: {
-            background: `linear-gradient(135deg, ${BASE.highlightDark}, ${primaryMain})`,
-            ":hover": { filter: "brightness(0.95)" },
-          },
+          root: { borderRadius: 8, paddingInline: 20, paddingBlock: 10 },
+
           outlined: {
             borderColor: alpha(primaryMain, 0.4),
-            ":hover": {
-              borderColor: alpha(primaryMain, 0.8),
-              background: alpha(primaryMain, 0.06),
-            },
           },
-          textPrimary: { ":hover": { background: alpha(primaryMain, 0.08) } },
         },
       },
       MuiLink: {
@@ -205,15 +195,15 @@ const cacheLtr = createCache({ key: "muiltr" });
 
 export default function MUIProviders({ children, lng = "ar", mode = "light" }) {
   const dir = lng === "ar" ? "rtl" : "ltr";
-  const cache = dir === "rtl" ? cacheRtl : cacheLtr;
+  // const cache = dir === "rtl" ? cacheRtl : cacheLtr;
   const theme = buildTheme({ dir, mode });
 
   return (
-    <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </CacheProvider>
+    // <CacheProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
+    // </CacheProvider>
   );
 }
