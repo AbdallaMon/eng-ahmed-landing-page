@@ -5,11 +5,13 @@ export const arCompanies = {
       image: "./decor-stores-logo.png",
       text: "أثاث عصري ، جودة عالية ، تنوع فخم تصميمات تلائم كل ذوق.",
       buttonText: "ديكورستورز",
+      href: "https://decorstores.ltd",
     },
     {
       image: "./dream-studio-logo.png",
       text: ".تصميم داخلي فاخر تنفيذ احترافي ، لمسات إبداعية ، مواد عصرية",
       buttonText: "دريم استوديوو",
+      href: "http://dreamstudiio.com",
     },
   ],
 };

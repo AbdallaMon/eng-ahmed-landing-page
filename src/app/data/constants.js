@@ -31,6 +31,10 @@ export const colors = {
   solidWhite: "#FFFFFF", // الأبيض
   teritary: "#EFEFEF",
   borderColor: "#201B17",
+  borderColor2: "#D9DBE9",
+  brown: "#322A23",
+
+  lightBrown: "#FDF9F5",
 };
 export const socialMediaIconsLinks = [
   {
@@ -54,3 +58,6 @@ export const socialMediaIconsLinks = [
     iconSrc: "./social-media/mail.png",
   },
 ];
+
+export const imageBannerSrc = "./video-banner-pc.png";
+export const imageBannerMobileSrc = "./video-banner-mobile.png";

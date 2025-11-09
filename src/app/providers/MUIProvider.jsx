@@ -5,7 +5,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme, alpha, darken, lighten } from "@mui/material/styles";
 import { colors } from "../data/constants";
 
-function buildTheme({ dir = "ltr", mode = "light" } = {}) {
+function buildTheme({ dir = "ltr", mode = "light", lng } = {}) {
   const BASE = colors;
   const primaryMain = BASE.primary;
   const secondaryMain = BASE.secondary;
@@ -88,6 +88,7 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
             backgroundColor: bgDefault,
             color: textPrimary,
             direction: dir,
+            textAlign: lng === "ar" ? "right" : "left",
           },
           "::selection": { background: BASE.highlight, color: "#1a1410" },
           "::-moz-selection": { background: BASE.highlight, color: "#1a1410" },
@@ -196,7 +197,7 @@ const cacheLtr = createCache({ key: "muiltr" });
 export default function MUIProviders({ children, lng = "ar", mode = "light" }) {
   const dir = lng === "ar" ? "rtl" : "ltr";
   // const cache = dir === "rtl" ? cacheRtl : cacheLtr;
-  const theme = buildTheme({ dir, mode });
+  const theme = buildTheme({ dir, mode, lng });
 
   return (
     // <CacheProvider>

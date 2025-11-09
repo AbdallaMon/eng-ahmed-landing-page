@@ -8,7 +8,7 @@ export default async function StagesSection({ lng }) {
 
   const stagesData = t("stages", { returnObjects: true });
   return (
-    <Box>
+    <Box sx={{ mt: { md: 5 } }}>
       <Container
         maxWidth="xl"
         sx={{ backgroundColor: colors.primary, pb: { xs: 16, md: 20 } }}

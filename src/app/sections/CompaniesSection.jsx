@@ -10,7 +10,7 @@ export default async function CompaniesSection({ lng }) {
   return (
     <Box sx={{ pb: 5 }}>
       <Container maxWidth="xl">
-        <Box>
+        <Box sx={{ px: { lg: 5, xl: 10 } }}>
           <Box sx={{ mt: { xs: 8, md: 10 }, mb: 6 }}>
             <Typography
               variant="h3"
@@ -43,6 +43,7 @@ export default async function CompaniesSection({ lng }) {
 }
 
 export function Companycard({ cardData }) {
+  console.log(cardData, "cardData");
   return (
     <Box
       sx={{
