@@ -33,8 +33,8 @@ export const colors = {
   borderColor: "#201B17",
   borderColor2: "#D9DBE9",
   brown: "#322A23",
-
   lightBrown: "#FDF9F5",
+  backgroundLight: "#fafafa",
 };
 export const socialMediaIconsLinks = [
   {

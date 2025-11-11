@@ -8,6 +8,8 @@ import { BeforeAndAfterSection } from "./sections/BeforeAndAfterSection";
 import { HomeProjects } from "./sections/HomeProjects";
 import { TranslatingIdeasSection } from "./sections/TranslatingIdeasSection";
 import { SuccessJourney } from "./sections/SuccessJourney";
+import { Testmonails } from "./sections/Testmonails";
+import { FAQ } from "./sections/FAQ";
 
 export default async function Home({ searchParams }) {
   const awaitedSearchParams = await searchParams;
@@ -24,6 +26,8 @@ export default async function Home({ searchParams }) {
       <BeforeAndAfterSection lng={lng} />
       <TranslatingIdeasSection lng={lng} />
       <SuccessJourney lng={lng} />
+      <Testmonails lng={lng} />
+      <FAQ lng={lng} />
     </Box>
   );
 }

@@ -10,7 +10,13 @@ export default function StageItem({ title, subTitle, description }) {
 
   return (
     <Paper
-      sx={{ p: 2, borderRadius: 1, mb: 3, width: "100%", maxWidth: "600px" }}
+      sx={{
+        p: 2,
+        borderRadius: 1,
+        mb: 3,
+        width: { xs: "100%", md: "600px" },
+        maxWidth: "600px",
+      }}
     >
       {/* Header row */}
       <Box

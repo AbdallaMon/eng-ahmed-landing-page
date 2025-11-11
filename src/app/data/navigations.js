@@ -1,14 +1,14 @@
 import { arFullName, pageLanguages } from "./constants";
 
 export const arNavigations = [
-  { title: "الرئيسية", path: "/", type: "HREF" },
-  { title: "المشاريع", path: "/projects", type: "HREF" },
-  { title: "التواصل", path: "/contact", type: "HREF" },
+  { label: "الرئيسية", href: "/", type: "HREF" },
+  { label: "المشاريع", href: "/projects", type: "HREF" },
+  { label: "التواصل", href: "/contact", type: "HREF" },
 ];
 export const enNavigations = [
-  { title: "Home", path: "/", type: "HREF" },
-  { title: "Projects", path: "/projects", type: "HREF" },
-  { title: "Contact", path: "/contact", type: "HREF" },
+  { label: "Home", href: "/", type: "HREF" },
+  { label: "Projects", href: "/projects", type: "HREF" },
+  { label: "Contact", href: "/contact", type: "HREF" },
 ];
 
 export const languagesSelector = {

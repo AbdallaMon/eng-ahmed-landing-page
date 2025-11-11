@@ -1,3 +1,4 @@
+import { Footer } from "./component/navigations/Footer";
 import "./globals.css";
 import MUIProviders from "./providers/MUIProvider";
 
@@ -22,7 +23,10 @@ export default async function RootLayout({ children, params }) {
   return (
     <html lang={lng} dir={lng === "ar" ? "rtl" : "ltr"}>
       <MUIProviders lng={lng}>
-        <body className={rubic.className}>{children}</body>
+        <body className={rubic.className}>
+          {children}
+          <Footer lng={lng} />
+        </body>
       </MUIProviders>
     </html>
   );

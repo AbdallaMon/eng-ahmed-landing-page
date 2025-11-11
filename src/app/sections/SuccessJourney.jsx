@@ -8,7 +8,7 @@ export async function SuccessJourney({ lng }) {
   const data = t("successJourney", { returnObjects: true });
   const buttons = t("buttons", { returnObjects: true });
   return (
-    <Box sx={{ mt: { xs: 6, md: 12 } }}>
+    <Box sx={{ mt: { xs: 6, md: 12 }, mb: { xs: 0, md: 8 } }}>
       <Container maxWidth="xl">
         <Box>
           <Grid container spacing={{ xs: 2, md: 8 }}>

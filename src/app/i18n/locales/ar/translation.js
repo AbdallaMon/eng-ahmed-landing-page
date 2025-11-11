@@ -4,11 +4,13 @@ import { arButtons } from "@/app/data/buttons";
 import { arCompanies } from "@/app/data/companies";
 
 import { arFollowMeText } from "@/app/data/constants";
+import { arFaq } from "@/app/data/FAQData";
 import { arFooter, arNavbar } from "@/app/data/navigations";
 import { arOurNumbersData } from "@/app/data/our-numbers";
 import { arProjects } from "@/app/data/projects";
 import { arStages } from "@/app/data/stages";
 import { arSuccessJourney } from "@/app/data/successJourney";
+import { arTestmonials } from "@/app/data/testmonials";
 import { arTranslatingIdeas } from "@/app/data/translating-ideas";
 import { arVisionData } from "@/app/data/vision";
 
@@ -26,5 +28,7 @@ const translation = {
   projects: arProjects,
   translatingIdeasSection: arTranslatingIdeas,
   successJourney: arSuccessJourney,
+  testmonails: arTestmonials,
+  faqs: arFaq,
 };
 export default translation;

@@ -74,7 +74,7 @@ function buildTheme({ dir = "ltr", mode = "light", lng } = {}) {
       h3: { fontWeight: 600, color: textPrimary },
       h4: { fontWeight: 600, color: textPrimary },
       body1: { color: BASE.secondary },
-      body2: { color: textSecondary },
+      body2: { color: BASE.secondary },
       button: { textTransform: "none", fontWeight: 600 },
     },
     breakpoints: {

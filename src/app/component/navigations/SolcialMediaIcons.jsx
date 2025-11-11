@@ -2,11 +2,20 @@ import { socialMediaIconsLinks } from "@/app/data/constants";
 import { getTranslation } from "@/app/i18n";
 import { Box, Typography } from "@mui/material";
 
-export default async function SocialMediaIcons({ lng, includeText }) {
+export default async function SocialMediaIcons({ sx, lng, includeText }) {
   const { t } = await getTranslation(lng);
   const followMeText = t("followMe");
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 3, mt: 1, mb: 5 }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 3,
+        mt: 1,
+        mb: 5,
+        ...sx,
+      }}
+    >
       {includeText && (
         <Typography
           variant="body1"
@@ -15,7 +24,9 @@ export default async function SocialMediaIcons({ lng, includeText }) {
           {followMeText}
         </Typography>
       )}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", gap: { xs: 2, md: 2.5 } }}
+      >
         {socialMediaIconsLinks.map((icon, index) => (
           <Box
             key={index}
@@ -26,7 +37,7 @@ export default async function SocialMediaIcons({ lng, includeText }) {
             <Box
               component="img"
               src={icon.iconSrc}
-              sx={{ width: { xs: "30px", md: "35px" } }}
+              sx={{ width: { xs: "35px", md: "40px" } }}
             />
           </Box>
         ))}
