@@ -43,7 +43,6 @@ export default async function CompaniesSection({ lng }) {
 }
 
 export function Companycard({ cardData }) {
-  console.log(cardData, "cardData");
   return (
     <Box
       sx={{

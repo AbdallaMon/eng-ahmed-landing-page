@@ -1,4 +1,4 @@
-import { colors } from "@/app/providers/MUIProvider";
+import { colors } from "@/app/data/constants";
 import { Box, Button, lighten } from "@mui/material";
 
 export function LinkButton({

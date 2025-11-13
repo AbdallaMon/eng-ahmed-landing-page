@@ -1,6 +1,6 @@
 export const arSuccessJourney = {
   title: {
-    primary: "تجربة شخصية وقصة",
+    primary: " تجربة شخصية وقصة",
     secondary: " نجاح ملهمة في التصميم والديكور",
   },
   description: {
@@ -12,7 +12,7 @@ export const arSuccessJourney = {
 
 export const enSuccessJourney = {
   title: {
-    primary: "Personal Experience and",
+    primary: "Personal Experience and ",
     secondary: "An Inspiring Success Story in Design and Decor",
   },
   description: {

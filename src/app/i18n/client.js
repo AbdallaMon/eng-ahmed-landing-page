@@ -9,7 +9,7 @@ import {
 import { useCookies } from "react-cookie";
 import resourcesToBackend from "i18next-resources-to-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { cookieName, getOptions, languages } from "./locales/settings";
+import { cookieName, getOptions, languages } from "./settings";
 
 const runsOnServerSide = typeof window === "undefined";
 

@@ -1,8 +1,12 @@
+import { CookiesProvider } from "react-cookie";
 import { Footer } from "./component/navigations/Footer";
+import { Navbar } from "./component/navigations/Navbar";
 import "./globals.css";
 import MUIProviders from "./providers/MUIProvider";
 
 import { Rubik } from "next/font/google";
+import Navigations from "./component/navigations/Navigations";
+import { cookies } from "next/headers";
 
 const rubic = Rubik({
   weight: ["400", "500", "600", "700"],
@@ -18,16 +22,19 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children, params }) {
-  const resolvedParams = await params;
-  const lng = resolvedParams.lng;
+  const cookieStore = await cookies();
+  const lng = cookieStore.get("i18next")?.value || "ar";
+  console.log(lng, "lng from cookies");
   return (
     <html lang={lng} dir={lng === "ar" ? "rtl" : "ltr"}>
-      <MUIProviders lng={lng}>
-        <body className={rubic.className}>
+      <body className={rubic.className}>
+        <MUIProviders lng={lng}>
+          <Navbar lng={lng} />
+
           {children}
           <Footer lng={lng} />
-        </body>
-      </MUIProviders>
+        </MUIProviders>
+      </body>
     </html>
   );
 }

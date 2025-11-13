@@ -11,7 +11,7 @@ export async function TranslatingIdeasSection({ lng }) {
   const buttons = t("buttons", { returnObjects: true });
   return (
     <>
-      <Box sx={{ mb: { xs: 4, md: 6 } }}>
+      <Box sx={{ mb: { xs: 4, md: 6 }, direction: "rtl" }}>
         <Container
           maxWidth="xl"
           sx={{

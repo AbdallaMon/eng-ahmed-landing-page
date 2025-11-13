@@ -4,8 +4,9 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme, alpha, darken, lighten } from "@mui/material/styles";
 import { colors } from "../data/constants";
+import { useSearchParams } from "next/navigation";
 
-function buildTheme({ dir = "ltr", mode = "light", lng } = {}) {
+function buildTheme({ dir = "ltr", mode = "light" } = {}) {
   const BASE = colors;
   const primaryMain = BASE.primary;
   const secondaryMain = BASE.secondary;
@@ -88,7 +89,7 @@ function buildTheme({ dir = "ltr", mode = "light", lng } = {}) {
             backgroundColor: bgDefault,
             color: textPrimary,
             direction: dir,
-            textAlign: lng === "ar" ? "right" : "left",
+            // textAlign: lng === "ar" ? "right" : "left",
           },
           "::selection": { background: BASE.highlight, color: "#1a1410" },
           "::-moz-selection": { background: BASE.highlight, color: "#1a1410" },
@@ -194,9 +195,8 @@ function buildTheme({ dir = "ltr", mode = "light", lng } = {}) {
 const cacheRtl = createCache({ key: "muirtl", stylisPlugins: [rtlPlugin] });
 const cacheLtr = createCache({ key: "muiltr" });
 
-export default function MUIProviders({ children, lng = "ar", mode = "light" }) {
+export default function MUIProviders({ lng, children, mode = "light" }) {
   const dir = lng === "ar" ? "rtl" : "ltr";
-  // const cache = dir === "rtl" ? cacheRtl : cacheLtr;
   const theme = buildTheme({ dir, mode, lng });
 
   return (

@@ -8,11 +8,11 @@ export const arFullName = `${arProfessionSuffix} أحمد المبيض`;
 export const enFullName = `${enProfessionSuffix} Ahmed Almobayd`;
 export const pageLanguages = [
   {
-    title: "العربية",
+    label: "العربية",
     value: "ar",
   },
   {
-    title: "English",
+    label: "English",
     value: "en",
   },
 ];

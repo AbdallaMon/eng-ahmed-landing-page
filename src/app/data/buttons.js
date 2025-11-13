@@ -5,7 +5,7 @@ export const arButtons = {
     href: "/booking",
     icon: "./arrow-left.png",
   },
-  viewPortfolio: { name: "شاهد بعض من أعمالي", href: "/portfolio" },
+  viewPortfolio: { name: "شاهد بعض من أعمالي", href: "/projects" },
   readMore: { name: "اقرأ المزيد", href: "/blog" },
   watchVideo: { name: "شاهد الفيديو" },
   filter: { name: "تصفية", href: "/projects?filter=all" },
@@ -15,7 +15,7 @@ export const arButtons = {
 // English buttons
 export const enButtons = {
   booking: { name: "Book a Quick Session", href: "/booking" },
-  viewPortfolio: { name: "View Some of My Work", href: "/portfolio" },
+  viewPortfolio: { name: "View Some of My Work", href: "/projects" },
   readMore: { name: "Read More", href: "/blog" },
   watchVideo: { name: "Watch Video" },
   filter: { name: "Filter", href: "/projects?filter=all" },

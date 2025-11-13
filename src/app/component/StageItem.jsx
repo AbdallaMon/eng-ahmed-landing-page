@@ -4,9 +4,12 @@
 import { useState } from "react";
 import { Box, Button, Collapse, Paper, Typography } from "@mui/material";
 import { colors } from "../data/constants";
+import { useSearchParams } from "next/navigation";
 
 export default function StageItem({ title, subTitle, description }) {
   const [open, setOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const lng = searchParams.get("lng") || "ar";
 
   return (
     <Paper
@@ -16,6 +19,7 @@ export default function StageItem({ title, subTitle, description }) {
         mb: 3,
         width: { xs: "100%", md: "600px" },
         maxWidth: "600px",
+        mx: "auto",
       }}
     >
       {/* Header row */}
@@ -34,13 +38,10 @@ export default function StageItem({ title, subTitle, description }) {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 700, textAlign: "right" }}>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
             {title}
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{ color: "text.primary", textAlign: "right" }}
-          >
+          <Typography variant="body1" sx={{ color: "text.primary" }}>
             {subTitle}
           </Typography>
         </Box>
@@ -56,7 +57,13 @@ export default function StageItem({ title, subTitle, description }) {
             color: open ? colors.primary : colors.white,
           }}
         >
-          قراءة المزيد
+          {lng === "ar"
+            ? open
+              ? "إخفاء التفاصيل"
+              : "قراءة المزيد"
+            : open
+            ? "Hide Details"
+            : "Read More"}
         </Button>
       </Box>
 
@@ -73,7 +80,7 @@ export default function StageItem({ title, subTitle, description }) {
                 : theme.palette.background.default,
             color: "text.primary",
             whiteSpace: "pre-wrap",
-            textAlign: "right",
+            // textAlign: "right",
           }}
         >
           {description}
