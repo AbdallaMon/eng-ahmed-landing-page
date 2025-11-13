@@ -69,7 +69,7 @@ function LanguageSwitcher({ options, currentLanguage, onChange }) {
       >
         <Box
           component="img"
-          src={"./chevron-down-colored.png"}
+          src={"/chevron-down-colored.png"}
           alt="Language"
           sx={{
             width: 18,
@@ -83,7 +83,7 @@ function LanguageSwitcher({ options, currentLanguage, onChange }) {
         </Typography>
         <Box
           component="img"
-          src={"./language-selector.png"}
+          src={"/language-selector.png"}
           alt="Language"
           sx={{ width: 18, height: 18 }}
         />
@@ -229,7 +229,7 @@ export function NavbarClient({ navItems, lng, bookingButton }) {
           >
             <Box
               component="img"
-              src={"./menu.png"}
+              src={"/menu.png"}
               alt="Menu"
               sx={{ width: 28, height: 28 }}
             />

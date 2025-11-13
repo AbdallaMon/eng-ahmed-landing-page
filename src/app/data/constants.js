@@ -40,24 +40,24 @@ export const socialMediaIconsLinks = [
   {
     title: "YouTube",
     href: "https://www.youtube.com/@engahmedalmobayed",
-    iconSrc: "./social-media/youtube.png",
+    iconSrc: "/social-media/youtube.png",
   },
   {
     title: "Instagram",
     href: "https://www.instagram.com/eng.ahmedalmobayed/",
-    iconSrc: "./social-media/instagram.png",
+    iconSrc: "/social-media/instagram.png",
   },
   {
     title: "TikTok",
     href: "https://www.tiktok.com/@engahmedalmobayed",
-    iconSrc: "./social-media/tiktok.png",
+    iconSrc: "/social-media/tiktok.png",
   },
   {
     title: "Mail",
     href: "mailto:eng.ahmedalmobayed@gmail.com",
-    iconSrc: "./social-media/mail.png",
+    iconSrc: "/social-media/mail.png",
   },
 ];
 
-export const imageBannerSrc = "./video-banner-pc.png";
-export const imageBannerMobileSrc = "./video-banner-mobile.png";
+export const imageBannerSrc = "/video-banner-pc.png";
+export const imageBannerMobileSrc = "/video-banner-mobile.png";

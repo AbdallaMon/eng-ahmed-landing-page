@@ -24,7 +24,6 @@ export const metadata = {
 export default async function RootLayout({ children, params }) {
   const cookieStore = await cookies();
   const lng = cookieStore.get("i18next")?.value || "ar";
-  console.log(lng, "lng from cookies");
   return (
     <html lang={lng} dir={lng === "ar" ? "rtl" : "ltr"}>
       <body className={rubic.className}>
