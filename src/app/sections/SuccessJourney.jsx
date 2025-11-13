@@ -2,6 +2,7 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 import { getTranslation } from "../i18n";
 import { colors, imageBannerSrc } from "../data/constants";
 import { LinkButton } from "../component/buttons/LinkButton";
+import { SuccessJourneyClient } from "../component/SuccessJournayClient";
 
 export async function SuccessJourney({ lng }) {
   const { t } = await getTranslation(lng);
@@ -12,20 +13,12 @@ export async function SuccessJourney({ lng }) {
       <Container maxWidth="xl">
         <Box>
           <Grid container spacing={{ xs: 2, md: 8 }}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Box
-                component="img"
-                sx={{
-                  maxWidth: "100%",
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: 1,
-                }}
-                src={imageBannerSrc}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }} sx={{ py: { xs: 3, md: 6 } }}>
+            <SuccessJourneyClient
+              lng={lng}
+              data={data}
+              buttons={buttons}
+              imageBannerSrc={imageBannerSrc}
+            >
               <Box>
                 <Box sx={{ maxWidth: "600px" }}>
                   <Typography
@@ -91,43 +84,7 @@ export async function SuccessJourney({ lng }) {
                   </Box>
                 ))}
               </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                  mb: { xs: 4, md: 0 },
-                }}
-              >
-                <LinkButton
-                  {...buttons.booking}
-                  borderColor={colors.primary}
-                  bgColor={colors.primary}
-                  textColor={colors.white}
-                  sx={{
-                    mt: 1.5,
-                    fontSize: {
-                      xs: "0.8rem",
-                      md: "1rem",
-                    },
-                  }}
-                  icon={"./arrow-left.png"}
-                />
-                <LinkButton
-                  {...buttons.watchVideo}
-                  borderColor={colors.teritary}
-                  bgColor={colors.teritary}
-                  textColor={colors.primary}
-                  sx={{
-                    mt: 1.5,
-                    fontSize: {
-                      xs: "0.8rem",
-                      md: "1.1rem",
-                    },
-                  }}
-                />
-              </Box>
-            </Grid>
+            </SuccessJourneyClient>
           </Grid>
         </Box>
       </Container>

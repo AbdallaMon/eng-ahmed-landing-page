@@ -9,12 +9,14 @@ export function LinkButton({
   textColor = colors.white,
   borderColor,
   sx = {},
+  onClick,
 }) {
   return (
     <Button
       component="a"
       href={href}
       variant="contained"
+      onClick={onClick}
       sx={{
         backgroundColor: bgColor,
         color: textColor,
