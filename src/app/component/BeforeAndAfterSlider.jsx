@@ -8,7 +8,7 @@ export default function BeforeAndAfterSlider({
   beforeSrc,
   afterSrc,
   initialPct = 65,
-  topImage = "before",
+  topImage = "after",
   direction = "ltr", // keeps reveal logic; badges stay left/right as requested
   lng = "en",
   grabIconSrc = "/grap-icon.png", // path to your grab/drag icon
@@ -88,7 +88,10 @@ export default function BeforeAndAfterSlider({
       sx={{
         position: "relative",
         width: "100%",
-        aspectRatio: "16 / 10",
+        maxWidth: "600px",
+        mx: "auto",
+        // aspectRatio: "4 / 3",
+        height: { xs: 400, md: 500 },
         overflow: "hidden",
         borderRadius: 0.5,
         boxShadow: 3,

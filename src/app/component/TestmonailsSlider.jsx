@@ -58,7 +58,7 @@ export function TestmonailsSlider({ data, rtl }) {
             left: "92%",
           },
         }}
-        dir={rtl ? "ltr" : "ltr"}
+        dir={rtl ? "rtl" : "ltr"}
         modules={[Pagination, Navigation]}
         loop={canLoop}
         speed={500}

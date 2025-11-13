@@ -6,136 +6,82 @@ export const arStages = {
     {
       title: "المرحلة الأولى",
       subTitle: "تحليل وتقييم المشروع",
-      description: `
-اجتمع معي شخصيًا لمدة 30 دقيقة لقراءة مشروعك واكتشاف الثغرات ووضع خطة أولية تجنبك الأخطاء الكبيرة.
-
-نُحدّد نطاق العمل، الأهداف، المؤشرات، والجمهور المستهدف بصورة مبدئية تمهيدًا للمراحل التالية.
-`,
+      description: `اجتمع معي شخصيا مدة 30 دقيقة لأقوم بقراءة مشروعك وايجاد ثغرات فيه ووضع خطة مبدئية تجنبك الأخطاء كبيرة`,
     },
     {
       title: "المرحلة الثانية",
-      subTitle: "البحث ودراسة الجمهور",
-      description: `
-تحليل المنافسين المباشرين وغير المباشرين، ودراسة سلوك المستخدم واحتياجاته.
-
-نستخرج رؤى عملية تساعدنا على اتخاذ قرارات تصميمية وتسويقية مدروسة.
+      subTitle: "دراسة فعلية مع فرش المخططات 2D",
+      description: ` تحسين جودة المخطط لمستوا اعلى مع فرش المخططات بشكل مناسب للمساحات بالقياس الحقيقي لنتجنب اعمال التكسير والمبالغ الإضافية التي يطلبها منك المقاول
 `,
     },
     {
       title: "المرحلة الثالثة",
-      subTitle: "صياغة الإستراتيجية وخارطة الطريق",
-      description: `
-نضع إستراتيجية واضحة للهوية، المحتوى، القنوات، وخارطة طريق زمنية بمراحل وتقديرات.
-
-تشمل الأولويات والنتائج المتوقعة ومخاطر التنفيذ وخطط التخفيف.
-`,
+      subTitle: "تصميم 3D",
+      description: `اظهار شكل الجدران مع الأرضية والفرش بالإضافة للإنارة مع تكييف وكل ما يخص المنزل من داخل ليحقق جميع سبل الراحة ويكون بيتك فندقي`,
     },
     {
       title: "المرحلة الرابعة",
-      subTitle: "تصميم الهوية والواجهات",
-      description: `
-نطوّر نظامًا بصريًا متكاملًا (هوية، ألوان، خطوط، مكوّنات) ونماذج أولية لواجهات رئيسية.
-
-نقدّم لوحات نمط (Style Guide) وقابلة للتوسّع عبر المنصات.
-`,
+      subTitle: "مخططات تنفيذية",
+      description: ` رسم مخططات التصميم بشكل احترافي يوضح جميع الأبعاد ونوعية المواد والأكواد الخاصة بالإنارة والألوان لتتجنب التخمين من قبل العمالة والمقاولين ويصبح لديك خطة متكاملة تضمن فيها تطابق تصميم مع تنفيذ`,
     },
     {
       title: "المرحلة الخامسة",
-      subTitle: "هندسة التجربة والتطوير الأوّلي",
-      description: `
-تحويل النماذج إلى مكوّنات قابلة للاستخدام، وبناء نسخة أولية MVP قابلة للاختبار.
-
-نركّز على الأداء، وإمكانية الوصول، والبنية التي تسهّل التطوير اللاحق.
-`,
+      subTitle: " حصر الكميات والمواد",
+      description: `سيتم تزويدك بكميات المواد مطلوبة للمشروع مع اماكن الشراء لكي تقوم بشرائها بنفسك ان تطلب الأمر وتتجنب الغش والأحتيال`,
     },
     {
       title: "المرحلة السادسة",
-      subTitle: "الاختبار والتحسين",
-      description: `
-اختبارات قابلية الاستخدام، تتبّع السلوك عبر التحليلات، وجمع التغذية الراجعة.
-
-نُجري تحسينات تدريجية على التدفقات، النصوص، والأداء للوصول إلى تجربة سلسة.
-`,
+      subTitle: "تنفيذ المشروع على ارض الواقع ",
+      description: `مشروعك المصمم سيتم تنفيذه بجميع تفاصيله وبسرعة عالية لتضمن اعلى نسبة تطابق التصميم مع التنفيذ على أرض الواقع`,
     },
     {
       title: "المرحلة السابعة",
-      subTitle: "الإطلاق والمتابعة",
-      description: `
-ننفّذ خطة الإطلاق، ونعدّ قياسات النجاح، ونراقب الأداء بعد الإطلاق.
-
-نقدّم دعمًا لاحقًا وجدولة تحسينات دورية لضمان نمو مستدام.
+      subTitle: "تسويق المشروع ان كان هدفك تجاريا",
+      description: `لدي اكثر من مليونين متابع من الخليج على سوشيال ميديا لذلك يمكنني عرض مشروعك بطريقة احترافية على منصاتي واقوم بجلب زبائن لك ليشتروا منك عقارك بأسرع وقت ممكن
 `,
     },
   ],
 };
 
 export const enStages = {
-  title: "Your Journey Map with Ahmed Al-Mobayyad",
+  title: "Your Journey Roadmap with Ahmed Al-Mubaid",
   description:
-    "From the first idea to the grand opening, we draw clear steps to build a successful architectural project.",
+    "From the very first idea all the way to the grand opening, we lay out clear steps to build a successful architectural project.",
   stages: [
     {
       title: "Stage One",
-      subTitle: "Project Assessment",
-      description: `
-Meet with me for 30 minutes to review your project, uncover gaps, and draft a starter plan that helps you avoid major pitfalls.
-
-We define scope, goals, KPIs, and the target audience at a high level to prepare for the next stages.
-`,
+      subTitle: "Project Analysis and Evaluation",
+      description: `Meet with me personally for 30 minutes so I can review your project, identify its gaps, and set an initial plan that protects you from major mistakes.`,
     },
     {
       title: "Stage Two",
-      subTitle: "Research & Audience Study",
-      description: `
-Analyze direct and indirect competitors, and study user behavior and needs.
-
-We extract practical insights that guide informed design and marketing decisions.
-`,
+      subTitle: "Actual study with 2D layout furnishing",
+      description: `We improve the quality of the plan to a higher level, furnishing the layouts appropriately for the spaces at real scale so we avoid demolition works and extra amounts the contractor might ask you for.`,
     },
     {
       title: "Stage Three",
-      subTitle: "Strategy & Roadmap",
-      description: `
-Set a clear strategy for brand, content, and channels, plus a time-boxed roadmap with phases and estimates.
-
-Includes priorities, expected outcomes, risks, and mitigation plans.
-`,
+      subTitle: "3D Design",
+      description: `We show the look of the walls with the flooring and furniture, in addition to lighting, air conditioning and everything related to the interior of the house, so it achieves all means of comfort and makes your home feel like a hotel.`,
     },
     {
       title: "Stage Four",
-      subTitle: "Identity & UI Design",
-      description: `
-Develop a cohesive visual system (brand, colors, typography, components) and primary interface prototypes.
-
-Deliver a scalable style guide that works across platforms.
-`,
+      subTitle: "Execution Drawings",
+      description: `We draft the design drawings professionally, clarifying all dimensions, material types, and the codes related to lighting and colors, so you avoid guesswork from workers and contractors and have an integrated plan that ensures the match between design and execution.`,
     },
     {
       title: "Stage Five",
-      subTitle: "Experience Engineering & MVP",
-      description: `
-Turn prototypes into usable components and build a testable MVP.
-
-We focus on performance, accessibility, and an architecture that supports future growth.
-`,
+      subTitle: "Quantity Takeoff and Materials",
+      description: `You will be provided with the quantities of materials required for the project along with purchase locations, so you can buy them yourself if needed and avoid fraud and deception.`,
     },
     {
       title: "Stage Six",
-      subTitle: "Testing & Optimization",
-      description: `
-Run usability tests, track behavior with analytics, and collect feedback.
-
-Iterate on flows, copy, and performance to deliver a smooth experience.
-`,
+      subTitle: "Project Execution on Site",
+      description: `Your designed project will be executed with all its details and at high speed to ensure the highest possible match between design and on-site execution.`,
     },
     {
       title: "Stage Seven",
-      subTitle: "Launch & Follow-Up",
-      description: `
-Execute the launch plan, set success metrics, and monitor post-launch performance.
-
-Provide ongoing support and schedule periodic improvements for sustainable growth.
-`,
+      subTitle: "Marketing the Project if Your Goal is Commercial",
+      description: `I have more than two million followers from the Gulf on social media, so I can showcase your project professionally on my platforms and bring you clients to buy your property as quickly as possible.`,
     },
   ],
 };

@@ -40,7 +40,7 @@ export function TestMonailCard({ data }) {
               color: colors.brown,
               mt: 2,
               mb: 3,
-              ml: "auto",
+              // ml: "auto",
             }}
           >
             {data.text}
@@ -50,8 +50,9 @@ export function TestMonailCard({ data }) {
           mt={2}
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "flex-start",
             alignItems: "center",
+            gap: 1,
           }}
         >
           <Box
