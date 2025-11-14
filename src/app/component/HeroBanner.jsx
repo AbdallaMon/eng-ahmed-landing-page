@@ -119,6 +119,8 @@ export function HeroBanner({ data, lng }) {
       duration: 0.4,
       ease: "power3.out",
     });
+    console.log(percentage, "percentage");
+    console.log(doubleMiddle, "percentage");
 
     if (isMobile) {
       const opacityValue =
@@ -137,7 +139,8 @@ export function HeroBanner({ data, lng }) {
       });
     } else {
       gsap.to(".hero-main-box .left", {
-        opacity: percentage <= middle ? 1 : (doubleMiddle - percentage) / 100,
+        opacity:
+          percentage <= middle ? 1 : (doubleMiddle - percentage - 20) / 100,
         duration: 0.35,
         ease: "power2.out",
       });
