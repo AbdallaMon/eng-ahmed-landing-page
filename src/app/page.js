@@ -10,6 +10,7 @@ import { TranslatingIdeasSection } from "./sections/TranslatingIdeasSection";
 import { SuccessJourney } from "./sections/SuccessJourney";
 import { Testmonails } from "./sections/Testmonails";
 import { FAQ } from "./sections/FAQ";
+import { Hero } from "./sections/Hero";
 
 export default async function Home({ searchParams }) {
   const awaitedSearchParams = await searchParams;
@@ -17,6 +18,7 @@ export default async function Home({ searchParams }) {
 
   return (
     <Box>
+      <Hero lng={lng} />
       <CTASection lng={lng} />
       <About lng={lng} />
       <StagesSection lng={lng} />

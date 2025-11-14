@@ -5,6 +5,7 @@ import { arCompanies } from "@/app/data/companies";
 
 import { arFollowMeText } from "@/app/data/constants";
 import { arFaq } from "@/app/data/FAQData";
+import { arHero } from "@/app/data/hero";
 import { arFooter, arNavbar } from "@/app/data/navigations";
 import { arOurNumbersData } from "@/app/data/our-numbers";
 import { arProjects } from "@/app/data/projects";
@@ -16,11 +17,10 @@ import { arVisionData } from "@/app/data/vision";
 
 const translation = {
   navBar: arNavbar,
+  hero: arHero,
   vission: arVisionData,
   about: arAboutData,
-  footer: arFooter,
   followMe: arFollowMeText,
-  buttons: arButtons,
   stages: arStages,
   companies: arCompanies,
   ourNumbers: arOurNumbersData,
@@ -30,5 +30,7 @@ const translation = {
   successJourney: arSuccessJourney,
   testmonails: arTestmonials,
   faqs: arFaq,
+  footer: arFooter,
+  buttons: arButtons,
 };
 export default translation;

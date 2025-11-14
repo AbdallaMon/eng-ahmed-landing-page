@@ -4,6 +4,7 @@ import { enButtons } from "@/app/data/buttons";
 import { enCompanies } from "@/app/data/companies";
 import { enFollowMeText } from "@/app/data/constants";
 import { enFaq } from "@/app/data/FAQData";
+import { enHero } from "@/app/data/hero";
 import { enFooter, enNavbar } from "@/app/data/navigations";
 import { enOurNumbersData } from "@/app/data/our-numbers";
 import { enProjects } from "@/app/data/projects";
@@ -15,11 +16,10 @@ import { enVisionData } from "@/app/data/vision";
 
 const translation = {
   navBar: enNavbar,
+  hero: enHero,
   vission: enVisionData,
   about: enAboutData,
-  footer: enFooter,
   followMe: enFollowMeText,
-  buttons: enButtons,
   stages: enStages,
   companies: enCompanies,
   ourNumbers: enOurNumbersData,
@@ -29,5 +29,7 @@ const translation = {
   successJourney: enSuccessJourney,
   testmonails: enTestmonials,
   faqs: enFaq,
+  footer: enFooter,
+  buttons: enButtons,
 };
 export default translation;
