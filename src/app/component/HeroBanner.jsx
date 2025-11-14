@@ -152,6 +152,8 @@ export function HeroBanner({ data, lng }) {
 
   const handleMouseMove = (event) => {
     const rect = containerRef.current?.getBoundingClientRect();
+    const containerWidth = containerRef.current.offsetWidth;
+    if (containerWidth < 900) return;
     if (!rect) return;
 
     // x relative to container
@@ -186,6 +188,10 @@ export function HeroBanner({ data, lng }) {
 
     const handleScroll = () => {
       if (!containerRef.current) return;
+
+      // get container width to make this work only in monile
+      const containerWidth = containerRef.current.offsetWidth;
+      if (containerWidth > 900) return;
 
       const currentY = window.scrollY;
 
@@ -255,7 +261,7 @@ export function HeroBanner({ data, lng }) {
             maxWidth: { xs: "300px", md: "900px" },
             mx: "auto",
             aspectRatio: "16 / 13",
-            height: { xs: "240px", md: "600px" },
+            height: { xs: "200px", md: "600px" },
           }}
         >
           <RightAndLeftText data={data} lng={lng} />
@@ -362,6 +368,7 @@ function HeroMainText({ data, position, lng }) {
           fontSize: { xs: 7, md: 14 },
           lineHeight: 1.5,
           opacity: 0.85,
+          display: { xs: "none", md: "block" },
         }}
       >
         {position === "left"
