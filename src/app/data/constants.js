@@ -45,7 +45,7 @@ export const socialMediaIconsLinks = [
   {
     title: "Instagram",
     href: "https://www.instagram.com/eng.ahmedalmobayed/",
-    iconSrc: "/social-media/instagram.png",
+    iconSrc: "/social-media/Instagram.png",
   },
   {
     title: "TikTok",
