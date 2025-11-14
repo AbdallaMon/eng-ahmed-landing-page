@@ -261,7 +261,7 @@ export function HeroBanner({ data, lng }) {
             maxWidth: { xs: "300px", md: "900px" },
             mx: "auto",
             aspectRatio: "16 / 13",
-            height: { xs: "200px", md: "600px" },
+            height: { xs: "240px", md: "600px" },
           }}
         >
           <RightAndLeftText data={data} lng={lng} />
@@ -368,7 +368,6 @@ function HeroMainText({ data, position, lng }) {
           fontSize: { xs: 7, md: 14 },
           lineHeight: 1.5,
           opacity: 0.85,
-          display: { xs: "none", md: "block" },
         }}
       >
         {position === "left"
