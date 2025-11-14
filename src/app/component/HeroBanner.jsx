@@ -145,7 +145,7 @@ export function HeroBanner({ data, lng }) {
             height: { xs: "240px", md: "600px" },
           }}
         >
-          <RightAndLeftText data={data} />
+          <RightAndLeftText data={data} lng={lng} />
           <HeroFloatingText data={data} />
           <FloatingHeroPattern data={data} />
           <HeroMainImages data={data} split={split} />
@@ -195,15 +195,15 @@ function HeroImage({ src, alt, clipPath }) {
   );
 }
 
-function RightAndLeftText({ data }) {
+function RightAndLeftText({ data, lng }) {
   return (
     <>
-      <HeroMainText data={data} position="left" />
-      <HeroMainText data={data} position="right" />
+      <HeroMainText data={data} position="left" lng={lng} />
+      <HeroMainText data={data} position="right" lng={lng} />
     </>
   );
 }
-function HeroMainText({ data, position }) {
+function HeroMainText({ data, position, lng }) {
   return (
     <Box
       className={`${position}  main-text-box main-text-box-${position}`}
@@ -216,8 +216,18 @@ function HeroMainText({ data, position }) {
         //   right: { xs: -30, md: -120 },
         top: { xs: 60, md: 130 },
         ...(position === "left"
-          ? { left: { xs: -30, md: -120 } }
-          : { right: { xs: -25, md: -120 } }),
+          ? {
+              left: {
+                xs: lng === "ar" ? -30 : -20,
+                md: lng === "ar" ? -120 : -90,
+              },
+            }
+          : {
+              right: {
+                xs: lng === "ar" ? -25 : -35,
+                md: lng === "ar" ? -120 : -150,
+              },
+            }),
       }}
     >
       <Typography
@@ -265,8 +275,7 @@ function FloatingText({ data, position }) {
     <Typography
       variant="body2"
       sx={{
-        fontSize: { xs: 8, md: 16 },
-        fontWeight: "bold",
+        fontSize: { xs: 7, md: 16 },
         mx: 2,
         position: "absolute",
         bottom:
