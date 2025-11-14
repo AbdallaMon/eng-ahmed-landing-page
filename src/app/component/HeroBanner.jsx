@@ -1,160 +1,203 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Slider, Typography } from "@mui/material";
+
 import { gsap } from "gsap";
 
 export function HeroBanner({ data, lng }) {
-  const middle = 50;
-  const [split, setSplit] = useState(60);
-
+  const middle = 60;
+  const initialSplit = 60;
   const containerRef = useRef(null);
-  const baseScrollYRef = useRef(null);
 
-  // smooth setters for movement & opacity (no new tweens on every event)
-  const heroX = useRef(null);
-  const leftX = useRef(null);
-  const rightX = useRef(null);
-  const leftOpacity = useRef(null);
-  const rightOpacity = useRef(null);
+  // For mouse direction detection
+  const lastMouseXRef = useRef(null);
 
-  useEffect(() => {
-    heroX.current = gsap.quickTo(".hero-main-box", "x", {
-      duration: 0.4,
-      ease: "power3.out",
-    });
-    leftX.current = gsap.quickTo(".hero-main-box .main-text-box-left", "x", {
-      duration: 0.4,
-      ease: "power3.out",
-    });
-    rightX.current = gsap.quickTo(".hero-main-box .main-text-box-right", "x", {
-      duration: 0.4,
-      ease: "power3.out",
-    });
-    leftOpacity.current = gsap.quickTo(".hero-main-box .left", "opacity", {
-      duration: 0.5,
-      ease: "power2.out",
-    });
-    rightOpacity.current = gsap.quickTo(".hero-main-box .right", "opacity", {
-      duration: 0.5,
-      ease: "power2.out",
-    });
-  }, []);
+  // For scroll direction detection
+  const lastScrollYRef = useRef(0);
 
-  // ---------- INITIAL ANIMATION (FASTER + SMOOTHER) ----------
   function handleInitialAnimation() {
-    const timeLine = gsap.timeline({
-      defaults: {
-        duration: 0.9, // faster than 1.5s
+    const timeLine = new gsap.timeline();
+
+    // images - give them a bit more time (smoother)
+    timeLine.fromTo(
+      ".hero-main-box .right-image",
+      {
+        x: 100,
+        opacity: 0,
+      },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 1.1, // more time for image
+        ease: "power3.out",
+      }
+    );
+
+    timeLine.fromTo(
+      ".hero-main-box .left-image",
+      {
+        x: -100,
+        opacity: 0,
+      },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 1.1, // match right image
         ease: "power3.out",
       },
+      "<"
+    );
+
+    // pattern and floating text – slightly shorter than before
+    timeLine.fromTo(
+      ".hero-main-box .pattern",
+      { x: 50, opacity: 0 },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.75,
+        ease: "power2.out",
+      }
+    );
+    timeLine.fromTo(
+      ".hero-main-box .floating-text-box",
+      { x: -50, opacity: 0 },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.75,
+        ease: "power2.out",
+      },
+      "<"
+    );
+
+    // left and right text – less time (snappier)
+    timeLine.fromTo(
+      ".main-text-box",
+      { y: -50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.6, // less than before
+        ease: "power3.out",
+      }
+    );
+  }
+
+  function handleAnimation(percentage, isMobile) {
+    const doubleMiddle = isMobile ? 120 : 120;
+    const split = doubleMiddle - percentage;
+
+    // ADD duration to make split smoother
+    gsap.to(".hero-main-box .right-image", {
+      clipPath: `inset(0 0 0 ${split}%)`,
+      duration: 0.45, // smooth split
+      ease: "power3.out",
+    });
+    gsap.to(".hero-main-box .left-image", {
+      clipPath: `inset(0 ${100 - split}% 0 0)`,
+      duration: 0.45, // smooth split
+      ease: "power3.out",
     });
 
-    timeLine
-      // images
-      .fromTo(
-        ".hero-main-box .right-image",
-        { x: 60, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1 }
-      )
-      .fromTo(
-        ".hero-main-box .left-image",
-        { x: -60, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1 },
-        "<"
-      )
-      // pattern + floating text
-      .fromTo(
-        ".hero-main-box .pattern",
-        { x: 30, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1 },
-        "-=0.3"
-      )
-      .fromTo(
-        ".hero-main-box .floating-text-box",
-        { x: -30, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1 },
-        "<"
-      )
-      // main text
-      .fromTo(
-        ".main-text-box",
-        { y: -25, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1 },
-        "-=0.3"
-      );
+    gsap.to(".hero-main-box", {
+      x: (percentage - middle) / 2,
+      duration: 0.35, // keep main box as it is
+      ease: "power3.out",
+    });
+
+    // left & right main texts
+    gsap.to(".hero-main-box .main-text-box-left", {
+      x: -((percentage - middle) / 2),
+      duration: 0.4,
+      ease: "power3.out",
+    });
+
+    gsap.to(".hero-main-box .main-text-box-right", {
+      x: -((percentage - middle) / 2),
+      duration: 0.4,
+      ease: "power3.out",
+    });
+
+    if (isMobile) {
+      const opacityValue =
+        percentage <= middle ? 1 : (doubleMiddle - percentage) / 100;
+
+      gsap.to(".hero-main-box .left", {
+        opacity: opacityValue,
+        duration: 0.35,
+        ease: "power2.out",
+      });
+
+      gsap.to(".hero-main-box .right", {
+        opacity: opacityValue,
+        duration: 0.35,
+        ease: "power2.out",
+      });
+    } else {
+      gsap.to(".hero-main-box .left", {
+        opacity: percentage <= middle ? 1 : (doubleMiddle - percentage) / 100,
+        duration: 0.35,
+        ease: "power2.out",
+      });
+
+      gsap.to(".hero-main-box .right", {
+        opacity: percentage >= middle ? 1 : percentage / 100,
+        duration: 0.35,
+        ease: "power2.out",
+      });
+    }
   }
 
-  // ---------- MAIN ANIMATION (MOUSE + SCROLL) ----------
-  function handleAnimation(percentage, isMobile = false) {
-    const clamped = Math.max(0, Math.min(100, percentage));
-
-    // round so React doesn't re-render on every tiny move (less jitter)
-    const nextSplit = Math.round(100 - clamped);
-    setSplit((prev) => (prev === nextSplit ? prev : nextSplit));
-
-    const shift = (clamped - middle) / 2;
-
-    heroX.current?.(shift);
-    leftX.current?.(-shift);
-    rightX.current?.(-shift);
-
-    const leftOpacityValue = clamped <= middle ? 1 : (100 - clamped) / 100;
-    const rightOpacityValue = isMobile
-      ? leftOpacityValue
-      : clamped >= middle
-      ? 1
-      : clamped / 100;
-
-    leftOpacity.current?.(leftOpacityValue);
-    rightOpacity.current?.(rightOpacityValue);
-  }
-
-  // ---------- MOUSE MOVE (DESKTOP) ----------
   const handleMouseMove = (event) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
 
+    // x relative to container
     const x = event.clientX - rect.left;
-    const ratio = x / rect.width;
+
+    // 0 -> left, 50 -> center, 100 -> right
+    const ratio = x / rect.width; // 0–1
     const percentFromLeft = Math.max(0, Math.min(100, ratio * 100));
 
-    handleAnimation(percentFromLeft, false);
+    handleAnimation(percentFromLeft);
+
+    lastMouseXRef.current = x;
   };
 
-  // run initial entrance animation
   useEffect(() => {
     if (containerRef.current) {
       handleInitialAnimation();
     }
   }, []);
 
-  // ---------- SCROLL (MOBILE ONLY) ----------
+  const baseScrollYRef = useRef(null);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // base scroll position = center of hero container
-    if (baseScrollYRef.current === null && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      baseScrollYRef.current = window.scrollY + rect.top + rect.height / 2;
+    // store the initial scroll position as the "center" (50)
+    if (baseScrollYRef.current === null) {
+      baseScrollYRef.current = window.scrollY;
     }
+
+    lastScrollYRef.current = window.scrollY;
 
     const handleScroll = () => {
       if (!containerRef.current) return;
 
-      // only drive scroll animation on mobile/tablet
-      if (window.innerWidth > 900) return;
-
       const currentY = window.scrollY;
-      const baseY = baseScrollYRef.current ?? currentY;
-      const distance = Math.abs(currentY - baseY);
 
-      // reach max effect a bit earlier so it feels faster
-      const maxDistance = window.innerHeight * 0.6;
+      // ----- PERCENTAGE 50 → 100 BASED ON DISTANCE FROM INITIAL POSITION -----
+      const baseY = baseScrollYRef.current ?? currentY;
+      const distance = Math.abs(currentY - baseY); // how far from initial
+
+      // choose how far you need to scroll to reach 100 (here: 1 viewport height)
+      const maxDistance = window.innerHeight; // you can tweak this
 
       const normalized = Math.min(distance / maxDistance, 1); // 0 → 1
-      const verticalPercent = 50 + normalized * 50; // 50 → 100
-
+      const verticalPercent = (currentY + 120) / 2;
       handleAnimation(verticalPercent, true);
     };
 
@@ -213,13 +256,12 @@ export function HeroBanner({ data, lng }) {
             mx: "auto",
             aspectRatio: "16 / 13",
             height: { xs: "240px", md: "600px" },
-            willChange: "transform", // GPU hint
           }}
         >
           <RightAndLeftText data={data} lng={lng} />
           <HeroFloatingText data={data} />
           <FloatingHeroPattern data={data} />
-          <HeroMainImages data={data} split={split} />
+          <HeroMainImages data={data} split={initialSplit} />
         </Box>
       </Container>
     </Box>
@@ -253,7 +295,7 @@ function HeroImage({ name, src, alt, clipPath }) {
         position: "absolute",
         inset: 0,
         height: "100%",
-        clipPath,
+        clipPath: clipPath,
         opacity: 0,
       }}
     >
@@ -320,7 +362,6 @@ function HeroMainText({ data, position, lng }) {
           fontSize: { xs: 7, md: 14 },
           lineHeight: 1.5,
           opacity: 0.85,
-          //   display: { xs: "none", md: "block" },
         }}
       >
         {position === "left"
