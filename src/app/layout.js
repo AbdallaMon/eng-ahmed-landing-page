@@ -9,6 +9,7 @@ import Navigations from "./component/navigations/Navigations";
 import { cookies } from "next/headers";
 import ToastProvider from "./providers/ToastLoadingProvider";
 import { getTranslation } from "./i18n";
+import DotsLoader from "./component/feedback/loaders/DotsLoader";
 
 const rubic = Rubik({
   weight: ["400", "500", "600", "700"],
@@ -37,6 +38,7 @@ export default async function RootLayout({ children, params }) {
         <MUIProviders lng={lng}>
           <ToastProvider>
             <Navbar lng={lng} />
+            <DotsLoader />
 
             {children}
             <Footer lng={lng} />
