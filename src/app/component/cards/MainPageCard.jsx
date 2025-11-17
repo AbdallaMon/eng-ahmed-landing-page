@@ -21,6 +21,8 @@ export function MainPageCard({ data, lng }) {
           textDecoration: "none",
           overflow: "hidden",
           aspectRatio: "1 / 1",
+          maxWidth: 400,
+          margin: "0 auto",
         }}
       >
         <Box

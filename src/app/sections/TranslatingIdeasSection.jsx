@@ -4,11 +4,13 @@ import { pcTranslatingIdeaImage } from "../data/translating-ideas";
 import { Typography } from "@mui/material";
 import { LinkButton } from "../component/buttons/LinkButton";
 import { colors } from "../data/constants";
+import { MainPageCard } from "../component/cards/MainPageCard";
 
 export async function TranslatingIdeasSection({ lng }) {
   const { t } = await getTranslation(lng);
   const data = t("translatingIdeasSection", { returnObjects: true });
   const buttons = t("buttons", { returnObjects: true });
+
   return (
     <>
       <Box sx={{ mb: { xs: 4, md: 6 }, direction: "rtl" }}>

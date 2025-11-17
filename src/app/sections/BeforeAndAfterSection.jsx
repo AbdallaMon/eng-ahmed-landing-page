@@ -4,11 +4,14 @@ import { Box, Typography } from "@mui/material";
 import { colors } from "../data/constants";
 import BeforeAndAfterSlider from "../component/BeforeAndAfterSlider";
 import { LinkButton } from "../component/buttons/LinkButton";
+import { MainPageCard } from "../component/cards/MainPageCard";
 
 export async function BeforeAndAfterSection({ lng }) {
   const { t } = await getTranslation(lng);
   const data = t("beforeAndAfter", { returnObjects: true });
   const buttons = t("buttons", { returnObjects: true });
+  const mainPageData = t("main", { returnObjects: true });
+  const showInAboutItems = mainPageData.filter((item) => item.showInAbout);
   return (
     <Box sx={{ mt: { xs: 4, md: 4 }, mb: { xs: 6, md: 12 } }}>
       <Container maxWidth="xl">
@@ -77,6 +80,17 @@ export async function BeforeAndAfterSection({ lng }) {
                 />
               </Grid>
             </Grid>
+          </Grid>
+        </Box>
+      </Container>
+      <Container maxWidth="xl" sx={{ mt: { xs: 4, md: 6 } }}>
+        <Box>
+          <Grid container spacing={2}>
+            {showInAboutItems.map((item, index) => (
+              <Grid size={{ xs: 6, md: 6 }} key={index}>
+                <MainPageCard lng={lng} data={item} />
+              </Grid>
+            ))}
           </Grid>
         </Box>
       </Container>

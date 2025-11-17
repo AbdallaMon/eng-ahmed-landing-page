@@ -10,11 +10,13 @@ export const arMainPageData = [
     title: "كتبي",
     href: "https://decorstores.ltd/products/book",
     image: "/books.jpg",
+    showInAbout: true,
   },
   {
     title: "كورساتي",
     href: "https://decorstores.ltd/products/animation",
     image: "/courses.jpg",
+    showInAbout: true,
   },
   {
     title: "الدائرة المقربة",
@@ -34,11 +36,13 @@ export const enMainPageData = [
     title: "My Books",
     href: "https://decorstores.ltd/products/book",
     image: "/books.jpg",
+    showInAbout: true,
   },
   {
     title: "My Courses",
     href: "https://decorstores.ltd/products/animation",
     image: "/courses.jpg",
+    showInAbout: true,
   },
   {
     title: "The Inner Circle",
