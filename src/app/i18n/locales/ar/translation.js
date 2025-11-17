@@ -12,6 +12,7 @@ import {
   arMainPageData,
   bookAndCoursesData,
 } from "@/app/data/mainPage";
+import { arMetaData } from "@/app/data/meta";
 import { arFooter, arNavbar } from "@/app/data/navigations";
 import { arOurNumbersData } from "@/app/data/our-numbers";
 import { arProjects } from "@/app/data/projects";
@@ -41,5 +42,6 @@ const translation = {
   booking: arBooking,
   footer: arFooter,
   buttons: arButtons,
+  meta: arMetaData,
 };
 export default translation;

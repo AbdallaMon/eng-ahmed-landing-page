@@ -7,6 +7,7 @@ import { enFollowMeText } from "@/app/data/constants";
 import { enFaq } from "@/app/data/FAQData";
 import { enHero } from "@/app/data/hero";
 import { enBookAndCoursesData, enMainPageData } from "@/app/data/mainPage";
+import { enMetaData } from "@/app/data/meta";
 import { enFooter, enNavbar } from "@/app/data/navigations";
 import { enOurNumbersData } from "@/app/data/our-numbers";
 import { enProjects } from "@/app/data/projects";
@@ -36,5 +37,6 @@ const translation = {
   booking: enBooking,
   footer: enFooter,
   buttons: enButtons,
+  meta: enMetaData,
 };
 export default translation;

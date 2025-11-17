@@ -1,0 +1,144 @@
+export const arMetaData = {
+  mainPage: {
+    title: `مهندس أحمد المبيض - استشارات تصميم داخلي وتخطيط وتنفيذ`,
+    description: `مهندس أحمد المبيض يقدم استشارات تصميم داخلي، تخطيط وتنفيذ المشاريع السكنية والتجارية. احجز استشارتك الآن لتحويل رؤيتك إلى واقع.`,
+    keywords: `مهندس داخلي, استشارات تصميم, تخطيط مشاريع, تنفيذ ديكور, تصميم منازل, تصميم مكاتب, أحمد المبيض`,
+    openGraph: {
+      title: `مهندس أحمد المبيض - استشارات تصميم داخلي وتخطيط وتنفيذ`,
+      description: `مهندس أحمد المبيض يقدم استشارات تصميم داخلي، تخطيط وتنفيذ المشاريع السكنية والتجارية. احجز استشارتك الآن لتحويل رؤيتك إلى واقع.`,
+      url: "https://ahmadmobayed.com",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "احجز استشارتك مع المهندس أحمد المبيض",
+      description:
+        "احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.",
+      images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+  aboutPage: {
+    title: `عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط`,
+    description: `تعرف على المهندس أحمد المبيض، خبير التصميم الداخلي والتخطيط. اكتشف رؤيته، خبرته، ومشاريعه الناجحة في تحويل المساحات إلى بيئات ملهمة.`,
+    keywords: `عن أحمد المبيض, خبرة تصميم داخلي, تخطيط مشاريع, سيرتي الذاتية, مشاريع ناجحة, تصميم منازل, تصميم مكاتب`,
+    openGraph: {
+      title: `عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط`,
+      description: `تعرف على المهندس أحمد المبيض، خبير التصميم الداخلي والتخطيط. اكتشف رؤيته، خبرته، ومشاريعه الناجحة في تحويل المساحات إلى بيئات ملهمة.`,
+      url: "https://ahmadmobayed.com/about",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط",
+      description:
+        "تعرف على المهندس أحمد المبيض، خبير التصميم الداخلي والتخطيط. اكتشف رؤيته، خبرته، ومشاريعه الناجحة في تحويل المساحات إلى بيئات ملهمة.",
+      images: ["https://eng.ahmadmobayed.com/hero.png"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+  bookingPage: {
+    title: `احجز استشارتك مع المهندس أحمد المبيض - تصميم داخلي وتخطيط`,
+    description: `احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.`,
+    keywords: `احجز استشارة, مهندس داخلي, تصميم داخلي, تخطيط مشاريع, تنفيذ ديكور, تصميم منازل, تصميم مكاتب, أحمد المبيض`,
+    openGraph: {
+      title: `احجز استشارتك مع المهندس أحمد المبيض - تصميم داخلي وتخطيط`,
+      description: `احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.`,
+      url: "https://ahmadmobayed.com/booking",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "احجز استشارتك مع المهندس أحمد المبيض",
+      description:
+        "احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.",
+      images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+};
+
+export const enMetaData = {
+  mainPage: {
+    title: `Eng. Ahmed Almobayd - Interior Design Consultation, Planning & Execution`,
+    description: `Eng. Ahmed Almobayd offers interior design consultation, planning, and execution for residential and commercial projects. Book your consultation now to transform your vision into reality.`,
+    keywords: `Interior Designer, Design Consultation, Project Planning, Decor Execution, Home Design, Office Design, Ahmed Almobayd`,
+    openGraph: {
+      title: `Eng. Ahmed Almobayd - Interior Design Consultation, Planning & Execution`,
+      description: `Eng. Ahmed Almobayd offers interior design consultation, planning, and execution for residential and commercial projects. Book your consultation now to transform your vision into reality.`,
+      url: "https://ahmadmobayed.com",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Book Your Consultation with Eng. Ahmed Almobayd",
+      description:
+        "Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.",
+      images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+  aboutPage: {
+    title: `About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning`,
+    description: `Learn about Eng. Ahmed Almobayd, an expert in interior design and planning. Discover his vision, expertise, and successful projects in transforming spaces into inspiring environments.`,
+    keywords: `About Ahmed Almobayd, Interior Design Expertise, Project Planning, Resume, Successful Projects, Home Design, Office Design`,
+    openGraph: {
+      title: `About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning`,
+      description: `Learn about Eng. Ahmed Almobayd, an expert in interior design and planning. Discover his vision, expertise, and successful projects in transforming spaces into inspiring environments.`,
+      url: "https://ahmadmobayed.com/about",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title:
+        "About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning",
+      description:
+        "Learn about Eng. Ahmed Almobayd, an expert in interior design and planning. Discover his vision, expertise, and successful projects in transforming spaces into inspiring environments.",
+      images: ["https://eng.ahmadmobayed.com/hero.png"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+  bookingPage: {
+    title: `Book Your Consultation with Eng. Ahmed Almobayd - Interior Design & Planning`,
+    description: `Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.`,
+    keywords: `Book Consultation, Interior Designer, Interior Design, Project Planning, Decor Execution, Home Design, Office Design, Ahmed Almobayd`,
+    openGraph: {
+      title: `Book Your Consultation with Eng. Ahmed Almobayd - Interior Design & Planning`,
+      description: `Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.`,
+      url: "https://ahmadmobayed.com/booking",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Book Your Consultation with Eng. Ahmed Almobayd",
+      description:
+        "Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.",
+      images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+};
