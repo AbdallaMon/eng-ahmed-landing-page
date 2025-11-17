@@ -1,5 +1,6 @@
 import { arAboutData } from "@/app/data/about";
 import { arBeforeAndAfter } from "@/app/data/BeforeAndAfter";
+import { arBooking } from "@/app/data/booking";
 import { arButtons } from "@/app/data/buttons";
 import { arCompanies } from "@/app/data/companies";
 
@@ -30,6 +31,7 @@ const translation = {
   successJourney: arSuccessJourney,
   testmonails: arTestmonials,
   faqs: arFaq,
+  booking: arBooking,
   footer: arFooter,
   buttons: arButtons,
 };

@@ -1,0 +1,26 @@
+import { TextField } from "@mui/material";
+
+export function TextInput({ input, value, lng, handleChange }) {
+  return (
+    <TextField
+      fullWidth
+      label={input.label}
+      name={input.id}
+      variant="outlined"
+      value={value}
+      onChange={handleChange}
+      slotProps={{
+        input: {
+          sx: {
+            borderRadius: 2,
+            "&:hover": {
+              "& fieldset": {
+                borderColor: "primary.main",
+              },
+            },
+          },
+        },
+      }}
+    />
+  );
+}

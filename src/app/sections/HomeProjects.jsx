@@ -6,7 +6,7 @@ export async function HomeProjects({ lng }) {
   const { t } = await getTranslation(lng);
   const data = t("projects", { returnObjects: true });
 
-  const homeProjects = data.filter((project) => project.isHome);
+  const homeProjects = data.filter((project) => project.isHome).reverse();
   return (
     <Container maxWidth="xl">
       <Grid container spacing={{ xs: 4, md: 3 }}>

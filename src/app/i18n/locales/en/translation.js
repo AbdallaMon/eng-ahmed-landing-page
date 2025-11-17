@@ -1,5 +1,6 @@
 import { enAboutData } from "@/app/data/about";
 import { enBeforeAndAfter } from "@/app/data/BeforeAndAfter";
+import { enBooking } from "@/app/data/booking";
 import { enButtons } from "@/app/data/buttons";
 import { enCompanies } from "@/app/data/companies";
 import { enFollowMeText } from "@/app/data/constants";
@@ -29,6 +30,7 @@ const translation = {
   successJourney: enSuccessJourney,
   testmonails: enTestmonials,
   faqs: enFaq,
+  booking: enBooking,
   footer: enFooter,
   buttons: enButtons,
 };

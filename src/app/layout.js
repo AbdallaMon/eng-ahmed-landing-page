@@ -7,6 +7,7 @@ import MUIProviders from "./providers/MUIProvider";
 import { Rubik } from "next/font/google";
 import Navigations from "./component/navigations/Navigations";
 import { cookies } from "next/headers";
+import ToastProvider from "./providers/ToastLoadingProvider";
 
 const rubic = Rubik({
   weight: ["400", "500", "600", "700"],
@@ -28,10 +29,12 @@ export default async function RootLayout({ children, params }) {
     <html lang={lng} dir={lng === "ar" ? "rtl" : "ltr"}>
       <body className={rubic.className}>
         <MUIProviders lng={lng}>
-          <Navbar lng={lng} />
+          <ToastProvider>
+            <Navbar lng={lng} />
 
-          {children}
-          <Footer lng={lng} />
+            {children}
+            <Footer lng={lng} />
+          </ToastProvider>
         </MUIProviders>
       </body>
     </html>

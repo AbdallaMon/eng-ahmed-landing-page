@@ -3,7 +3,7 @@ export const arButtons = {
   booking: {
     name: "احجز جلسة سريعة",
     href: "/booking",
-    icon: "./arrow-left.png",
+    icon: "/arrow-left.png",
   },
   viewPortfolio: { name: "شاهد بعض من أعمالي", href: "/projects" },
   readMore: { name: "اقرأ المزيد", href: "/blog" },
@@ -14,7 +14,12 @@ export const arButtons = {
 
 // English buttons
 export const enButtons = {
-  booking: { name: "Book a Quick Session", href: "/booking" },
+  booking: {
+    name: "Book a Quick Session",
+    href: "/booking",
+    icon: "/arrow-left.png",
+    lng: "en",
+  },
   viewPortfolio: { name: "View Some of My Work", href: "/projects" },
   readMore: { name: "Read More", href: "/blog" },
   watchVideo: { name: "Watch Video" },

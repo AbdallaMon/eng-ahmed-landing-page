@@ -79,7 +79,7 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
       button: { textTransform: "none", fontWeight: 600 },
     },
     breakpoints: {
-      values: { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1536, xxl: 1920 },
+      values: { xs: 0, sm: 600, md: 1000, lg: 1200, xl: 1536, xxl: 1920 },
     },
     components: {
       MuiCssBaseline: {
@@ -146,10 +146,18 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
       },
       MuiOutlinedInput: {
         styleOverrides: {
-          root: { borderRadius: 12 },
+          root: {
+            borderRadius: "12px !important",
+            boxShadow: `0 4px 12px ${alpha(primaryMain, 0.1)}`,
+          },
           notchedOutline: { borderColor: alpha(primaryMain, 0.25) },
           input: { "::placeholder": { opacity: 0.7 } },
         },
+        // THIS is the important part: the visible outline
+        // notchedOutline: {
+        //   borderColor: alpha(primaryMain, 0.25),
+        //   borderRadius: 1, // same as root (or whatever you want)
+        // },
       },
       MuiFormLabel: {
         styleOverrides: { root: { color: alpha(textPrimary, 0.7) } },
@@ -191,9 +199,6 @@ function buildTheme({ dir = "ltr", mode = "light" } = {}) {
     },
   });
 }
-
-const cacheRtl = createCache({ key: "muirtl", stylisPlugins: [rtlPlugin] });
-const cacheLtr = createCache({ key: "muiltr" });
 
 export default function MUIProviders({ lng, children, mode = "light" }) {
   const dir = lng === "ar" ? "rtl" : "ltr";

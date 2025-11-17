@@ -18,7 +18,7 @@ export const pageLanguages = [
 ];
 export const devloperName = "AbdallaMon";
 export const developerLink = "https://abdalla-webportfolio.vercel.app";
-export const siteEmail = "abdalla.mon@gmail.com";
+export const siteEmail = "info@ahmadmobayed.com";
 export const arFollowMeText = "تابعني على حساباتي الرسمية:";
 export const enFollowMeText = "Follow me on my official accounts:";
 
@@ -39,22 +39,22 @@ export const colors = {
 export const socialMediaIconsLinks = [
   {
     title: "YouTube",
-    href: "https://www.youtube.com/@engahmedalmobayed",
+    href: "https://www.youtube.com/@ahmadalmobayed",
     iconSrc: "/social-media/youtube.png",
   },
   {
     title: "Instagram",
-    href: "https://www.instagram.com/eng.ahmedalmobayed/",
+    href: "https://www.instagram.com/eng.ahmad_almobayed/?hl=ar",
     iconSrc: "/social-media/Instagram.png",
   },
   {
     title: "TikTok",
-    href: "https://www.tiktok.com/@engahmedalmobayed",
+    href: "https://www.tiktok.com/@ahmadmobayed",
     iconSrc: "/social-media/tiktok.png",
   },
   {
     title: "Mail",
-    href: "mailto:eng.ahmedalmobayed@gmail.com",
+    href: `mailto:${siteEmail}`,
     iconSrc: "/social-media/mail.png",
   },
 ];

@@ -244,7 +244,7 @@ export function NavbarClient({ navItems, lng, bookingButton }) {
           >
             <Box
               component="img"
-              src={"./logo.png"}
+              src={"/logo.png"}
               alt="Logo"
               fill
               // style={{ objectFit: "contain" }}
@@ -278,7 +278,7 @@ export function NavbarClient({ navItems, lng, bookingButton }) {
           <Box sx={{ p: 2, display: "flex", alignItems: "center" }}>
             <Box
               component="img"
-              src={"./logo.png"}
+              src={"/logo.png"}
               alt="Logo"
               fill
               // style={{ objectFit: "contain" }}

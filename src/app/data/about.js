@@ -9,17 +9,16 @@ const aboutImages = {
   aboutGradientLeft: "./about-gradient-left.png",
 };
 export const arAboutData = {
-  // title: "المهندس أحمد المبيض: تجربة شخصية وقصة نجاح ملهمة في التصميم والديكور",
   title: "المهندس أحمد المبيض:  صانع المساحات المبتكرة والجمال البصري",
   description:
-    "المهندس أحمد المبيض، مهندس معماري ومتخصص في التصميم الداخلي، صانع محتوى تجاوزت مشاهداته المليار. يقود شركتي دريم استديو ومتاجر وديكور ستورز، ويقدّم حلولًا مبتكرة للمشاريع السكنية والتجارية، إلى جانب تدريبه للمهندسين وتأليفه لكتب متخصصة، مما يجعله من أبرز الأسماء في المجال.",
+    " مهندس معماري ومتخصص في التصميم الداخلي، صانع محتوى تجاوزت مشاهداته المليار. يقود شركتي دريم استديو ومتاجر وديكور ستورز، ويقدّم حلولًا مبتكرة للمشاريع السكنية والتجارية، إلى جانب تدريبه للمهندسين وتأليفه لكتب متخصصة، مما يجعله من أبرز الأسماء في المجال.",
   aboutImages,
 };
 
 export const enAboutData = {
   title:
-    "Eng. Ahmed Al-Mobayed: A Personal Journey and Inspiring Success Story in Design and Decor",
+    "Engineer Ahmed Al-Mubayyid: Creator of Innovative Spaces and Visual Beauty",
   description:
-    "Eng> Ahmed El-Mobayed: Creator of Innovative Spaces and Visual Beauty",
+    "An architect and interior design specialist, and a content creator whose content has surpassed one billion views. He leads the companies Dream Studio and Metager & Decor Stores, and provides innovative solutions for residential and commercial projects, in addition to training engineers and authoring specialized books, which makes him one of the most prominent names in the field.",
   aboutImages,
 };

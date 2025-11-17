@@ -19,7 +19,7 @@ export default async function StagesSection({ lng }) {
               sx={{
                 textAlign: "center",
                 mb: { xs: 3, md: 5 },
-                mt: { xs: 14, md: 20 },
+                mt: { xs: 8, md: 16 },
               }}
             >
               <Typography

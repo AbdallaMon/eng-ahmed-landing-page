@@ -1,4 +1,4 @@
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Chip, Container, Grid } from "@mui/material";
 import { getTranslation } from "../i18n";
 
 export default async function page({ searchParams }) {
@@ -56,22 +56,43 @@ export default async function page({ searchParams }) {
     </Box>
   );
 }
+
 function ProjectCard({ data }) {
   return (
     <Box
       component="a"
       href={data.href}
       target="_blank"
+      rel="noreferrer"
+      className="project-card"
       sx={{
         width: "100%",
         height: "100%",
+        position: "relative",
+        display: "block",
+        textDecoration: "none",
       }}
     >
+      {/* Category chip */}
+      {data.category && (
+        <Box className="project-card__category">
+          <Chip
+            label={data.category}
+            size="small"
+            className="project-card__chip"
+          />
+        </Box>
+      )}
+
+      {/* Project image */}
       <Box
-        component={"img"}
+        component="img"
+        className="project-card__image"
         sx={{
           width: "100%",
           height: "100%",
+          display: "block",
+          objectFit: "cover",
         }}
         src={`./projects/project-${data.id}.png`}
         alt={data.name}

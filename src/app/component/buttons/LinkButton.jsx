@@ -10,6 +10,7 @@ export function LinkButton({
   borderColor,
   sx = {},
   onClick,
+  lng = "ar",
 }) {
   return (
     <Button
@@ -25,6 +26,7 @@ export function LinkButton({
         alignItems: "center",
         gap: 1,
         fontSize: { xs: "0.8rem", md: "1.1rem" },
+        flexDirection: lng === "en" ? "row-reverse" : "row",
         paddingX: {
           xs: "14px",
           md: "20px",

@@ -13,15 +13,8 @@ export async function BeforeAndAfterSection({ lng }) {
     <Box sx={{ mt: { xs: 4, md: 4 }, mb: { xs: 6, md: 12 } }}>
       <Container maxWidth="xl">
         <Box>
-          <Grid container spacing={{ xs: 3, md: 6, lg: 10, xl: 12 }}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <BeforeAndAfterSlider
-                beforeSrc={data.images.before}
-                afterSrc={data.images.after}
-                lng={lng}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
+          <Grid container spacing={{ xs: 3, md: 3 }}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Box
                 sx={{
                   px: { md: 2 },
@@ -67,6 +60,22 @@ export async function BeforeAndAfterSection({ lng }) {
                   />
                 </Box>
               </Box>{" "}
+            </Grid>
+            <Grid size={{ xs: 12, md: 8 }} container spacing={2}>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <BeforeAndAfterSlider
+                  beforeSrc={data.images.before[0]}
+                  afterSrc={data.images.after[0]}
+                  lng={lng}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <BeforeAndAfterSlider
+                  beforeSrc={data.images.before[1]}
+                  afterSrc={data.images.after[1]}
+                  lng={lng}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Box>

@@ -14,13 +14,11 @@ export const arProjects = [
       "./projects/project-1/6.png",
     ],
     cover: "./projects/project-1/1.png",
-    name: "شقة في هايت داهاك",
-    description: "شقة على ستايل لاكجري و«وابي-سابي».",
-    imageSrc: "./projects/home-project-1.png",
-    location: "مارينا دبي",
-    homeDescription:
-      "صممت شقة فاخرة في داماك هايت مع التركيز على التفاصيل المعمارية والفخامة",
-    isHome: true,
+    name: "مجلس رجال",
+    description: "مجلس علي ستايل كلاسيك لاكجري",
+
+    location: "ابو ظبي ،راس الخيمة",
+
     year: 2025,
     status: "مكتمل",
     category: "سكني",
@@ -38,11 +36,12 @@ export const arProjects = [
       "./projects/project-2/6.png",
     ],
     cover: "./projects/project-2/1.png",
-    name: "صالة مفتوحة",
-    description: "صالة مفتوحة مع طعام ومدخل ودرج على ستايل مودرن ريفي.",
-    location: "أبو ظبي، مدينة الرياض",
+    name: "مجلس خارجي",
+    description:
+      "مجلس خارجي مع طاولة طعام ومغاسل وحمام على ستايل مينيماليست لاكجري.",
+    location: "أبو ظبي، مدينة محمد بن زايد",
     year: 2025,
-    status: "قيد الإنشاء",
+    status: "مكتمل",
     category: "سكني",
   },
   {
@@ -79,10 +78,15 @@ export const arProjects = [
       "./projects/project-4/6.png",
     ],
     cover: "./projects/project-4/1.png",
-    name: "مجلس خارجي",
-    description:
-      "مجلس خارجي مع طاولة طعام ومغاسل وحمام على ستايل مينماليست لاكجري.",
-    location: "أبو ظبي، مدينة محمد بن زايد",
+    name: "شقة في داماك هايت",
+    description: "شقة على ستايل لاكجري وابي سابي",
+    homeDescription:
+      "صممت شقة فاخرة في داماك هايت مع التركيز على التفاصيل المعمارية والفخامة",
+    imageSrc: "./projects/home-project-3.png",
+
+    isHome: true,
+
+    location: "مارينا دبي",
     year: 2025,
     status: "مكتمل",
     category: "سكني",
@@ -100,11 +104,11 @@ export const arProjects = [
       "./projects/project-5/6.png",
     ],
     cover: "./projects/project-5/1.png",
-    name: "مجلس رجال",
-    description: "مجلس على ستايل كلاسيك لاكجري.",
-    location: "أبو ظبي، رأس الخيمة",
+    name: "صالة مفتوحة",
+    description: "صالة مفتوحة مع طعام ومدخل ودرج على ستايل مودرن ريفي.",
+    location: "أبو ظبي، مدينة الرياض",
     year: 2025,
-    status: "مكتمل",
+    status: "قيد الإنشاء",
     category: "سكني",
   },
   {
@@ -120,12 +124,17 @@ export const arProjects = [
       "./projects/project-6/6.png",
     ],
     cover: "./projects/project-6/1.png",
-    name: "مجلس مع استقبال",
-    description: "مجلس مع مقلط وحديقة على ستايل نيو كلاسيك لاكجري.",
-    location: "الرياض، السعودية",
-    year: 2024,
-    status: "تصميم",
-    category: "سكني",
+    name: "صالة انتظار",
+    description:
+      "مشروع عيادات في ابو ظبي تم توزيع المساحات واستغلالها لتتضمن صالة انتظار مع جلسة وبار ليتمكن الزائر الأنتظار دون ملل",
+    imageSrc: "./projects/home-project-2.png",
+    homeDescription:
+      "صممت مشروع صالة إنتظار مبتكرًا يجمع بين الجمالية والوظيفية لتجربة مريحة وفاخرة",
+    isHome: true,
+    location: "ابو ظبي",
+    year: 2025,
+    status: "مكتمل",
+    category: "تجاري",
   },
   {
     id: 7,
@@ -145,7 +154,7 @@ export const arProjects = [
       "مركز مساج داخل مركز تجميل يضم حمام مغربي وغرف مساج خاصة ومشالح مع مغاسل.",
     homeDescription:
       "صممت مركز تجميل عصريًا يوازن بين الراحة والفخامة مع مراعاة تدفق الحركة بدقة هندسية",
-    imageSrc: "./projects/home-project-2.png",
+    imageSrc: "./projects/home-project-1.png",
 
     isHome: true,
     location: "أبو ظبي، مدينة العين",
@@ -166,19 +175,13 @@ export const arProjects = [
       "./projects/project-8/6.png",
     ],
     cover: "./projects/project-8/1.png",
-    name: "صالة انتظار",
-    description:
-      "مشروع عيادات في أبو ظبي، تم توزيع المساحات لتتضمن صالة انتظار مع جلسة وبار لانتظار مريح بلا ملل.",
-    homeDescription:
-      "صممت مشروع صالة إنتظار مبتكرًا يجمع بين الجمالية والوظيفية لتجربة مريحة وفاخرة",
-    imageSrc: "./projects/home-project-3.png",
+    name: "مجلس مع استقبال",
+    description: "مجلس مع مقلط وحديقة على ستايل نيو كلاسيك لاكجري",
 
-    isHome: true,
-
-    location: "أبو ظبي",
-    year: 2025,
-    status: "مكتمل",
-    category: "تجاري",
+    location: "الرياض السعودية",
+    year: 2024,
+    status: "تصميم",
+    category: "سكني",
   },
   {
     id: 9,
@@ -217,15 +220,9 @@ export const enProjects = [
       "./projects/project-1/6.png",
     ],
     cover: "./projects/project-1/1.png",
-    name: "Apartment in Hayat Dahak",
-    description: "Luxury meets Wabi-Sabi in a refined apartment design.",
-    homeDescription:
-      "I designed a luxurious apartment in Damac Heights with meticulous attention to architectural detail and a sense of opulence.",
-    imageSrc: "./projects/home-project-1.png",
-
-    isHome: true,
-
-    location: "Dubai Marina, Dubai",
+    name: "Men's Majlis",
+    description: "Majlis in a classic luxury style",
+    location: "Abu Dhabi, Ras Al Khaimah",
     year: 2025,
     status: "Completed",
     category: "Residential",
@@ -243,12 +240,12 @@ export const enProjects = [
       "./projects/project-2/6.png",
     ],
     cover: "./projects/project-2/1.png",
-    name: "Open-Plan Lounge",
+    name: "Outdoor Majlis",
     description:
-      "An open-plan lounge with dining, entryway, and staircase in modern rustic style.",
-    location: "Madinat Al Riyadh, Abu Dhabi",
+      "Outdoor majlis with dining table, wash basins and bathroom in a minimalist luxury style.",
+    location: "Abu Dhabi, Mohammed Bin Zayed City",
     year: 2025,
-    status: "Under Construction",
+    status: "Completed",
     category: "Residential",
   },
   {
@@ -264,10 +261,10 @@ export const enProjects = [
       "./projects/project-3/6.png",
     ],
     cover: "./projects/project-3/1.png",
-    name: "Open Lounge with Courtyard",
+    name: "Open Hall with Garden",
     description:
-      "Reception and living area with a central courtyard—minimal contemporary soul of the home.",
-    location: "Baghdad, Iraq",
+      "Reception hall with living area and a central garden that became the heart of the home in a modern minimalist style.",
+    location: "Iraq, Baghdad",
     year: 2024,
     status: "Design",
     category: "Residential",
@@ -285,10 +282,13 @@ export const enProjects = [
       "./projects/project-4/6.png",
     ],
     cover: "./projects/project-4/1.png",
-    name: "Outdoor Majlis",
-    description:
-      "An outdoor majlis with dining table, wash area, and bathroom in minimalist luxury.",
-    location: "MBZ City, Abu Dhabi",
+    name: "Apartment in Damac Heights",
+    description: "Apartment in a luxury and wabi-sabi style",
+    homeDescription:
+      "I designed a luxury apartment in Damac Heights with a focus on architectural details and opulence",
+    imageSrc: "./projects/home-project-3.png",
+    isHome: true,
+    location: "Dubai Marina",
     year: 2025,
     status: "Completed",
     category: "Residential",
@@ -306,11 +306,12 @@ export const enProjects = [
       "./projects/project-5/6.png",
     ],
     cover: "./projects/project-5/1.png",
-    name: "Men’s Majlis",
-    description: "A classic luxury majlis tailored for formal gatherings.",
-    location: "Abu Dhabi & Ras Al Khaimah",
+    name: "Open Hall",
+    description:
+      "Open hall with dining area, entrance and staircase in a modern rustic style.",
+    location: "Abu Dhabi, Riyadh City",
     year: 2025,
-    status: "Completed",
+    status: "Under Construction",
     category: "Residential",
   },
   {
@@ -326,13 +327,17 @@ export const enProjects = [
       "./projects/project-6/6.png",
     ],
     cover: "./projects/project-6/1.png",
-    name: "Majlis with Reception",
+    name: "Waiting Lounge",
     description:
-      "A neo-classic luxury majlis with dining (maqlat) and a garden feature.",
-    location: "Riyadh, Saudi Arabia",
-    year: 2024,
-    status: "Design",
-    category: "Residential",
+      "Clinic project in Abu Dhabi where spaces were laid out and optimized to include a waiting lounge with seating and a bar so visitors can wait without boredom.",
+    imageSrc: "./projects/home-project-2.png",
+    homeDescription:
+      "I designed an innovative waiting lounge project that combines aesthetics and functionality for a comfortable, luxurious experience",
+    isHome: true,
+    location: "Abu Dhabi",
+    year: 2025,
+    status: "Completed",
+    category: "Commercial",
   },
   {
     id: 7,
@@ -349,13 +354,12 @@ export const enProjects = [
     cover: "./projects/project-7/1.png",
     name: "Beauty Center",
     description:
-      "Massage center inside a salon: Moroccan bath, private therapy rooms, changing areas, and wash stations.",
+      "Massage center inside a beauty center featuring a Moroccan bath, private massage rooms, changing rooms and wash basins.",
     homeDescription:
-      "I designed a modern beauty center that balances comfort and luxury, carefully considering flow and movement with engineering precision.",
-    imageSrc: "./projects/home-project-2.png",
-
+      "I designed a contemporary beauty center that balances comfort and luxury while carefully considering circulation flow",
+    imageSrc: "./projects/home-project-1.png",
     isHome: true,
-    location: "Al Ain, Abu Dhabi",
+    location: "Abu Dhabi, Al Ain City",
     year: 2025,
     status: "Design Completed",
     category: "Commercial",
@@ -373,19 +377,13 @@ export const enProjects = [
       "./projects/project-8/6.png",
     ],
     cover: "./projects/project-8/1.png",
-    name: "Waiting Lounge",
-    homeDescription:
-      "I designed an innovative waiting lounge that blends aesthetics with functionality to offer a comfortable, luxurious experience.",
-    imageSrc: "./projects/home-project-3.png",
-
-    isHome: true,
-
+    name: "Majlis with Reception",
     description:
-      "Clinic project in Abu Dhabi with optimized layout: waiting lounge, seating, and bar for a pleasant wait.",
-    location: "Abu Dhabi",
-    year: 2025,
-    status: "Completed",
-    category: "Commercial",
+      "Majlis with dining area and garden in a neo-classical luxury style",
+    location: "Riyadh, Saudi Arabia",
+    year: 2024,
+    status: "Design",
+    category: "Residential",
   },
   {
     id: 9,
@@ -402,10 +400,10 @@ export const enProjects = [
     cover: "./projects/project-9/1.png",
     name: "Private Office",
     description:
-      "Specialized office for AISCO (HVAC): director’s room, two workrooms, meeting room, two bathrooms, service pantry, and archive.",
-    location: "Bani Yas, Abu Dhabi",
+      "Office for Aysco company specialized in HVAC works: manager's office, two work rooms, meeting room, two bathrooms, service pantry and archive.",
+    location: "Abu Dhabi, Baniyas",
     year: 2025,
-    status: "Design & Build Completed",
+    status: "Design and Execution Completed",
     category: "Commercial",
   },
 ];

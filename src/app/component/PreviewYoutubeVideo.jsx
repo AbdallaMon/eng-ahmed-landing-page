@@ -12,12 +12,8 @@ import {
   Typography,
 } from "@mui/material";
 import { IoClose } from "react-icons/io5";
-import { LinkButton } from "./buttons/LinkButton";
-import { colors } from "../data/constants";
 
-export function SuccessJourneyClient({
-  children,
-  buttons,
+export function PreviewYoutubeVideo({
   imageBannerSrc,
   videoUrl = "https://www.youtube.com/embed/Ovh-UNeKgVQ",
 }) {
@@ -30,68 +26,21 @@ export function SuccessJourneyClient({
 
   return (
     <>
-      {/* Image column */}
-      <Grid size={{ xs: 12, md: 6 }}>
-        <Box
-          component="img"
-          sx={{
-            maxWidth: "100%",
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: 1,
-            cursor: "pointer",
-          }}
-          src={imageBannerSrc}
-          alt=""
-          onClick={handleOpen}
-        />
-      </Grid>
+      <Box
+        component="img"
+        sx={{
+          maxWidth: "100%",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          borderRadius: 1,
+          cursor: "pointer",
+        }}
+        src={imageBannerSrc}
+        alt=""
+        onClick={handleOpen}
+      />
 
-      {/* Text + buttons column */}
-      <Grid size={{ xs: 12, md: 6 }} sx={{ py: { xs: 3, md: 6 } }}>
-        {children}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            mb: { xs: 4, md: 0 },
-          }}
-        >
-          <LinkButton
-            {...buttons.booking}
-            borderColor={colors.primary}
-            bgColor={colors.primary}
-            textColor={colors.white}
-            sx={{
-              mt: 1.5,
-              fontSize: {
-                xs: "0.8rem",
-                md: "1rem",
-              },
-            }}
-            icon={"./arrow-left.png"}
-          />
-
-          <LinkButton
-            {...buttons.watchVideo}
-            borderColor={colors.teritary}
-            bgColor={colors.teritary}
-            textColor={colors.primary}
-            sx={{
-              mt: 1.5,
-              fontSize: {
-                xs: "0.8rem",
-                md: "1.1rem",
-              },
-            }}
-            onClick={handleOpen} // override / add click handler
-          />
-        </Box>
-      </Grid>
-
-      {/* Video dialog */}
       <Dialog
         open={open}
         onClose={handleClose}

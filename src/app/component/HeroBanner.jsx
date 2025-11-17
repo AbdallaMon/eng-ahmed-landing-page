@@ -119,8 +119,7 @@ export function HeroBanner({ data, lng }) {
       duration: 0.4,
       ease: "power3.out",
     });
-    console.log(percentage, "percentage");
-    console.log(doubleMiddle, "percentage");
+ 
 
     if (isMobile) {
       const opacityValue =

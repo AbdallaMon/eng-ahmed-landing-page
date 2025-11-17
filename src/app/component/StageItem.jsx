@@ -38,10 +38,25 @@ export default function StageItem({ title, subTitle, description }) {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              fontSize: {
+                xs: "1rem",
+                md: "1.25rem",
+              },
+            }}
+          >
             {title}
           </Typography>
-          <Typography variant="body1" sx={{ color: "text.primary" }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.primary",
+              fontSize: { xs: "0.9rem", md: "1.05rem" },
+            }}
+          >
             {subTitle}
           </Typography>
         </Box>
@@ -50,11 +65,12 @@ export default function StageItem({ title, subTitle, description }) {
         <Button
           onClick={() => setOpen((p) => !p)}
           variant={"contained"}
-          //   color={!open ? "primary" : "inherit"}
           sx={{
             minWidth: 140,
             backgroundColor: open ? colors.highlight : colors.primary,
             color: open ? colors.primary : colors.white,
+            fontSize: { xs: "0.75rem", md: "1rem" },
+            px: { xs: 1, md: 2 },
           }}
         >
           {lng === "ar"
@@ -81,6 +97,7 @@ export default function StageItem({ title, subTitle, description }) {
             color: "text.primary",
             whiteSpace: "pre-wrap",
             // textAlign: "right",
+            fontSize: { xs: "0.9rem", md: "1.1rem" },
           }}
         >
           {description}

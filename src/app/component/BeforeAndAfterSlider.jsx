@@ -91,7 +91,7 @@ export default function BeforeAndAfterSlider({
         maxWidth: "600px",
         mx: "auto",
         // aspectRatio: "4 / 3",
-        height: { xs: 400, md: 500 },
+        height: { xs: 450, md: 600 },
         overflow: "hidden",
         borderRadius: 0.5,
         boxShadow: 3,

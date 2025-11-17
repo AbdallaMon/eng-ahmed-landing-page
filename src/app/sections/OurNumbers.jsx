@@ -16,7 +16,10 @@ export async function OurNumbersSection({ lng }) {
   const buttons = t("buttons", { returnObjects: true });
   const order = ["right", "middle", "left"];
   return (
-    <Box component="section" sx={{ py: { xs: 6, md: 28 } }}>
+    <Box
+      component="section"
+      sx={{ pt: { xs: 4, md: 11 }, pb: { xs: 6, md: 15 } }}
+    >
       <Container maxWidth="lg">
         <Typography
           variant="h4"
