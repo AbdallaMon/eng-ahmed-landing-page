@@ -52,7 +52,7 @@ export function BookingPage({ bookingData, lng }) {
               backgroundColor: "#fff",
               width: "100%",
               ml: { md: "-100px" },
-              mt: { xs: "-100px", md: 0 },
+              mt: { xs: "-140px", md: 0 },
               height: { md: "95%" },
               my: { md: "auto !important" },
             }}

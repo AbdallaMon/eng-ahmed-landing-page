@@ -7,6 +7,7 @@ import { arCompanies } from "@/app/data/companies";
 import { arFollowMeText } from "@/app/data/constants";
 import { arFaq } from "@/app/data/FAQData";
 import { arHero } from "@/app/data/hero";
+import { arMainPageData } from "@/app/data/mainPage";
 import { arFooter, arNavbar } from "@/app/data/navigations";
 import { arOurNumbersData } from "@/app/data/our-numbers";
 import { arProjects } from "@/app/data/projects";
@@ -18,6 +19,7 @@ import { arVisionData } from "@/app/data/vision";
 
 const translation = {
   navBar: arNavbar,
+  main: arMainPageData,
   hero: arHero,
   vission: arVisionData,
   about: arAboutData,

@@ -8,7 +8,7 @@ export function TextInput({ input, value, lng, handleChange }) {
       name={input.id}
       variant="outlined"
       value={value}
-      onChange={handleChange}
+      onChange={(event) => handleChange(event.target.value, input.id)}
       slotProps={{
         input: {
           sx: {

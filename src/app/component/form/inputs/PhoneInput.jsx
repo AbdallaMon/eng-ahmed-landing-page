@@ -33,7 +33,7 @@ export function PhoneInput({ input, value, lng, handleChange }) {
       name={input.id}
       label={input.label}
       loading={loading}
-      onChange={handleChange}
+      onChange={(value) => handleChange(value, input.id)}
       error={matchIsValidTel(value) || value === "" ? false : true}
       helperText={
         matchIsValidTel(value) || value === ""

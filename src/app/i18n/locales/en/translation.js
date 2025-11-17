@@ -6,6 +6,7 @@ import { enCompanies } from "@/app/data/companies";
 import { enFollowMeText } from "@/app/data/constants";
 import { enFaq } from "@/app/data/FAQData";
 import { enHero } from "@/app/data/hero";
+import { enMainPageData } from "@/app/data/mainPage";
 import { enFooter, enNavbar } from "@/app/data/navigations";
 import { enOurNumbersData } from "@/app/data/our-numbers";
 import { enProjects } from "@/app/data/projects";
@@ -17,6 +18,7 @@ import { enVisionData } from "@/app/data/vision";
 
 const translation = {
   navBar: enNavbar,
+  main: enMainPageData,
   hero: enHero,
   vission: enVisionData,
   about: enAboutData,
