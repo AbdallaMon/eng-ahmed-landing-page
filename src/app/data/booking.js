@@ -24,7 +24,7 @@ export const arBooking = {
       isRequired: true,
     },
   ],
-  buttonText: "احجز الأن 39 دولار",
+  buttonText: "احجز الأن مجانا",
   callToActionText: {
     light: "وقتك ووقتنا ثمين، في حال لم نتمكن من تقديم الحل المناسب لك، ",
     highlight: "سيتم استرجاع المبلغ المدفوع بالكامل.",
@@ -57,7 +57,7 @@ export const enBooking = {
       isRequired: true,
     },
   ],
-  buttonText: "Book Now $39",
+  buttonText: "Book Now for Free",
   callToActionText: {
     light:
       "Your time and ours are valuable, if we cannot provide the right solution for you, ",

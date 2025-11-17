@@ -84,7 +84,7 @@ export function BookingPage({ bookingData, lng }) {
               </Typography>
             </Box>
             <BookingForm bookingData={bookingData} lng={lng} />
-            <Box
+            {/* <Box
               sx={{
                 mt: 4,
                 textAlign: "center",
@@ -105,7 +105,7 @@ export function BookingPage({ bookingData, lng }) {
               >
                 {bookingData.callToActionText.highlight}
               </Typography>
-            </Box>
+            </Box> */}
           </Paper>
         </Grid>
       </Grid>

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
-import { MainPage } from "./component/pages/MainPage";
 import { getTranslation } from "./i18n";
+import { MainPage } from "./component/pages/MainPage";
 
 export default async function Home({ searchParams }) {
   const awaitedSearchParams = await searchParams;
