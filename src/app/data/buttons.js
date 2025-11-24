@@ -10,6 +10,11 @@ export const arButtons = {
   watchVideo: { name: "شاهد الفيديو" },
   filter: { name: "تصفية", href: "/projects?filter=all" },
   search: { name: "بحث", href: "/search" },
+  viewAllProjects: {
+    name: "شاهد جميع المشاريع",
+    href: "/projects",
+    icon: "/arrow-left.png",
+  },
 };
 
 // English buttons
@@ -25,4 +30,9 @@ export const enButtons = {
   watchVideo: { name: "Watch Video" },
   filter: { name: "Filter", href: "/projects?filter=all" },
   search: { name: "Search", href: "/search" },
+  viewAllProjects: {
+    name: "View All Projects",
+    href: "/projects",
+    icon: "/arrow-left.png",
+  },
 };

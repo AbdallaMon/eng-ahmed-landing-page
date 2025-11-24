@@ -19,7 +19,6 @@ export default function CTACard({ data }) {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          maxWidth: { xs: "220px", md: "300px" },
           mx: "auto",
           gap: { xs: 2.2, md: 3 },
         }}
@@ -28,7 +27,7 @@ export default function CTACard({ data }) {
           variant="h4"
           sx={{
             color: "primary.main",
-            fontSize: { xs: "1.1rem", md: "1.5rem" },
+            fontSize: { xs: "1.3rem", md: "1.7rem" },
           }}
         >
           {data.title}
@@ -38,9 +37,11 @@ export default function CTACard({ data }) {
           variant="body1"
           sx={{
             lineHeight: { xs: "17px", md: "23px" },
+            maxWidth: { xs: "220px", md: "300px" },
+
             fontSize: {
-              xs: "0.7rem",
-              md: "1rem",
+              xs: "0.9rem",
+              md: "1.1rem",
             },
           }}
         >

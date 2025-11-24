@@ -1,17 +1,15 @@
 import { arAboutData } from "@/app/data/about";
 import { arBeforeAndAfter } from "@/app/data/BeforeAndAfter";
 import { arBooking } from "@/app/data/booking";
+import { arBooksAndCoursesData } from "@/app/data/booksAndCourses";
 import { arButtons } from "@/app/data/buttons";
 import { arCompanies } from "@/app/data/companies";
 
 import { arFollowMeText } from "@/app/data/constants";
 import { arFaq } from "@/app/data/FAQData";
 import { arHero } from "@/app/data/hero";
-import {
-  arBooksAndCoursesData,
-  arMainPageData,
-  bookAndCoursesData,
-} from "@/app/data/mainPage";
+import { arHomeProjectsSection } from "@/app/data/homeProjectsSection";
+import { arMainPageData } from "@/app/data/mainPage";
 import { arMetaData } from "@/app/data/meta";
 import { arFooter, arNavbar } from "@/app/data/navigations";
 import { arOurNumbersData } from "@/app/data/our-numbers";
@@ -26,6 +24,7 @@ const translation = {
   navBar: arNavbar,
   main: arMainPageData,
   bookAndCourses: arBooksAndCoursesData,
+  homeProjectsSection: arHomeProjectsSection,
   hero: arHero,
   vission: arVisionData,
   about: arAboutData,

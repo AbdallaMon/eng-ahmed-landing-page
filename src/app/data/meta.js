@@ -68,6 +68,29 @@ export const arMetaData = {
       apple: "/favicon.ico",
     },
   },
+  projectsPage: {
+    title: `مشاريع المهندس أحمد المبيض - تصميم داخلي وتنفيذ`,
+    description: `استكشف مشاريع المهندس أحمد المبيض في التصميم الداخلي والتنفيذ. شاهد كيف يحول الأفكار إلى مساحات عملية وجميلة تلبي احتياجات العملاء.`,
+    keywords: `مشاريع أحمد المبيض, تصميم داخلي, تنفيذ ديكور, تخطيط مشاريع, تصميم منازل, تصميم مكاتب, أمثلة مشاريع`,
+    openGraph: {
+      title: `مشاريع المهندس أحمد المبيض - تصميم داخلي وتنفيذ`,
+      description: `استكشف مشاريع المهندس أحمد المبيض في التصميم الداخلي والتنفيذ. شاهد كيف يحول الأفكار إلى مساحات عملية وجميلة تلبي احتياجات العملاء.`,
+      url: "https://ahmadmobayed.com/projects",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "مشاريع المهندس أحمد المبيض - تصميم داخلي وتنفيذ",
+      description:
+        "استكشف مشاريع المهندس أحمد المبيض في التصميم الداخلي والتنفيذ. شاهد كيف يحول الأفكار إلى مساحات عملية وجميلة تلبي احتياجات العملاء.",
+      images: ["https://eng.ahmadmobayed.com/hero.png"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
 };
 
 export const enMetaData = {
@@ -134,6 +157,29 @@ export const enMetaData = {
       description:
         "Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.",
       images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+  projectsPage: {
+    title: `Eng. Ahmed Almobayd's Projects - Interior Design & Execution`,
+    description: `Explore Eng. Ahmed Almobayd's projects in interior design and execution. See how he transforms ideas into functional and beautiful spaces that meet clients' needs.`,
+    keywords: `Ahmed Almobayd Projects, Interior Design, Decor Execution, Project Planning, Home Design, Office Design, Project Examples`,
+    openGraph: {
+      title: `Eng. Ahmed Almobayd's Projects - Interior Design & Execution`,
+      description: `Explore Eng. Ahmed Almobayd's projects in interior design and execution. See how he transforms ideas into functional and beautiful spaces that meet clients' needs.`,
+      url: "https://ahmadmobayed.com/projects",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Eng. Ahmed Almobayd's Projects - Interior Design & Execution",
+      description:
+        "Explore Eng. Ahmed Almobayd's projects in interior design and execution. See how he transforms ideas into functional and beautiful spaces that meet clients' needs.",
+      images: ["https://eng.ahmadmobayed.com/hero.png"],
     },
     icons: {
       icon: "/favicon.ico",

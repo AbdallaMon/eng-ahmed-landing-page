@@ -4,7 +4,6 @@ import { imageBannerMobileSrc, imageBannerSrc } from "@/app/data/constants";
 import { PreviewYoutubeVideo } from "../../PreviewYoutubeVideo";
 
 export function BookingPage({ bookingData, lng }) {
-  console.log(bookingData, "bookingData in BookingPage");
   return (
     <Container maxWidth="xl">
       <Grid

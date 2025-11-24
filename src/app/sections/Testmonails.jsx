@@ -51,6 +51,8 @@ export async function Testmonails({ lng }) {
                 sx={{
                   display: "flex",
                   justifyContent: "center",
+                  position: "relative",
+                  zIndex: 100,
                 }}
               >
                 <LinkButton
@@ -101,11 +103,7 @@ export async function Testmonails({ lng }) {
               display: { xs: "block", md: "none" },
             }}
           />
-          <TestmonailsSlider data={data} rtl={lng === "ar"}>
-            {/* {data.reviews.map((review, index) => (
-                <TestMonailCard key={index} data={review} />
-              ))} */}
-          </TestmonailsSlider>
+          <TestmonailsSlider data={data} rtl={lng === "ar"}></TestmonailsSlider>
         </Container>
       </Box>
     </>

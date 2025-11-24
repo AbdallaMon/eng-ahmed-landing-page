@@ -3,10 +3,10 @@ export const arTestmonials = {
   subTitle: "2,157 شخصًا عبّروا عن رضاهم عن تصاميم المهندس أحمد",
   reviews: [
     {
-      text: "كل نقطة ناقشناها في الجلسة الأولى شفتها تنفذت على أرض الواقع بكل التفاصيل، ما في شيء عشوائي.",
+      text: "كل نقطة ناقشناها في الجلسة الأولى شفتها تنفذت على أرض الواقع بكل التفاصيل، مع شوية تعديلات بسيطة أثناء التنفيذ.",
       name: "علي البلوشي",
       country: "عمان",
-      rating: 5,
+      rating: 4,
       avatar: "./testmonials/ali.png",
     },
     {
@@ -24,24 +24,24 @@ export const arTestmonials = {
       avatar: "./testmonials/maha.png",
     },
     {
-      text: "جلسة تحليل المشروع وضحت لي أخطاء كبيرة في المخطط قبل ما أبدأ التنفيذ، وفرّت علي مبالغ ما كنت منتبه لها.",
+      text: "جلسة تحليل المشروع وضحت لي أخطاء كبيرة في المخطط قبل ما أبدأ التنفيذ، وفرّت علي مبالغ ما كنت منتبه لها، مع بعض الملاحظات اللي تم تعديل أغلبها.",
       name: "سعيد القحطاني",
       country: "السعودية",
-      rating: 5,
+      rating: 4.5,
       avatar: "./testmonials/saeed.png",
     },
     {
-      text: "اهتموا بكل زاوية في البيت، من توزيع الإضاءة إلى أماكن التخزين، النتيجة كانت عملية وجميلة في نفس الوقت.",
+      text: "اهتموا بكل زاوية في البيت، من توزيع الإضاءة إلى أماكن التخزين، النتيجة كانت عملية وجميلة في نفس الوقت، احتجنا نراجع توزيع الإضاءة أكثر من مرة بس النتيجة النهائية كانت مرضية.",
       name: "نورة العبدالله",
       country: "السعودية",
-      rating: 5,
+      rating: 4.5,
       avatar: "./testmonials/noura.png",
     },
     {
-      text: "أكثر شيء حبيته وضوح خطوات العمل من أول مكالمة إلى التسليم، ما حسّيت بأي فوضى أو ضياع في المعلومات.",
+      text: "أكثر شيء حبيته وضوح خطوات العمل من أول مكالمة إلى التسليم، ما حسّيت بأي فوضى أو ضياع في المعلومات، بعض المراحل أخذت وقت أطول من المتوقع لكن التواصل كان واضح.",
       name: "عبدالله الأنصاري",
       country: "قطر",
-      rating: 5,
+      rating: 4.5,
       avatar: "./testmonials/abdullah.png",
     },
     {
@@ -52,10 +52,10 @@ export const arTestmonials = {
       avatar: "./testmonials/sara.png",
     },
     {
-      text: "احترموا ميزانيتي واقترحوا خيارات بديلة للمواد تعطي نفس الإحساس بس بتكلفة أقل.",
+      text: "احترموا ميزانيتي واقترحوا خيارات بديلة للمواد تعطي نفس الإحساس بس بتكلفة أقل، بعض المواد تأخرت شوي في التوريد بس النتيجة النهائية ممتازة.",
       name: "محمد الحارثي",
       country: "عمان",
-      rating: 5,
+      rating: 4,
       avatar: "./testmonials/mohammed.png",
     },
     {
@@ -66,10 +66,10 @@ export const arTestmonials = {
       avatar: "./testmonials/khalid.png",
     },
     {
-      text: "فريق العمل متعاون وسريع في الرد، أي ملاحظة كنا نرسلها يتم تعديلها بنفس اليوم تقريباً.",
+      text: "فريق العمل متعاون وسريع في الرد بشكل عام، بعض التعديلات أخذت وقت أطول من اللي توقعناه لكن النتيجة في النهاية كانت مرضية.",
       name: "ريم الجبوري",
       country: "العراق",
-      rating: 5,
+      rating: 3.5,
       avatar: "./testmonials/reem.png",
     },
     {
@@ -116,10 +116,10 @@ export const enTestmonials = {
     "2,157 people have expressed their satisfaction with Ahmed's designs",
   reviews: [
     {
-      text: "Every point we discussed in the first session was implemented on site with all the details—nothing was random.",
+      text: "Every point we discussed in the first session was implemented on site with all the details, with a few small adjustments during execution.",
       name: "Ali Al Balushi",
       country: "Oman",
-      rating: 5,
+      rating: 4,
       avatar: "./testmonials/ali.png",
     },
     {
@@ -137,24 +137,24 @@ export const enTestmonials = {
       avatar: "./testmonials/maha.png",
     },
     {
-      text: "The project analysis session revealed major issues in the plan before execution and saved me costs I wasn’t aware of.",
+      text: "The project analysis session revealed major issues in the plan before execution and saved me costs I wasn’t aware of, with a few comments that were mostly addressed.",
       name: "Saeed Al Qahtani",
       country: "Saudi Arabia",
-      rating: 5,
+      rating: 4.5,
       avatar: "./testmonials/saeed.png",
     },
     {
-      text: "They cared about every corner of the house, from the lighting layout to storage spaces. The result is practical and beautiful at the same time.",
+      text: "They cared about every corner of the house, from the lighting layout to storage spaces. The result is practical and beautiful at the same time, and we had to review the lighting layout more than once, but the final outcome was satisfying.",
       name: "Noura Al Abdullah",
       country: "Saudi Arabia",
-      rating: 5,
+      rating: 4.5,
       avatar: "./testmonials/noura.png",
     },
     {
-      text: "What I loved most was how clear the workflow was from the first call to delivery; I never felt any chaos or lost information.",
+      text: "What I loved most was how clear the workflow was from the first call to delivery; I never felt any chaos or lost information, and although some stages took longer than expected, communication was always clear.",
       name: "Abdullah Al Ansari",
       country: "Qatar",
-      rating: 5,
+      rating: 4.5,
       avatar: "./testmonials/abdullah.png",
     },
     {
@@ -165,10 +165,10 @@ export const enTestmonials = {
       avatar: "./testmonials/sara.png",
     },
     {
-      text: "They respected my budget and suggested alternative materials that gave the same feel at a lower cost.",
+      text: "They respected my budget and suggested alternative materials that gave the same feel at a lower cost, although some materials were slightly delayed in delivery, the final result was excellent.",
       name: "Mohammed Al Harthi",
       country: "Oman",
-      rating: 5,
+      rating: 4,
       avatar: "./testmonials/mohammed.png",
     },
     {
@@ -179,10 +179,10 @@ export const enTestmonials = {
       avatar: "./testmonials/khalid.png",
     },
     {
-      text: "The team is cooperative and quick to respond; any comment we sent was usually adjusted the same day.",
+      text: "The team is cooperative and generally quick to respond; some changes took longer than we expected, but the result was satisfactory in the end.",
       name: "Reem Al Jabouri",
       country: "Iraq",
-      rating: 5,
+      rating: 3.5,
       avatar: "./testmonials/reem.png",
     },
     {

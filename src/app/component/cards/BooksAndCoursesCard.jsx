@@ -61,7 +61,14 @@ export function BooksAndCoursesCard({ cardData, lng }) {
           justifyContent: "center",
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            height: { xs: "100px", md: "200px" },
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Typography
             variant="h3"
             sx={{
@@ -72,6 +79,12 @@ export function BooksAndCoursesCard({ cardData, lng }) {
           >
             {cardData.title}
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            height: "100%",
+          }}
+        >
           <Typography
             variant="body1"
             sx={{
@@ -83,19 +96,19 @@ export function BooksAndCoursesCard({ cardData, lng }) {
           >
             {cardData.subTitle}
           </Typography>
+          <LinkButton
+            href={cardData.href}
+            bgColor={colors.highlight}
+            textColor={colors.primary}
+            borderColor={colors.primary}
+            name={cardData.buttonText}
+            sx={{
+              textAlign: "center",
+              paddingX: 3,
+              fontSize: { xs: "0.7rem", md: "0.9rem" },
+            }}
+          />
         </Box>
-        <LinkButton
-          href={cardData.href}
-          bgColor={colors.highlight}
-          textColor={colors.primary}
-          borderColor={colors.primary}
-          name={cardData.buttonText}
-          sx={{
-            textAlign: "center",
-            paddingX: 3,
-            fontSize: { xs: "0.7rem", md: "0.9rem" },
-          }}
-        />
       </Box>
     </Box>
   );

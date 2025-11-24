@@ -12,7 +12,7 @@ export const enBeforeAndAfter = {
   description:
     "Explore how we transform initial ideas into fully realized architectural designs that balance beauty and function. Every project tells the story of our craft—precision details, thoughtful lighting, and perfect spatial flow—so each place becomes uniquely elegant and effortlessly livable.",
   images: {
-    before: "./before.png",
-    after: "./after.png",
+    before: ["./before.png", "./before-1.jpg"],
+    after: ["./after.png", "./after-1.png"],
   },
 };

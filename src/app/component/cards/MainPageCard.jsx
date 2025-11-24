@@ -5,8 +5,11 @@ export function MainPageCard({ data, lng }) {
     <Box
       component="a"
       href={data.href}
+      target="_blank"
+      rel="noopener noreferrer"
       sx={{
         display: "block",
+        px: { xs: 8, md: 0 },
       }}
     >
       <Box
@@ -69,7 +72,7 @@ export function MainPageCard({ data, lng }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          mt: { xs: 1.5, md: 2 },
+          mt: { xs: 0.5, md: 2 },
           textAlign: "center",
         }}
       >

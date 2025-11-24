@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 
-export default function HomeProjectCard({
+export default function ProjectCard({
   id,
   imageSrc,
   imgAlt = "Project image",
@@ -24,6 +24,10 @@ export default function HomeProjectCard({
         position: "relative",
         backgroundColor: "transparent",
         boxShadow: "none",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
       }}
     >
       {/* Image on top */}
@@ -72,7 +76,15 @@ export default function HomeProjectCard({
       </CardActionArea>
 
       {/* Description + Button */}
-      <CardContent sx={{ pt: 2 }}>
+      <CardContent
+        sx={{
+          pt: 2,
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
         {description ? (
           <Typography
             variant="body1"

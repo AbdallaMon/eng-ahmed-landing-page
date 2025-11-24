@@ -3,8 +3,10 @@
 export const arProjects = [
   {
     id: 1,
+    relatedIds: [2, 5, 4, 8],
     slug: "project-1",
     href: "/projects/1",
+    imagesNumbers: 8,
     images: [
       "./projects/project-1/1.png",
       "./projects/project-1/2.png",
@@ -13,20 +15,21 @@ export const arProjects = [
       "./projects/project-1/5.png",
       "./projects/project-1/6.png",
     ],
-    cover: "./projects/project-1/1.png",
+    cover: "/projects/project-1/1.png",
     name: "مجلس رجال",
     description: "مجلس علي ستايل كلاسيك لاكجري",
-
     location: "ابو ظبي ،راس الخيمة",
-
     year: 2025,
     status: "مكتمل",
     category: "سكني",
   },
   {
     id: 2,
+    relatedIds: [1, 5, 8],
     slug: "project-2",
     href: "/projects/2",
+    imagesNumbers: 17,
+
     images: [
       "./projects/project-2/1.png",
       "./projects/project-2/2.png",
@@ -35,7 +38,7 @@ export const arProjects = [
       "./projects/project-2/5.png",
       "./projects/project-2/6.png",
     ],
-    cover: "./projects/project-2/1.png",
+    cover: "/projects/project-2/1.png",
     name: "مجلس خارجي",
     description:
       "مجلس خارجي مع طاولة طعام ومغاسل وحمام على ستايل مينيماليست لاكجري.",
@@ -46,8 +49,11 @@ export const arProjects = [
   },
   {
     id: 3,
+    relatedIds: [5, 8, 4],
     slug: "project-3",
     href: "/projects/3",
+    imagesNumbers: 50,
+
     images: [
       "./projects/project-3/1.png",
       "./projects/project-3/2.png",
@@ -56,7 +62,7 @@ export const arProjects = [
       "./projects/project-3/5.png",
       "./projects/project-3/6.png",
     ],
-    cover: "./projects/project-3/1.png",
+    cover: "/projects/project-3/1.png",
     name: "صالة مفتوحة مع حديقة",
     description:
       "صالة استقبال مع معيشة وحديقة في المنتصف كانت روح البيت على ستايل مينماليست عصري.",
@@ -67,6 +73,9 @@ export const arProjects = [
   },
   {
     id: 4,
+    relatedIds: [1, 5, 3],
+    imagesNumbers: 15,
+
     slug: "project-4",
     href: "/projects/4",
     images: [
@@ -77,15 +86,13 @@ export const arProjects = [
       "./projects/project-4/5.png",
       "./projects/project-4/6.png",
     ],
-    cover: "./projects/project-4/1.png",
+    cover: "/projects/project-4/1.png",
     name: "شقة في داماك هايت",
     description: "شقة على ستايل لاكجري وابي سابي",
     homeDescription:
       "صممت شقة فاخرة في داماك هايت مع التركيز على التفاصيل المعمارية والفخامة",
     imageSrc: "./projects/home-project-3.png",
-
     isHome: true,
-
     location: "مارينا دبي",
     year: 2025,
     status: "مكتمل",
@@ -93,6 +100,10 @@ export const arProjects = [
   },
   {
     id: 5,
+    relatedIds: [1, 2, 3, 4],
+    imagesType: "NOT_EQUAL",
+    imagesNumbers: 11,
+
     slug: "project-5",
     href: "/projects/5",
     images: [
@@ -103,7 +114,7 @@ export const arProjects = [
       "./projects/project-5/5.png",
       "./projects/project-5/6.png",
     ],
-    cover: "./projects/project-5/1.png",
+    cover: "/projects/project-5/1.png",
     name: "صالة مفتوحة",
     description: "صالة مفتوحة مع طعام ومدخل ودرج على ستايل مودرن ريفي.",
     location: "أبو ظبي، مدينة الرياض",
@@ -113,8 +124,13 @@ export const arProjects = [
   },
   {
     id: 6,
+    relatedIds: [7, 9],
     slug: "project-6",
+
     href: "/projects/6",
+    imagesExtension: "png",
+
+    imagesNumbers: 6,
     images: [
       "./projects/project-6/1.png",
       "./projects/project-6/2.png",
@@ -123,7 +139,7 @@ export const arProjects = [
       "./projects/project-6/5.png",
       "./projects/project-6/6.png",
     ],
-    cover: "./projects/project-6/1.png",
+    cover: "/projects/project-6/1.png",
     name: "صالة انتظار",
     description:
       "مشروع عيادات في ابو ظبي تم توزيع المساحات واستغلالها لتتضمن صالة انتظار مع جلسة وبار ليتمكن الزائر الأنتظار دون ملل",
@@ -138,8 +154,11 @@ export const arProjects = [
   },
   {
     id: 7,
+    relatedIds: [6, 9],
     slug: "project-7",
     href: "/projects/7",
+    imagesNumbers: 20,
+
     images: [
       "./projects/project-7/1.png",
       "./projects/project-7/2.png",
@@ -148,14 +167,13 @@ export const arProjects = [
       "./projects/project-7/5.png",
       "./projects/project-7/6.png",
     ],
-    cover: "./projects/project-7/1.png",
+    cover: "/projects/project-7/1.png",
     name: "مركز تجميل",
     description:
       "مركز مساج داخل مركز تجميل يضم حمام مغربي وغرف مساج خاصة ومشالح مع مغاسل.",
     homeDescription:
       "صممت مركز تجميل عصريًا يوازن بين الراحة والفخامة مع مراعاة تدفق الحركة بدقة هندسية",
     imageSrc: "./projects/home-project-1.png",
-
     isHome: true,
     location: "أبو ظبي، مدينة العين",
     year: 2025,
@@ -164,8 +182,11 @@ export const arProjects = [
   },
   {
     id: 8,
+    relatedIds: [2, 3, 1],
     slug: "project-8",
     href: "/projects/8",
+    imagesNumbers: 18,
+
     images: [
       "./projects/project-8/1.png",
       "./projects/project-8/2.png",
@@ -174,10 +195,9 @@ export const arProjects = [
       "./projects/project-8/5.png",
       "./projects/project-8/6.png",
     ],
-    cover: "./projects/project-8/1.png",
+    cover: "/projects/project-8/1.png",
     name: "مجلس مع استقبال",
     description: "مجلس مع مقلط وحديقة على ستايل نيو كلاسيك لاكجري",
-
     location: "الرياض السعودية",
     year: 2024,
     status: "تصميم",
@@ -185,6 +205,7 @@ export const arProjects = [
   },
   {
     id: 9,
+    relatedIds: [6, 7],
     slug: "project-9",
     href: "/projects/9",
     images: [
@@ -195,7 +216,9 @@ export const arProjects = [
       "./projects/project-9/5.png",
       "./projects/project-9/6.png",
     ],
-    cover: "./projects/project-9/1.png",
+    cover: "/projects/project-9/1.png",
+    imagesNumbers: 24,
+
     name: "مكتب خاص",
     description:
       "مكتب لشركة آيسكو المتخصصة في أعمال التكييف: غرفة مدير، غرفتا عمل، غرفة اجتماعات، حمّامان، بوفيه خدمي وأرشيف.",
@@ -209,8 +232,10 @@ export const arProjects = [
 export const enProjects = [
   {
     id: 1,
+    relatedIds: [2, 5, 4, 8],
     slug: "project-1",
     href: "/projects/1",
+    imagesNumbers: 8,
     images: [
       "./projects/project-1/1.png",
       "./projects/project-1/2.png",
@@ -219,7 +244,7 @@ export const enProjects = [
       "./projects/project-1/5.png",
       "./projects/project-1/6.png",
     ],
-    cover: "./projects/project-1/1.png",
+    cover: "/projects/project-1/1.png",
     name: "Men's Majlis",
     description: "Majlis in a classic luxury style",
     location: "Abu Dhabi, Ras Al Khaimah",
@@ -229,8 +254,10 @@ export const enProjects = [
   },
   {
     id: 2,
+    relatedIds: [1, 5, 8],
     slug: "project-2",
     href: "/projects/2",
+    imagesNumbers: 17,
     images: [
       "./projects/project-2/1.png",
       "./projects/project-2/2.png",
@@ -239,7 +266,7 @@ export const enProjects = [
       "./projects/project-2/5.png",
       "./projects/project-2/6.png",
     ],
-    cover: "./projects/project-2/1.png",
+    cover: "/projects/project-2/1.png",
     name: "Outdoor Majlis",
     description:
       "Outdoor majlis with dining table, wash basins and bathroom in a minimalist luxury style.",
@@ -250,8 +277,10 @@ export const enProjects = [
   },
   {
     id: 3,
+    relatedIds: [5, 8, 4],
     slug: "project-3",
     href: "/projects/3",
+    imagesNumbers: 50,
     images: [
       "./projects/project-3/1.png",
       "./projects/project-3/2.png",
@@ -260,7 +289,7 @@ export const enProjects = [
       "./projects/project-3/5.png",
       "./projects/project-3/6.png",
     ],
-    cover: "./projects/project-3/1.png",
+    cover: "/projects/project-3/1.png",
     name: "Open Hall with Garden",
     description:
       "Reception hall with living area and a central garden that became the heart of the home in a modern minimalist style.",
@@ -271,8 +300,10 @@ export const enProjects = [
   },
   {
     id: 4,
+    relatedIds: [1, 5, 3],
     slug: "project-4",
     href: "/projects/4",
+    imagesNumbers: 15,
     images: [
       "./projects/project-4/1.png",
       "./projects/project-4/2.png",
@@ -281,7 +312,7 @@ export const enProjects = [
       "./projects/project-4/5.png",
       "./projects/project-4/6.png",
     ],
-    cover: "./projects/project-4/1.png",
+    cover: "/projects/project-4/1.png",
     name: "Apartment in Damac Heights",
     description: "Apartment in a luxury and wabi-sabi style",
     homeDescription:
@@ -295,6 +326,9 @@ export const enProjects = [
   },
   {
     id: 5,
+    relatedIds: [1, 2, 3, 4],
+    imagesType: "NOT_EQUAL",
+    imagesNumbers: 11,
     slug: "project-5",
     href: "/projects/5",
     images: [
@@ -305,7 +339,7 @@ export const enProjects = [
       "./projects/project-5/5.png",
       "./projects/project-5/6.png",
     ],
-    cover: "./projects/project-5/1.png",
+    cover: "/projects/project-5/1.png",
     name: "Open Hall",
     description:
       "Open hall with dining area, entrance and staircase in a modern rustic style.",
@@ -316,8 +350,11 @@ export const enProjects = [
   },
   {
     id: 6,
+    relatedIds: [7, 9],
     slug: "project-6",
     href: "/projects/6",
+    imagesExtension: "png",
+    imagesNumbers: 6,
     images: [
       "./projects/project-6/1.png",
       "./projects/project-6/2.png",
@@ -326,7 +363,7 @@ export const enProjects = [
       "./projects/project-6/5.png",
       "./projects/project-6/6.png",
     ],
-    cover: "./projects/project-6/1.png",
+    cover: "/projects/project-6/1.png",
     name: "Waiting Lounge",
     description:
       "Clinic project in Abu Dhabi where spaces were laid out and optimized to include a waiting lounge with seating and a bar so visitors can wait without boredom.",
@@ -341,8 +378,10 @@ export const enProjects = [
   },
   {
     id: 7,
+    relatedIds: [6, 9],
     slug: "project-7",
     href: "/projects/7",
+    imagesNumbers: 20,
     images: [
       "./projects/project-7/1.png",
       "./projects/project-7/2.png",
@@ -351,7 +390,7 @@ export const enProjects = [
       "./projects/project-7/5.png",
       "./projects/project-7/6.png",
     ],
-    cover: "./projects/project-7/1.png",
+    cover: "/projects/project-7/1.png",
     name: "Beauty Center",
     description:
       "Massage center inside a beauty center featuring a Moroccan bath, private massage rooms, changing rooms and wash basins.",
@@ -366,8 +405,10 @@ export const enProjects = [
   },
   {
     id: 8,
+    relatedIds: [2, 3, 1],
     slug: "project-8",
     href: "/projects/8",
+    imagesNumbers: 18,
     images: [
       "./projects/project-8/1.png",
       "./projects/project-8/2.png",
@@ -376,7 +417,7 @@ export const enProjects = [
       "./projects/project-8/5.png",
       "./projects/project-8/6.png",
     ],
-    cover: "./projects/project-8/1.png",
+    cover: "/projects/project-8/1.png",
     name: "Majlis with Reception",
     description:
       "Majlis with dining area and garden in a neo-classical luxury style",
@@ -387,8 +428,10 @@ export const enProjects = [
   },
   {
     id: 9,
+    relatedIds: [6, 7],
     slug: "project-9",
     href: "/projects/9",
+    imagesNumbers: 24,
     images: [
       "./projects/project-9/1.png",
       "./projects/project-9/2.png",
@@ -397,7 +440,7 @@ export const enProjects = [
       "./projects/project-9/5.png",
       "./projects/project-9/6.png",
     ],
-    cover: "./projects/project-9/1.png",
+    cover: "/projects/project-9/1.png",
     name: "Private Office",
     description:
       "Office for Aysco company specialized in HVAC works: manager's office, two work rooms, meeting room, two bathrooms, service pantry and archive.",

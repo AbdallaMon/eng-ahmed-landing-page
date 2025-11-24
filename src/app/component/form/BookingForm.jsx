@@ -7,21 +7,12 @@ import { handleRequestSubmit } from "@/app/utility/handleSubmit";
 import { useToastContext } from "@/app/providers/ToastLoadingProvider";
 import { SuccessPage } from "../pages/booking/SuccessPage";
 import { useSearchParams } from "next/navigation";
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
-import rtlPlugin from "stylis-plugin-rtl";
 import { matchIsValidTel } from "mui-tel-input";
-
-const defaultCache = createCache({
-  key: "mui",
-});
-const cacheRtl = createCache({
-  key: "muirtl",
-  stylisPlugins: [rtlPlugin],
-});
+import LanguageCacheProvider from "@/app/providers/LanguageCacheProvider";
 
 export function BookingForm({ bookingData }) {
   const initialFormValues = {};
+
   bookingData.inputs.forEach((input) => {
     initialFormValues[input.id] = "";
   });
@@ -83,7 +74,6 @@ export function BookingForm({ bookingData }) {
       `client/new-lead/register?lng=${lng}`,
       lng === "ar" ? "جارى التسجيل..." : "Registering..."
     );
-    console.log(req, "req");
     if (req.status === 200) {
       setFormValues(initialFormValues);
       setSuccess(true);
@@ -95,7 +85,7 @@ export function BookingForm({ bookingData }) {
   }
 
   return (
-    <CacheProvider value={lng === "ar" ? cacheRtl : defaultCache}>
+    <LanguageCacheProvider rtl={lng === "ar"}>
       <Box
         component="form"
         sx={{
@@ -113,7 +103,9 @@ export function BookingForm({ bookingData }) {
                 input={input}
                 lng={bookingData.lng}
                 handleChange={handleChange}
-                value={formValues[input.id]}
+                value={
+                  Object.keys(formValues).length ? formValues[input.id] : null
+                }
               />
             ) : (
               <TextInput
@@ -166,6 +158,6 @@ export function BookingForm({ bookingData }) {
           </Alert>
         </Snackbar>
       </Box>
-    </CacheProvider>
+    </LanguageCacheProvider>
   );
 }

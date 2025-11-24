@@ -7,11 +7,12 @@ export function MainPage({ mainData, lng }) {
       <Box
         sx={{
           py: { xs: 8, md: 12 },
+          pt: { xs: 0, md: 12 },
         }}
       >
-        <Grid container spacing={{ xs: 2, md: 4 }}>
+        <Grid container sx={{}} spacing={{ xs: 1, md: 4 }}>
           {mainData.map((item, index) => (
-            <Grid size={{ xs: 6, md: 4 }} key={index}>
+            <Grid size={{ xs: 12, md: 4 }} key={index}>
               <MainPageCard data={item} lng={lng} />
             </Grid>
           ))}

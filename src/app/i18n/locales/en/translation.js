@@ -1,12 +1,14 @@
 import { enAboutData } from "@/app/data/about";
 import { enBeforeAndAfter } from "@/app/data/BeforeAndAfter";
 import { enBooking } from "@/app/data/booking";
+import { enBookAndCoursesData } from "@/app/data/booksAndCourses";
 import { enButtons } from "@/app/data/buttons";
 import { enCompanies } from "@/app/data/companies";
 import { enFollowMeText } from "@/app/data/constants";
 import { enFaq } from "@/app/data/FAQData";
 import { enHero } from "@/app/data/hero";
-import { enBookAndCoursesData, enMainPageData } from "@/app/data/mainPage";
+import { enHomeProjectsSection } from "@/app/data/homeProjectsSection";
+import { enMainPageData } from "@/app/data/mainPage";
 import { enMetaData } from "@/app/data/meta";
 import { enFooter, enNavbar } from "@/app/data/navigations";
 import { enOurNumbersData } from "@/app/data/our-numbers";
@@ -21,6 +23,7 @@ const translation = {
   navBar: enNavbar,
   main: enMainPageData,
   bookAndCourses: enBookAndCoursesData,
+  homeProjectsSection: enHomeProjectsSection,
   hero: enHero,
   vission: enVisionData,
   about: enAboutData,

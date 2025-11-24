@@ -99,9 +99,8 @@ function OurNumberCard({ card, isMiddle }) {
         borderRight: isMiddle ? `1px solid ${colors.borderColor2}` : 0,
       }}
     >
-      <CardContent sx={{ p: 0 }}>
+      <CardContent sx={{ p: 0, height: "100%" }}>
         <Typography
-          // middle title only is bigger
           variant={"h4"}
           sx={{
             fontWeight: 800,

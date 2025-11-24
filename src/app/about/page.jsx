@@ -11,6 +11,7 @@ import { SuccessJourney } from "../sections/SuccessJourney";
 import { Testmonails } from "../sections/Testmonails";
 import { FAQ } from "../sections/FAQ";
 import { Hero } from "../sections/Hero";
+import { BooksAndCourses } from "../sections/BooksAndCourses";
 
 export default async function Home({ searchParams }) {
   const awaitedSearchParams = await searchParams;
@@ -26,6 +27,7 @@ export default async function Home({ searchParams }) {
       <OurNumbersSection lng={lng} />
       <HomeProjects lng={lng} />
       <BeforeAndAfterSection lng={lng} />
+      <BooksAndCourses lng={lng} />
       <TranslatingIdeasSection lng={lng} />
       <SuccessJourney lng={lng} />
       <Testmonails lng={lng} />

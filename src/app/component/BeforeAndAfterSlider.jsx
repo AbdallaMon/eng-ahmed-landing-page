@@ -9,9 +9,9 @@ export default function BeforeAndAfterSlider({
   afterSrc,
   initialPct = 65,
   topImage = "after",
-  direction = "ltr", // keeps reveal logic; badges stay left/right as requested
+  direction = "ltr",
   lng = "en",
-  grabIconSrc = "/grap-icon.png", // path to your grab/drag icon
+  grabIconSrc = "/grap-icon.png",
 }) {
   const containerRef = useRef(null);
   const [pct, setPct] = useState(Math.max(0, Math.min(100, initialPct)));
@@ -36,8 +36,21 @@ export default function BeforeAndAfterSlider({
   const onPointerDown = (e) => {
     const el = containerRef.current;
     if (!el) return;
+
+    const target = e.target;
+    const isHandle =
+      target instanceof Element && target.closest?.('[data-ba-handle="true"]');
+
+    // On touch: only start drag if touching handle / slider
+    if (e.pointerType === "touch" && !isHandle) {
+      return; // let the browser handle scroll
+    }
+
     draggingRef.current = true;
+
+    // Only capture pointer when we actually start dragging
     el.setPointerCapture?.(e.pointerId);
+
     setPct(computePctFromX(e.clientX));
   };
 
@@ -62,13 +75,11 @@ export default function BeforeAndAfterSlider({
     };
   }, [onPointerMove]);
 
-  // Clip-path for top image (keeps full-size; only hides part)
   const clipPath =
     direction === "rtl"
       ? `inset(0 0 0 ${Math.max(0, 100 - pct)}%)`
       : `inset(0 ${Math.max(0, 100 - pct)}% 0 0)`;
 
-  // Handle positions
   const handleLeft =
     direction === "rtl" ? `calc(${100 - pct}% - 10px)` : `calc(${pct}% - 10px)`;
   const handleCenter = direction === "rtl" ? `${100 - pct}%` : `${pct}%`;
@@ -90,13 +101,13 @@ export default function BeforeAndAfterSlider({
         width: "100%",
         maxWidth: "600px",
         mx: "auto",
-        // aspectRatio: "4 / 3",
         height: { xs: 450, md: 600 },
         overflow: "hidden",
         borderRadius: 0.5,
         boxShadow: 3,
         userSelect: "none",
-        touchAction: "none",
+        // ✅ allow vertical scrolling on touch while still getting horizontal drag
+        touchAction: { xs: "pan-y", md: "none" },
         "& img": { pointerEvents: "none", userSelect: "none" },
       }}
     >
@@ -134,7 +145,7 @@ export default function BeforeAndAfterSlider({
         />
       </Box>
 
-      {/* Badges (fixed: left=Before, right=After) */}
+      {/* Badges */}
       <Box
         sx={{
           position: "absolute",
@@ -174,9 +185,10 @@ export default function BeforeAndAfterSlider({
         {beforeLabel}
       </Box>
 
-      {/* Divider under knob */}
+      {/* Divider under knob (also draggable area) */}
       <Box
         aria-hidden
+        data-ba-handle="true"
         sx={{
           position: "absolute",
           top: 0,
@@ -185,12 +197,13 @@ export default function BeforeAndAfterSlider({
           width: { xs: 12, md: 16 },
           bgcolor: "rgba(229,225,222,0.9)",
           boxShadow: "0 0 0 1px rgba(0,0,0,0.2)",
-          pointerEvents: "none",
+          pointerEvents: "auto",
         }}
       />
 
       {/* Draggable knob with grab icon */}
       <Box
+        data-ba-handle="true"
         onPointerDown={onPointerDown}
         tabIndex={0}
         aria-label="Drag to compare"

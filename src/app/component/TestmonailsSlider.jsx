@@ -98,7 +98,7 @@ export function TestmonailsSlider({ data, rtl }) {
       >
         {items.map((review, i) => (
           <SwiperSlide key={i}>
-            <TestMonailCard data={review} />
+            <TestMonailCard data={review} rtl={rtl} />
           </SwiperSlide>
         ))}
       </Box>

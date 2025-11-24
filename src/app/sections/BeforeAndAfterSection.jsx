@@ -1,17 +1,16 @@
+// BeforeAndAfterSection.jsx
 import { Container, Grid } from "@mui/system";
 import { getTranslation } from "../i18n";
 import { Box, Typography } from "@mui/material";
 import { colors } from "../data/constants";
 import BeforeAndAfterSlider from "../component/BeforeAndAfterSlider";
 import { LinkButton } from "../component/buttons/LinkButton";
-import { MainPageCard } from "../component/cards/MainPageCard";
-import { BooksAndCoursesCard } from "../component/cards/BooksAndCoursesCard";
 
 export async function BeforeAndAfterSection({ lng }) {
   const { t } = await getTranslation(lng);
   const data = t("beforeAndAfter", { returnObjects: true });
   const buttons = t("buttons", { returnObjects: true });
-  const bookAndCoursesData = t("bookAndCourses", { returnObjects: true });
+
   return (
     <Box sx={{ mt: { xs: 4, md: 4 }, mb: { xs: 6, md: 12 } }}>
       <Container maxWidth="xl">
@@ -45,7 +44,6 @@ export async function BeforeAndAfterSection({ lng }) {
                 <Typography
                   variant="body1"
                   sx={{
-                    color: "text.secondary",
                     mb: { xs: 0, md: 4 },
                     fontSize: { xs: "0.85rem", md: "1.1rem" },
                     maxWidth: "500px",
@@ -54,6 +52,7 @@ export async function BeforeAndAfterSection({ lng }) {
                 >
                   {data.description}
                 </Typography>
+
                 <Box sx={{ display: "flex", mt: 4 }}>
                   <LinkButton
                     {...buttons.booking}
@@ -62,14 +61,16 @@ export async function BeforeAndAfterSection({ lng }) {
                     textColor={colors.white}
                   />
                 </Box>
-              </Box>{" "}
+              </Box>
             </Grid>
+
             <Grid size={{ xs: 12, md: 8 }} container spacing={2}>
               <Grid size={{ xs: 12, md: 6 }}>
                 <BeforeAndAfterSlider
                   beforeSrc={data.images.before[0]}
                   afterSrc={data.images.after[0]}
                   lng={lng}
+                  initialPct={35}
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
@@ -82,18 +83,7 @@ export async function BeforeAndAfterSection({ lng }) {
             </Grid>
           </Grid>
         </Box>
-      </Container>
-      <Container maxWidth="xl" sx={{ mt: { xs: 4, md: 6 } }}>
-        <Box>
-          <Grid container spacing={2}>
-            {bookAndCoursesData.map((item, index) => (
-              <Grid size={{ xs: 6, md: 6 }} key={index}>
-                <BooksAndCoursesCard lng={lng} cardData={item} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Container>
+      </Container>{" "}
     </Box>
   );
 }

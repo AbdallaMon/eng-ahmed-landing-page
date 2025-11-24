@@ -1,6 +1,13 @@
 import { Box, Chip, Container, Grid } from "@mui/material";
 import { getTranslation } from "../i18n";
-
+import { cookies } from "next/headers";
+export async function generateMetadata({ params }) {
+  const cookieStore = await cookies();
+  const lng = cookieStore.get("i18next")?.value || "ar";
+  const { t } = await getTranslation(lng);
+  const metaData = t("meta", { returnObjects: true });
+  return metaData.projectsPage;
+}
 export default async function page({ searchParams }) {
   const awaitedSearchParams = await searchParams;
   const lng = awaitedSearchParams.lng;

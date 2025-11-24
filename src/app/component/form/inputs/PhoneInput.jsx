@@ -9,7 +9,7 @@ export function PhoneInput({ input, value, lng, handleChange }) {
     try {
       const response = await fetch("https://geolocation-db.com/json/");
       const data = await response.json();
-      if (data && data.country_code) {
+      if (data && data.country_code && data.country_code !== "Not found") {
         setDefaultCountry(data.country_code);
         return data.country_code;
       } else {
