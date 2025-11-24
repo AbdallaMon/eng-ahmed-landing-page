@@ -72,7 +72,7 @@ export async function Footer({ lng }) {
 
             <CopyrightText copyRight={data.copyRight} />
           </Box>
-          <Box sx={{ pt: 3 }}>
+          <Box sx={{ pt: 3, display: { xs: "block", md: "none" } }}>
             <SocialMediaIcons
               includeText={true}
               lng={lng}
