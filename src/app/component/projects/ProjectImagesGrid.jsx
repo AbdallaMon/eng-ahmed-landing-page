@@ -21,8 +21,6 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
   const DEFAULT_WIDTH = 1200;
   const DEFAULT_HEIGHT = 800;
 
-  // Expect shape per image:
-  // { src, fullSrc?, index, width?, height?, blurDataURL? }
   const imagesWithAlt = baseImages.map((img) => ({
     ...img,
     width: img.width ?? DEFAULT_WIDTH,
