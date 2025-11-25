@@ -117,7 +117,10 @@ export function NavbarClient({ navItems, lng, bookingButton }) {
   const handleLanguageChange = (value) => {
     const url = new URL(window.location.href);
     url.searchParams.set("lng", value);
-    window.localStorage.setItem("i18next", value);
+    window.localStorage.setItem("i18nextLng", value);
+    window.localStorage.setItem("lng", value);
+    // add cookies i18next with lng
+    document.cookie = `i18next=${value}; path=/;`;
     window.location.href = url.toString();
   };
 
