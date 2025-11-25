@@ -1,12 +1,27 @@
 // projects-data.js
 
-export const arProjects = [
+function getProjectImages(project) {
+  const totalImages =
+    project.imagesNumbers ||
+    (Array.isArray(project.images) ? project.images.length : 0);
+
+  if (!totalImages || !project.id) return [];
+
+  return Array.from({ length: totalImages }, (_, index) => ({
+    src: `/projects/project-${project.id}/${index + 1}.${
+      project.imagesExtension || "jpg"
+    }`,
+    index,
+  }));
+}
+export const arInitialProjects = [
   {
     id: 1,
     relatedIds: [2, 5, 4, 8],
     slug: "project-1",
     href: "/projects/1",
     imagesNumbers: 8,
+
     images: [
       "./projects/project-1/1.png",
       "./projects/project-1/2.png",
@@ -228,8 +243,12 @@ export const arProjects = [
     category: "تجاري",
   },
 ];
+export const arProjects = arInitialProjects.map((project) => ({
+  ...project,
+  images: getProjectImages(project),
+}));
 
-export const enProjects = [
+export const enInitialProjects = [
   {
     id: 1,
     relatedIds: [2, 5, 4, 8],
@@ -450,3 +469,7 @@ export const enProjects = [
     category: "Commercial",
   },
 ];
+export const enProjects = enInitialProjects.map((project) => ({
+  ...project,
+  images: getProjectImages(project),
+}));

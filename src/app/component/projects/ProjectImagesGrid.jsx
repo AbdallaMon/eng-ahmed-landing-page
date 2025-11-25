@@ -1,6 +1,7 @@
 // components/Project/ProjectImagesGrid.jsx
 import { Box, IconButton } from "@mui/material";
 import { MdRemoveRedEye } from "react-icons/md";
+import Image from "next/image";
 import ProjectImagesLightboxClient from "./ProjectImagesLightboxClient";
 
 function buildImageAlt({ project, index, lng }) {
@@ -12,28 +13,20 @@ function buildImageAlt({ project, index, lng }) {
   } – ${engAhmedBrand} – image ${index + 1}`;
 }
 
-function getProjectImages(project) {
-  const totalImages =
-    project.imagesNumbers ||
-    (Array.isArray(project.images) ? project.images.length : 0);
-
-  if (!totalImages || !project.id) return [];
-
-  return Array.from({ length: totalImages }, (_, index) => ({
-    src: `/projects/project-${project.id}/${index + 1}.${
-      project.imagesExtension || "jpg"
-    }`,
-    index,
-  }));
-}
-
 export default function ProjectImagesGrid({ project, lng = "ar" }) {
-  const baseImages = getProjectImages(project);
+  const baseImages = project.images || [];
 
   if (!baseImages.length) return null;
 
+  const DEFAULT_WIDTH = 1200;
+  const DEFAULT_HEIGHT = 800;
+
+  // Expect shape per image:
+  // { src, fullSrc?, index, width?, height?, blurDataURL? }
   const imagesWithAlt = baseImages.map((img) => ({
     ...img,
+    width: img.width ?? DEFAULT_WIDTH,
+    height: img.height ?? DEFAULT_HEIGHT,
     alt: buildImageAlt({ project, index: img.index, lng }),
   }));
 
@@ -61,7 +54,6 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
   while (middleCol.length > Math.min(leftCol.length, rightCol.length)) {
     const moved = middleCol.pop();
     if (!moved) break;
-    // Push to the right side (so we get patterns like 4 / 3 / 4 for 11 images)
     rightCol.push(moved);
   }
 
@@ -100,19 +92,23 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
                 sx={{
                   m: 0,
                   position: "relative",
+                  borderRadius: 1,
+                  overflow: "hidden",
                 }}
               >
-                <Box
-                  component="img"
+                <Image
                   src={img.src}
                   alt={img.alt}
+                  width={img.width}
+                  height={img.height}
+                  sizes="(max-width: 900px) 100vw, 33vw"
                   loading="lazy"
-                  itemProp="contentUrl"
-                  sx={{
+                  placeholder={img.blurDataURL ? "blur" : "empty"}
+                  blurDataURL={img.blurDataURL}
+                  style={{
                     width: "100%",
-                    height: "auto", // keep aspect ratio
+                    height: "auto",
                     display: "block",
-                    borderRadius: 1,
                   }}
                 />
 
