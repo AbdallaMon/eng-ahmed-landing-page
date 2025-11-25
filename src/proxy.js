@@ -17,7 +17,6 @@ export function proxy(request) {
 
   // Read lng from cookie
   const lngCookie = request.cookies.get(cookieName);
-  console.log(lngCookie, "lngCookie");
   if (lngCookie) {
     lng = acceptLanguage.get(lngCookie.value);
   }

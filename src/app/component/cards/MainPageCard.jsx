@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import Image from "next/image";
 
 export function MainPageCard({ data, lng }) {
   return (
@@ -39,8 +40,10 @@ export function MainPageCard({ data, lng }) {
             zIndex: 3,
           }}
         />
-        <Box
-          sx={{
+        <Image
+          width={400}
+          height={300}
+          style={{
             position: "absolute",
             top: 0,
             left: 0,
@@ -48,18 +51,18 @@ export function MainPageCard({ data, lng }) {
             height: "100%",
             zIndex: 2,
           }}
-          component={"img"}
           src={"/card-bg.png"}
           alt="المهندس احمد المبيض"
         />
 
-        <Box
-          component={"img"}
+        <Image
           src={data.image}
           alt="المهندس احمد المبيض"
-          sx={{
+          width={1200}
+          height={800}
+          style={{
             width: "100%",
-            borderRadius: 50,
+            borderRadius: 500,
             height: "100%",
             objectFit: data.type === "COVER" ? "cover" : "contain",
             position: "relative",

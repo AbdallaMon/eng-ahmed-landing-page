@@ -16,7 +16,11 @@ export default async function About({ lng }) {
         <Box>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 8 }}>
-              <AboutImageContainer images={aboutData.aboutImages} />
+              <AboutImageContainer
+                images={aboutData.aboutImages}
+                lng={lng}
+                aboutData={aboutData}
+              />
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <AboutMe
