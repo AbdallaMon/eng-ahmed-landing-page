@@ -41,7 +41,7 @@ export const arMetaData = {
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/about.png",
+          url: "https://ahmadmobayed.com/hero.png",
           width: 1200,
           height: 630,
           alt: "عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط",
@@ -53,7 +53,7 @@ export const arMetaData = {
       title: "عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط",
       description:
         "تعرف على المهندس أحمد المبيض، خبير التصميم الداخلي والتخطيط. اكتشف رؤيته، خبرته، ومشاريعه الناجحة في تحويل المساحات إلى بيئات ملهمة.",
-      images: ["https://ahmadmobayed.com/about.png"],
+      images: ["https://ahmadmobayed.com/hero.png"],
     },
     icons: {
       icon: "/favicon.ico",
@@ -72,7 +72,7 @@ export const arMetaData = {
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/about.png",
+          url: "https://ahmadmobayed.com/hero.png",
           width: 1200,
           height: 630,
           alt: "احجز استشارتك مع المهندس أحمد المبيض - تصميم داخلي وتخطيط",
@@ -84,7 +84,7 @@ export const arMetaData = {
       title: "احجز استشارتك مع المهندس أحمد المبيض",
       description:
         "احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.",
-      images: ["https://ahmadmobayed.com/about.png"],
+      images: ["https://ahmadmobayed.com/hero.png"],
     },
     icons: {
       icon: "/favicon.ico",
@@ -167,7 +167,7 @@ export const enMetaData = {
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/about.png",
+          url: "https://ahmadmobayed.com/hero.png",
           width: 1200,
           height: 630,
           alt: "About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning",
@@ -180,7 +180,7 @@ export const enMetaData = {
         "About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning",
       description:
         "Learn about Eng. Ahmed Almobayd, an expert in interior design and planning. Discover his vision, expertise, and successful projects in transforming spaces into inspiring environments.",
-      images: ["https://ahmadmobayed.com/about.png"],
+      images: ["https://ahmadmobayed.com/hero.png"],
     },
     icons: {
       icon: "/about.ico",
@@ -199,7 +199,7 @@ export const enMetaData = {
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/about.png",
+          url: "https://ahmadmobayed.com/hero.png",
           width: 1200,
           height: 630,
           alt: "Book Your Consultation with Eng. Ahmed Almobayd - Interior Design & Planning",
@@ -211,7 +211,7 @@ export const enMetaData = {
       title: "Book Your Consultation with Eng. Ahmed Almobayd",
       description:
         "Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.",
-      images: ["https://ahmadmobayed.com/about.png"],
+      images: ["https://ahmadmobayed.com/hero.png"],
     },
     icons: {
       icon: "/favicon.ico",
