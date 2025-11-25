@@ -24,8 +24,25 @@ export async function generateMetadata({ params }) {
   const projectData = projects.find((project) => project.id == projectId);
 
   if (!projectData) {
+    const baseTitle = lng === "ar" ? "المشروع غير موجود" : "Project Not Found";
+
     return {
-      title: lng === "ar" ? "المشروع غير موجود" : "Project Not Found",
+      title: baseTitle,
+      description: baseTitle,
+      openGraph: {
+        title: baseTitle,
+        description: baseTitle,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: baseTitle,
+        description: baseTitle,
+      },
+      icons: {
+        icon: "/favicon.ico",
+        shortcut: "/favicon.ico",
+        apple: "/favicon.ico",
+      },
     };
   }
 
@@ -37,22 +54,24 @@ export async function generateMetadata({ params }) {
   const description = `${projectData.description} ${engAhmedText}`;
 
   // Base URL for correct absolute URLs in meta
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-domain.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 
-  // Prefer cover, fallback to first image if exists
-  const ogImage =
-    projectData.cover || projectData.images?.[0]
-      ? {
-          url: `${baseUrl}${(
-            projectData.cover || projectData.images?.[0]
-          ).replace("./", "/")}`,
-          width: 1200,
-          height: 630,
-          alt: projectData.name,
-        }
-      : null;
+  // Prefer cover, fallback to first image, fallback to hero.png
+  const rawImagePath =
+    projectData.cover || projectData.images?.[0] || "/hero.png";
 
-  const keywords =
+  const normalizedImagePath = rawImagePath.startsWith("http")
+    ? rawImagePath
+    : `${baseUrl}${rawImagePath.replace("./", "/")}`;
+
+  const imageAlt =
+    lng === "ar"
+      ? `${projectData.name} - مشاريع المهندس أحمد المبيض`
+      : `${projectData.name} - Eng Ahmed Almobayed Projects`;
+
+  // Build keywords list then convert to a single string (like your static meta)
+  const keywordsList =
     lng === "ar"
       ? [
           "مشاريع",
@@ -81,29 +100,47 @@ export async function generateMetadata({ params }) {
           String(projectData.year),
         ];
 
-  return {
+  const keywords = keywordsList.join(", "); // <-- makes it same style as your arMetaData/enMetaData
+  const meta = {
     title: projectData.name,
     description,
-    keywords,
+    keywords, // string, not array
+
     openGraph: {
       title: projectData.name,
       description,
-      type: "article",
       url: `${baseUrl}/projects/${projectId}?lng=${lng}`,
-      images: ogImage ? [ogImage] : undefined,
+      type: "article",
       locale: lng === "ar" ? "ar" : "en",
-      siteName: lng === "ar" ? "المهندس احمد المبيض" : "Eng Ahmed Almobayed",
+      siteName: lng === "ar" ? "المهندس أحمد المبيض" : "Eng Ahmed Almobayed",
+      images: [
+        {
+          url: normalizedImagePath,
+          width: 1200,
+          height: 630,
+          alt: imageAlt,
+        },
+      ],
     },
+
     twitter: {
       card: "summary_large_image",
       title: projectData.name,
       description,
-      images: ogImage ? [ogImage.url] : undefined,
+      images: [normalizedImagePath],
     },
+
     alternates: {
       canonical: `${baseUrl}/projects/${projectId}`,
     },
+
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
   };
+  return meta;
 }
 
 export default async function page({ params, searchParams }) {
