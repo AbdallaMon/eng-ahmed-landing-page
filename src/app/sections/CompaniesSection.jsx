@@ -61,7 +61,7 @@ export function Companycard({ cardData }) {
         src={cardData.image}
         sx={{
           width: { xs: "120px", md: "180px" },
-          height: { md: "80px" },
+          // height: { md: "80px" },
           mb: 2,
         }}
       />
