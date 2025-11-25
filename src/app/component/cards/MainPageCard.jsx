@@ -61,9 +61,10 @@ export function MainPageCard({ data, lng }) {
             width: "100%",
             borderRadius: 50,
             height: "100%",
-            objectFit: "cover",
+            objectFit: data.type === "COVER" ? "cover" : "contain",
             position: "relative",
             zIndex: 2,
+            backgroundColor: "#ffffff",
           }}
         />
       </Box>
