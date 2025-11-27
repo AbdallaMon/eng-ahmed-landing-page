@@ -1,6 +1,8 @@
 import { Box, Chip, Container, Grid } from "@mui/material";
 import { getTranslation } from "../i18n";
 import { cookies } from "next/headers";
+import { getBreadcrumbJsonLd } from "../seo/jsonLdHelpers";
+import Script from "next/script";
 export async function generateMetadata({ params }) {
   const cookieStore = await cookies();
   const lng = cookieStore.get("i18next")?.value || "ar";
@@ -8,13 +10,34 @@ export async function generateMetadata({ params }) {
   const metaData = t("meta", { returnObjects: true });
   return metaData.projectsPage;
 }
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 export default async function page({ searchParams }) {
   const awaitedSearchParams = await searchParams;
   const lng = awaitedSearchParams.lng;
   const { t } = await getTranslation(lng);
   const projects = t("projects", { returnObjects: true });
+  const breadcrumbJsonLd = getBreadcrumbJsonLd({
+    baseUrl,
+    lng,
+    items: [
+      {
+        nameAr: "الرئيسية",
+        nameEn: "Home",
+        href: lng === "ar" ? "/?lng=ar" : "/?lng=en",
+      },
+      {
+        nameAr: "المشاريع",
+        nameEn: "Projects",
+        href: lng === "ar" ? "/projects?lng=ar" : "/projects?lng=en",
+      },
+    ],
+  });
   return (
     <Box>
+      <Script id="breadcrumb-projects" type="application/ld+json">
+        {JSON.stringify(breadcrumbJsonLd)}
+      </Script>
+
       <Container maxWidth="xl">
         <Box>
           <Grid container spacing={{ xs: 2, md: 3 }}>

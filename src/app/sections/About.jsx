@@ -56,6 +56,7 @@ function AboutMe({ lng, aboutData, buttonData }) {
         <Box>
           <Typography
             variant="h3"
+            component="h1"
             sx={{
               lineHeight: {
                 xs: "2.5rem",

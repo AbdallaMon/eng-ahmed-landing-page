@@ -15,6 +15,7 @@ export async function HomeProjects({ lng }) {
       <Container maxWidth="xl">
         <Typography
           variant="h4"
+          component="h1"
           sx={{
             fontWeight: 700,
             textAlign: "center",

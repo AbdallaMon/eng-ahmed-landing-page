@@ -1,7 +1,7 @@
 export const arName = "أحمد المبيض";
 export const enName = "Ahmed almobayd";
-export const arProfession = "مهندس";
-export const enProfession = "Engineer";
+export const arProfession = "مهندس تصميم داخلي";
+export const enProfession = "Interior Design Eng";
 export const arProfessionSuffix = "مهندس";
 export const enProfessionSuffix = "Eng";
 export const arFullName = `${arProfessionSuffix} أحمد المبيض`;

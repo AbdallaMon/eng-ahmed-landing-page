@@ -9,156 +9,91 @@
 
   <!-- Home -->
   <url>
-    <loc>https://ahmadmobayed.com/?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>1.00</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/?lng=en</loc>
+    <loc>https://ahmadmobayed.com/</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>1.00</priority>
   </url>
 
   <!-- Booking -->
   <url>
-    <loc>https://ahmadmobayed.com/booking?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/booking?lng=en</loc>
+    <loc>https://ahmadmobayed.com/booking</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.80</priority>
   </url>
 
   <!-- Projects listing -->
   <url>
-    <loc>https://ahmadmobayed.com/projects?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.80</priority>
   </url>
 
   <!-- About -->
   <url>
-    <loc>https://ahmadmobayed.com/about?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/about?lng=en</loc>
+    <loc>https://ahmadmobayed.com/about</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.80</priority>
   </url>
 
   <!-- Project 1 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/1?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/1?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/1</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 2 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/2?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/2?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/2</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 3 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/3?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/3?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/3</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 4 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/4?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/4?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/4</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 5 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/5?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/5?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/5</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 6 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/6?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/6?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/6</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 7 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/7?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/7?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/7</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 8 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/8?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/8?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/8</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>
 
   <!-- Project 9 -->
   <url>
-    <loc>https://ahmadmobayed.com/projects/9?lng=ar</loc>
-    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
-    <priority>0.64</priority>
-  </url>
-  <url>
-    <loc>https://ahmadmobayed.com/projects/9?lng=en</loc>
+    <loc>https://ahmadmobayed.com/projects/9</loc>
     <lastmod>2025-11-25T17:02:46+00:00</lastmod>
     <priority>0.64</priority>
   </url>

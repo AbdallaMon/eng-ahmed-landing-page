@@ -29,6 +29,7 @@ export async function BeforeAndAfterSection({ lng }) {
               >
                 <Typography
                   variant="h4"
+                  component="h1"
                   sx={{
                     fontWeight: 700,
                     mb: 1.5,

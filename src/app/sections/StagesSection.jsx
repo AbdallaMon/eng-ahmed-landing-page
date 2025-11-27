@@ -24,6 +24,7 @@ export default async function StagesSection({ lng }) {
             >
               <Typography
                 variant="h3"
+                component="h1"
                 sx={{
                   fontSize: {
                     xs: "1.8rem",

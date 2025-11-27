@@ -119,7 +119,6 @@ export function HeroBanner({ data, lng }) {
       duration: 0.4,
       ease: "power3.out",
     });
- 
 
     if (isMobile) {
       const opacityValue =
@@ -360,6 +359,7 @@ function HeroMainText({ data, position, lng }) {
     >
       <Typography
         variant="h3"
+        component="h1"
         sx={{ fontSize: { xs: 12, md: 40 }, fontWeight: "bold", mb: 1 }}
       >
         {position === "left" ? data.leftText?.title : data.rightText?.title}

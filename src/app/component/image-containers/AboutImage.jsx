@@ -1,7 +1,13 @@
 import { Box } from "@mui/material";
 import AboutImagesShapes from "./AboutImageShapes";
+import Image from "next/image";
 
 export default function AboutImageContainer({ images, lng, aboutData }) {
+  const profileAlt =
+    lng === "ar"
+      ? "المهندس أحمد المبيض – مهندس معماري ومتخصص في التصميم الداخلي"
+      : "Eng. Ahmed Almobayd – Architect and Interior Design Specialist";
+
   return (
     <Box sx={{ position: "relative" }}>
       <Box
@@ -14,20 +20,22 @@ export default function AboutImageContainer({ images, lng, aboutData }) {
           zIndex: 5,
         }}
       >
-        <Box
-          component="img"
-          sx={{
+        <Image
+          style={{
             width: "100%",
+            maxWidth: "550px",
+            height: "auto",
           }}
-          src={images.profile}
-          alt={
-            (lng === "ar"
-              ? "عن المهندس احمد المبيض :"
-              : "About eng ahmed almobayed") + aboutData.description
-          }
+          width={1200}
+          height={1200}
+          src={"/" + images.profile}
+          alt={profileAlt}
         />
+
         <AboutImagesShapes images={images} />
       </Box>
+
+      {/* صورة الـ blur (خلفية ديكورية) */}
       <Box
         component="img"
         sx={{
@@ -38,11 +46,8 @@ export default function AboutImageContainer({ images, lng, aboutData }) {
           zIndex: -1,
         }}
         src={images.blur}
-        alt={
-          (lng === "ar"
-            ? "عن المهندس احمد المبيض :"
-            : "About eng ahmed almobayed") + aboutData.description
-        }
+        alt=""
+        aria-hidden="true"
       />
     </Box>
   );

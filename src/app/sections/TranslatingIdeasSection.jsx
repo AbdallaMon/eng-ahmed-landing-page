@@ -50,6 +50,7 @@ export async function TranslatingIdeasSection({ lng }) {
                   }}
                 >
                   <Typography
+                    component="h1"
                     variant="body1"
                     sx={{
                       fontSize: {

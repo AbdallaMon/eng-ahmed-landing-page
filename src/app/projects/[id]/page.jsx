@@ -3,6 +3,10 @@ import ProjectRelatedSection from "@/app/component/projects/ProjectRelatedSectio
 import { colors } from "@/app/data/constants";
 import { getTranslation } from "@/app/i18n";
 import {
+  getBreadcrumbJsonLd,
+  getProjectArticleJsonLd,
+} from "@/app/seo/jsonLdHelpers";
+import {
   Box,
   Breadcrumbs,
   Card,
@@ -12,15 +16,17 @@ import {
   Typography,
 } from "@mui/material";
 import { cookies } from "next/headers";
+import Script from "next/script";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 
 export async function generateMetadata({ params }) {
   const cookieStore = await cookies();
   const lng = cookieStore.get("i18next")?.value || "ar";
   const { t } = await getTranslation(lng);
   const projects = t("projects", { returnObjects: true });
-
   const awaitedParams = await params;
   const projectId = awaitedParams.id;
+
   const projectData = projects.find((project) => project.id == projectId);
 
   if (!projectData) {
@@ -46,38 +52,22 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const engAhmedText =
-    lng === "ar"
-      ? "- مشاريع المهندس احمد المبيض"
-      : "- Eng Ahmed Almobayed Projects";
-
-  const description = `${projectData.description} ${engAhmedText}`;
-
-  // Base URL for correct absolute URLs in meta
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
-
   // Prefer cover, fallback to first image, fallback to hero.png
   const rawImagePath =
-    projectData.cover || projectData.images?.[0] || "/hero.png";
+    projectData.cover || projectData.images?.[0]?.src || "/hero.png";
 
   const normalizedImagePath = rawImagePath.startsWith("http")
     ? rawImagePath
     : `${baseUrl}${rawImagePath.replace("./", "/")}`;
 
-  const imageAlt =
-    lng === "ar"
-      ? `${projectData.name} - مشاريع المهندس أحمد المبيض`
-      : `${projectData.name} - Eng Ahmed Almobayed Projects`;
-
-  // Build keywords list then convert to a single string (like your static meta)
   const keywordsList =
     lng === "ar"
       ? [
+          "مشروع تصميم داخلي",
           "مشاريع",
           "تصميم داخلي",
-          "هندسة معمارية",
           "ديكور",
+          "هندسة معمارية",
           "المهندس احمد",
           "مشاريع احمد المبيض",
           "المهندس احمد المبيض",
@@ -87,10 +77,11 @@ export async function generateMetadata({ params }) {
           String(projectData.year),
         ]
       : [
+          "interior design project",
           "projects",
           "interior design",
-          "architecture",
           "decor",
+          "architecture",
           "eng ahmed",
           "ahmed almobayed",
           "eng ahmed almobayed",
@@ -100,32 +91,43 @@ export async function generateMetadata({ params }) {
           String(projectData.year),
         ];
 
-  const keywords = keywordsList.join(", "); // <-- makes it same style as your arMetaData/enMetaData
-  const meta = {
-    title: projectData.name,
+  const keywords = keywordsList.join(", ");
+
+  const title =
+    lng === "ar"
+      ? `${projectData.name} – تصميم داخلي في ${projectData.location} – المهندس أحمد المبيض`
+      : `${projectData.name} – Interior Design in ${projectData.location} – Eng. Ahmed Almobayd`;
+
+  const description =
+    lng === "ar"
+      ? `${projectData.description} – مشروع تصميم داخلي في ${projectData.location} من تنفيذ المهندس أحمد المبيض.`
+      : `${projectData.description} – Interior design project in ${projectData.location} by Eng. Ahmed Almobayd.`;
+
+  return {
+    title,
     description,
-    keywords, // string, not array
+    keywords,
 
     openGraph: {
-      title: projectData.name,
+      title, // خليه نفس الـ title عشان يبقى متسق
       description,
       url: `${baseUrl}/projects/${projectId}?lng=${lng}`,
       type: "article",
       locale: lng === "ar" ? "ar" : "en",
-      siteName: lng === "ar" ? "المهندس أحمد المبيض" : "Eng Ahmed Almobayed",
+      siteName: lng === "ar" ? "المهندس أحمد المبيض" : "Eng Ahmed Almobayd",
       images: [
         {
           url: normalizedImagePath,
           width: 1200,
           height: 630,
-          alt: imageAlt,
+          alt: projectData.name,
         },
       ],
     },
 
     twitter: {
       card: "summary_large_image",
-      title: projectData.name,
+      title,
       description,
       images: [normalizedImagePath],
     },
@@ -140,7 +142,6 @@ export async function generateMetadata({ params }) {
       apple: "/favicon.ico",
     },
   };
-  return meta;
 }
 
 export default async function page({ params, searchParams }) {
@@ -149,8 +150,14 @@ export default async function page({ params, searchParams }) {
   const lng = awaitedSearchParams.lng;
   const { t } = await getTranslation(lng);
   const projects = t("projects", { returnObjects: true });
+  const { t: otherLngT } = await getTranslation(lng === "ar" ? "en" : "ar");
+  const otherLngProjects = otherLngT("projects", { returnObjects: true });
+
   const projectId = awaitedParams.id;
   const projectData = projects.find((project) => project.id == projectId);
+  const otherLngProject = otherLngProjects?.find(
+    (project) => project.id == projectId
+  );
   const relatedIds = projectData?.relatedIds;
   const relatedProjects = projects.filter((project) => {
     return relatedIds.includes(project.id);
@@ -172,30 +179,81 @@ export default async function page({ params, searchParams }) {
       {projectData.name}
     </Typography>,
   ];
+  const rawImagePath =
+    projectData.cover || projectData.images?.[0] || "/hero.png";
+
+  const normalizedImagePath = rawImagePath.startsWith("http")
+    ? rawImagePath
+    : `${baseUrl}${rawImagePath.replace("./", "/")}`;
+
+  const breadcrumbJsonLd = getBreadcrumbJsonLd({
+    baseUrl,
+    lng,
+    items: [
+      {
+        nameAr: "الرئيسية",
+        nameEn: "Home",
+        href: lng === "ar" ? "/?lng=ar" : "/?lng=en",
+      },
+      {
+        nameAr: "المشاريع",
+        nameEn: "Projects",
+        href: lng === "ar" ? "/projects?lng=ar" : "/projects?lng=en",
+      },
+      {
+        nameAr: lng === "ar" ? projectData.name : otherLngProject.name,
+        nameEn: lng === "en" ? projectData.name : otherLngProject.name,
+        href:
+          lng === "ar"
+            ? `/projects/${projectId}?lng=ar`
+            : `/projects/${projectId}?lng=en`,
+      },
+    ],
+  });
+
+  // Article schema
+  const articleJsonLd = getProjectArticleJsonLd({
+    baseUrl,
+    lng,
+    projectData,
+    normalizedImagePath,
+  });
   return (
-    <Box>
-      <Container maxWidth="xl">
-        <Breadcrumbs
-          separator={">"}
-          aria-label="breadcrumb"
-          sx={{ my: 3, mt: 4 }}
-        >
-          {breadcrumbs}
-        </Breadcrumbs>
-        <Box>
-          <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold" }}>
-            {lng === "ar" ? "تفاصيل المشروع" : "Project Details"}
-          </Typography>
-          <ProjectCard data={projectData} lng={lng} />
-        </Box>
-        <Box sx={{ py: 4 }}>
-          <ProjectImagesGrid project={projectData} lng={lng} />
-        </Box>
-        <Box>
-          <ProjectRelatedSection relatedProjects={relatedProjects} lng={lng} />
-        </Box>
-      </Container>
-    </Box>
+    <>
+      <Script id={`breadcrumb-project-${projectId}`} type="application/ld+json">
+        {JSON.stringify(breadcrumbJsonLd)}
+      </Script>
+
+      <Script id={`article-project-${projectId}`} type="application/ld+json">
+        {JSON.stringify(articleJsonLd)}
+      </Script>
+      <Box>
+        <Container maxWidth="xl">
+          <Breadcrumbs
+            separator={">"}
+            aria-label="breadcrumb"
+            sx={{ my: 3, mt: 4 }}
+          >
+            {breadcrumbs}
+          </Breadcrumbs>
+          <Box>
+            <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold" }}>
+              {lng === "ar" ? "تفاصيل المشروع" : "Project Details"}
+            </Typography>
+            <ProjectCard data={projectData} lng={lng} />
+          </Box>
+          <Box sx={{ py: 4 }}>
+            <ProjectImagesGrid project={projectData} lng={lng} />
+          </Box>
+          <Box>
+            <ProjectRelatedSection
+              relatedProjects={relatedProjects}
+              lng={lng}
+            />
+          </Box>
+        </Container>
+      </Box>
+    </>
   );
 }
 function ProjectCard({ data, lng }) {

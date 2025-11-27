@@ -1,28 +1,48 @@
+import { arAboutData, enAboutData } from "./about";
+
+const baseUrl = "https://ahmadmobayed.com";
+
+/* ---------------------------------------------
+   SHORT SEO VERSIONS (أفضل نسخة للسيو)
+--------------------------------------------- */
+
+// Arabic SEO description for ABOUT page
+const arAboutSeoDescription =
+  "تعرف على المهندس أحمد المبيض، مهندس معماري ومتخصص في التصميم الداخلي وصانع محتوى تجاوزت مشاهداته المليار، يقدم حلولاً مبتكرة للمشاريع السكنية والتجارية ويقود شركات رائدة في مجال التصميم.";
+
+// English SEO description for ABOUT page
+const enAboutSeoDescription =
+  "Learn about Eng. Ahmed Almobayd, an architect and interior design specialist with over one billion views, providing innovative residential and commercial solutions and leading top design companies.";
+
+/* ---------------------------------------------
+   META (ARABIC VERSION)
+--------------------------------------------- */
+
 export const arMetaData = {
   mainPage: {
-    title: `مهندس أحمد المبيض - استشارات تصميم داخلي وتخطيط وتنفيذ`,
-    description: `مهندس أحمد المبيض يقدم استشارات تصميم داخلي، تخطيط وتنفيذ المشاريع السكنية والتجارية. احجز استشارتك الآن لتحويل رؤيتك إلى واقع.`,
-    keywords: `مهندس داخلي, استشارات تصميم, تخطيط مشاريع, تنفيذ ديكور, تصميم منازل, تصميم مكاتب, أحمد المبيض`,
+    title: `مهندس أحمد المبيض - تصميم داخلي وتخطيط وتنفيذ`,
+    description: `استشارات تصميم داخلي، تخطيط، وتنفيذ مشاريع سكنية وتجارية باحترافية عالية مع المهندس أحمد المبيض.`,
+    keywords: `تصميم داخلي, مهندس داخلي, ديكور, تخطيط مشاريع, تنفيذ ديكور, أحمد المبيض, تصميم منازل, تصميم مكاتب`,
     openGraph: {
-      title: `مهندس أحمد المبيض - استشارات تصميم داخلي وتخطيط وتنفيذ`,
-      description: `مهندس أحمد المبيض يقدم استشارات تصميم داخلي، تخطيط وتنفيذ المشاريع السكنية والتجارية. احجز استشارتك الآن لتحويل رؤيتك إلى واقع.`,
-      url: "https://ahmadmobayed.com",
+      title: `مهندس أحمد المبيض - تصميم داخلي وتخطيط وتنفيذ`,
+      description: `استشارات تصميم داخلي، تخطيط وتنفيذ المشاريع السكنية والتجارية. احجز استشارتك الآن.`,
+      url: baseUrl,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "المهندس أحمد المبيض - استشارات تصميم داخلي وتخطيط وتنفيذ",
+          alt: "المهندس أحمد المبيض - تصميم داخلي وتخطيط وتنفيذ",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "احجز استشارتك مع المهندس أحمد المبيض",
+      title: "المهندس أحمد المبيض - تصميم داخلي",
       description:
-        "احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+        "استشارات تصميم داخلي وتخطيط وتنفيذ المشاريع السكنية والتجارية.",
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/favicon.ico",
@@ -30,30 +50,31 @@ export const arMetaData = {
       apple: "/favicon.ico",
     },
   },
+
+  /* ---------- ABOUT PAGE ---------- */
   aboutPage: {
-    title: `عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط`,
-    description: `تعرف على المهندس أحمد المبيض، خبير التصميم الداخلي والتخطيط. اكتشف رؤيته، خبرته، ومشاريعه الناجحة في تحويل المساحات إلى بيئات ملهمة.`,
-    keywords: `عن أحمد المبيض, خبرة تصميم داخلي, تخطيط مشاريع, سيرتي الذاتية, مشاريع ناجحة, تصميم منازل, تصميم مكاتب`,
+    title: `عن المهندس أحمد المبيض – مهندس معماري وتصميم داخلي`,
+    description: arAboutSeoDescription,
+    keywords: `عن أحمد المبيض, مهندس معماري, تصميم داخلي, ديكور, خبرة تصميم داخلي, مشاريع أحمد المبيض, سيرة ذاتية, Dream Studio, Decor Stores`,
     openGraph: {
-      title: `عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط`,
-      description: `تعرف على المهندس أحمد المبيض، خبير التصميم الداخلي والتخطيط. اكتشف رؤيته، خبرته، ومشاريعه الناجحة في تحويل المساحات إلى بيئات ملهمة.`,
-      url: "https://ahmadmobayed.com/about",
+      title: `عن المهندس أحمد المبيض – خبرة في التصميم الداخلي والعمارة`,
+      description: arAboutSeoDescription,
+      url: `${baseUrl}/about`,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط",
+          alt: arAboutData.title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "عن المهندس أحمد المبيض - خبرة في التصميم الداخلي والتخطيط",
-      description:
-        "تعرف على المهندس أحمد المبيض، خبير التصميم الداخلي والتخطيط. اكتشف رؤيته، خبرته، ومشاريعه الناجحة في تحويل المساحات إلى بيئات ملهمة.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+      title: `عن المهندس أحمد المبيض`,
+      description: arAboutSeoDescription,
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/favicon.ico",
@@ -61,30 +82,31 @@ export const arMetaData = {
       apple: "/favicon.ico",
     },
   },
+
+  /* ---------- BOOKING PAGE ---------- */
   bookingPage: {
-    title: `احجز استشارتك مع المهندس أحمد المبيض - تصميم داخلي وتخطيط`,
-    description: `احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.`,
-    keywords: `احجز استشارة, مهندس داخلي, تصميم داخلي, تخطيط مشاريع, تنفيذ ديكور, تصميم منازل, تصميم مكاتب, أحمد المبيض`,
+    title: `احجز استشارتك مع المهندس أحمد المبيض – تصميم داخلي وتخطيط`,
+    description: `احجز جلسة استشارية مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع مميز.`,
+    keywords: `احجز استشارة, تصميم داخلي, مهندس داخلي, تصميم منازل, تخطيط مشاريع, تنفيذ ديكور, أحمد المبيض`,
     openGraph: {
-      title: `احجز استشارتك مع المهندس أحمد المبيض - تصميم داخلي وتخطيط`,
-      description: `احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.`,
-      url: "https://ahmadmobayed.com/booking",
+      title: `احجز استشارتك مع المهندس أحمد المبيض`,
+      description: `جلسات استشارية في التصميم الداخلي والتخطيط والتنفيذ.`,
+      url: `${baseUrl}/booking`,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "احجز استشارتك مع المهندس أحمد المبيض - تصميم داخلي وتخطيط",
+          alt: "احجز استشارتك مع المهندس أحمد المبيض",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "احجز استشارتك مع المهندس أحمد المبيض",
-      description:
-        "احجز استشارتك مع المهندس أحمد المبيض لتحويل رؤيتك التصميمية إلى واقع ملموس. خبرة في التصميم الداخلي، التخطيط، والتنفيذ.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+      title: "احجز استشارتك الآن",
+      description: `تصميم داخلي، ديكور، تخطيط وتنفيذ مع المهندس أحمد المبيض.`,
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/favicon.ico",
@@ -92,30 +114,31 @@ export const arMetaData = {
       apple: "/favicon.ico",
     },
   },
+
+  /* ---------- PROJECTS PAGE ---------- */
   projectsPage: {
-    title: `مشاريع المهندس أحمد المبيض - تصميم داخلي وتنفيذ`,
-    description: `استكشف مشاريع المهندس أحمد المبيض في التصميم الداخلي والتنفيذ. شاهد كيف يحول الأفكار إلى مساحات عملية وجميلة تلبي احتياجات العملاء.`,
-    keywords: `مشاريع أحمد المبيض, تصميم داخلي, تنفيذ ديكور, تخطيط مشاريع, تصميم منازل, تصميم مكاتب, أمثلة مشاريع`,
+    title: `مشاريع تصميم داخلي وتنفيذ – المهندس أحمد المبيض`,
+    description: `استكشف أحدث مشاريع التصميم الداخلي والتنفيذ التي قدمها المهندس أحمد المبيض، مع حلول مبتكرة وجودة عالية.`,
+    keywords: `مشاريع تصميم داخلي, مشاريع ديكور, تنفيذ ديكور, مشاريع أحمد المبيض, تصميم داخلي سكني, تصميم مكاتب`,
     openGraph: {
-      title: `مشاريع المهندس أحمد المبيض - تصميم داخلي وتنفيذ`,
-      description: `استكشف مشاريع المهندس أحمد المبيض في التصميم الداخلي والتنفيذ. شاهد كيف يحول الأفكار إلى مساحات عملية وجميلة تلبي احتياجات العملاء.`,
-      url: "https://ahmadmobayed.com/projects",
+      title: `مشاريع تصميم داخلي – المهندس أحمد المبيض`,
+      description: `نماذج من أعمال التصميم الداخلي والتنفيذ للمهندس أحمد المبيض.`,
+      url: `${baseUrl}/projects`,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "مشاريع المهندس أحمد المبيض - تصميم داخلي وتنفيذ",
+          alt: "مشاريع تصميم داخلي – المهندس أحمد المبيض",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "مشاريع المهندس أحمد المبيض - تصميم داخلي وتنفيذ",
-      description:
-        "استكشف مشاريع المهندس أحمد المبيض في التصميم الداخلي والتنفيذ. شاهد كيف يحول الأفكار إلى مساحات عملية وجميلة تلبي احتياجات العملاء.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+      title: "مشاريع تصميم داخلي",
+      description: `تعرف على أبرز مشاريع التصميم الداخلي والتنفيذ.`,
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/favicon.ico",
@@ -124,31 +147,36 @@ export const arMetaData = {
     },
   },
 };
+
+/* ---------------------------------------------
+   META (ENGLISH VERSION)
+--------------------------------------------- */
+
 export const enMetaData = {
   mainPage: {
-    title: `Eng. Ahmed Almobayd - Interior Design Consultation, Planning & Execution`,
-    description: `Eng. Ahmed Almobayd offers interior design consultation, planning, and execution for residential and commercial projects. Book your consultation now to transform your vision into reality.`,
-    keywords: `Interior Designer, Design Consultation, Project Planning, Decor Execution, Home Design, Office Design, Ahmed Almobayd`,
+    title: `Eng. Ahmed Almobayd - Interior Design, Planning & Execution`,
+    description: `Professional interior design consultation, planning, and execution services for residential and commercial projects.`,
+    keywords: `interior design, interior designer, decor, project planning, execution, home design, office design, Ahmed Almobayd`,
     openGraph: {
-      title: `Eng. Ahmed Almobayd - Interior Design Consultation, Planning & Execution`,
-      description: `Eng. Ahmed Almobayd offers interior design consultation, planning, and execution for residential and commercial projects. Book your consultation now to transform your vision into reality.`,
-      url: "https://ahmadmobayed.com",
+      title: `Eng. Ahmed Almobayd - Interior Design Expert`,
+      description: `Interior design, planning and execution for homes and businesses.`,
+      url: baseUrl,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "Eng. Ahmed Almobayd - Interior Design Consultation, Planning & Execution",
+          alt: "Eng Ahmed Almobayd Interior Design",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Book Your Consultation with Eng. Ahmed Almobayd",
+      title: "Interior Design Consultation",
       description:
-        "Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+        "Get expert interior design and planning with Eng. Ahmed Almobayd.",
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/favicon.ico",
@@ -156,31 +184,31 @@ export const enMetaData = {
       apple: "/favicon.ico",
     },
   },
+
+  /* ---------- ABOUT PAGE ---------- */
   aboutPage: {
-    title: `About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning`,
-    description: `Learn about Eng. Ahmed Almobayd, an expert in interior design and planning. Discover his vision, expertise, and successful projects in transforming spaces into inspiring environments.`,
-    keywords: `About Ahmed Almobayd, Interior Design Expertise, Project Planning, Resume, Successful Projects, Home Design, Office Design`,
+    title: `About Eng. Ahmed Almobayd – Architect & Interior Design Expert`,
+    description: enAboutSeoDescription,
+    keywords: `About Ahmed Almobayd, architect, interior design expert, resume, Dream Studio, Decor Stores`,
     openGraph: {
-      title: `About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning`,
-      description: `Learn about Eng. Ahmed Almobayd, an expert in interior design and planning. Discover his vision, expertise, and successful projects in transforming spaces into inspiring environments.`,
-      url: "https://ahmadmobayed.com/about",
+      title: `About Eng. Ahmed Almobayd`,
+      description: enAboutSeoDescription,
+      url: `${baseUrl}/about`,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning",
+          alt: enAboutData.title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title:
-        "About Eng. Ahmed Almobayd - Expertise in Interior Design & Planning",
-      description:
-        "Learn about Eng. Ahmed Almobayd, an expert in interior design and planning. Discover his vision, expertise, and successful projects in transforming spaces into inspiring environments.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+      title: `About Eng. Ahmed Almobayd`,
+      description: enAboutSeoDescription,
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/about.ico",
@@ -188,30 +216,31 @@ export const enMetaData = {
       apple: "/about.ico",
     },
   },
+
+  /* ---------- BOOKING PAGE ---------- */
   bookingPage: {
-    title: `Book Your Consultation with Eng. Ahmed Almobayd - Interior Design & Planning`,
-    description: `Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.`,
-    keywords: `Book Consultation, Interior Designer, Interior Design, Project Planning, Decor Execution, Home Design, Office Design, Ahmed Almobayd`,
+    title: `Book a Consultation – Eng. Ahmed Almobayd`,
+    description: `Book an interior design consultation with Eng. Ahmed Almobayd to bring your vision to life.`,
+    keywords: `book consultation, interior design, project planning, decor execution, Ahmed Almobayd`,
     openGraph: {
-      title: `Book Your Consultation with Eng. Ahmed Almobayd - Interior Design & Planning`,
-      description: `Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.`,
-      url: "https://ahmadmobayed.com/booking",
+      title: `Book Your Consultation`,
+      description: `Professional interior design and planning consultation.`,
+      url: `${baseUrl}/booking`,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "Book Your Consultation with Eng. Ahmed Almobayd - Interior Design & Planning",
+          alt: "Book Interior Design Consultation",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Book Your Consultation with Eng. Ahmed Almobayd",
-      description:
-        "Book your consultation with Eng. Ahmed Almobayd to transform your design vision into reality. Expertise in interior design, planning, and execution.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+      title: "Book Now",
+      description: `Interior design & decor consultation with Eng. Ahmed.`,
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/favicon.ico",
@@ -219,30 +248,32 @@ export const enMetaData = {
       apple: "/favicon.ico",
     },
   },
+
+  /* ---------- PROJECTS PAGE ---------- */
   projectsPage: {
-    title: `Eng. Ahmed Almobayd's Projects - Interior Design & Execution`,
-    description: `Explore Eng. Ahmed Almobayd's projects in interior design and execution. See how he transforms ideas into functional and beautiful spaces that meet clients' needs.`,
-    keywords: `Ahmed Almobayd Projects, Interior Design, Decor Execution, Project Planning, Home Design, Office Design, Project Examples`,
+    title: `Interior Design & Execution Projects – Eng. Ahmed Almobayd`,
+    description: `Explore interior design and execution projects delivered by Eng. Ahmed Almobayd with creativity and attention to detail.`,
+    keywords: `interior design projects, decor execution, Ahmed Almobayd, home design, office design, project examples`,
     openGraph: {
-      title: `Eng. Ahmed Almobayd's Projects - Interior Design & Execution`,
-      description: `Explore Eng. Ahmed Almobayd's projects in interior design and execution. See how he transforms ideas into functional and beautiful spaces that meet clients' needs.`,
-      url: "https://ahmadmobayed.com/projects",
+      title: `Interior Design Projects – Eng. Ahmed`,
+      description: `A collection of interior design and decor execution projects.`,
+      url: `${baseUrl}/projects`,
       type: "website",
       images: [
         {
-          url: "https://ahmadmobayed.com/hero.png",
+          url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "Eng. Ahmed Almobayd's Projects - Interior Design & Execution",
+          alt: "Interior Design Projects – Eng. Ahmed",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Eng. Ahmed Almobayd's Projects - Interior Design & Execution",
+      title: "Interior Design Projects",
       description:
-        "Explore Eng. Ahmed Almobayd's projects in interior design and execution. See how he transforms ideas into functional and beautiful spaces that meet clients' needs.",
-      images: ["https://ahmadmobayed.com/hero.png"],
+        "Explore creative interior design and decor execution projects.",
+      images: [`${baseUrl}/hero.png`],
     },
     icons: {
       icon: "/favicon.ico",

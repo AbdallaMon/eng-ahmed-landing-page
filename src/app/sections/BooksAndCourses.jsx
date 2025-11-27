@@ -18,6 +18,7 @@ export async function BooksAndCourses({ lng }) {
         <Container maxWidth="xl" sx={{ mt: { xs: 2, md: 2 } }}>
           <Typography
             variant="h4"
+            component="h1"
             sx={{
               fontWeight: 700,
               textAlign: "center",

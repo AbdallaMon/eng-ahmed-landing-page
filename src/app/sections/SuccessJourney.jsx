@@ -24,6 +24,7 @@ export async function SuccessJourney({ lng }) {
                   <Typography
                     variant="h3"
                     fontSize={{ xs: "1.1rem", md: "2rem" }}
+                    component="h1"
                     sx={{
                       maxWidth: {
                         xs: "300px",

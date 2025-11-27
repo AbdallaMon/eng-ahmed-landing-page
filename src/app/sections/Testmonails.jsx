@@ -39,6 +39,7 @@ export async function Testmonails({ lng }) {
               </Typography>
               <Typography
                 variant="h3"
+                component="h1"
                 mt={2}
                 mb={4}
                 sx={{

@@ -1,3 +1,5 @@
+import ProjectImagesGrid from "@/app/component/projects/ProjectImagesGrid";
+import ProjectRelatedSection from "@/app/component/projects/ProjectRelatedSection";
 import { colors } from "@/app/data/constants";
 import { getTranslation } from "@/app/i18n";
 import {
@@ -9,6 +11,134 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import { cookies } from "next/headers";
+
+export async function generateMetadata({ params }) {
+  const cookieStore = await cookies();
+  const lng = cookieStore.get("i18next")?.value || "ar";
+  const { t } = await getTranslation(lng);
+  const projects = t("projects", { returnObjects: true });
+
+  const awaitedParams = await params;
+  const projectId = awaitedParams.id;
+  const projectData = projects.find((project) => project.id == projectId);
+
+  if (!projectData) {
+    const baseTitle = lng === "ar" ? "المشروع غير موجود" : "Project Not Found";
+
+    return {
+      title: baseTitle,
+      description: baseTitle,
+      openGraph: {
+        title: baseTitle,
+        description: baseTitle,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: baseTitle,
+        description: baseTitle,
+      },
+      icons: {
+        icon: "/favicon.ico",
+        shortcut: "/favicon.ico",
+        apple: "/favicon.ico",
+      },
+    };
+  }
+
+  const engAhmedText =
+    lng === "ar"
+      ? "- مشاريع المهندس احمد المبيض"
+      : "- Eng Ahmed Almobayed Projects";
+
+  const description = `${projectData.description}`;
+
+  // Base URL for correct absolute URLs in meta
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
+
+  // Prefer cover, fallback to first image, fallback to hero.png
+  const rawImagePath =
+    projectData.cover || projectData.images?.[0] || "/hero.png";
+
+  const normalizedImagePath = rawImagePath.startsWith("http")
+    ? rawImagePath
+    : `${baseUrl}${rawImagePath.replace("./", "/")}`;
+
+  const imageAlt = lng === "ar" ? `${projectData.name}` : `${projectData.name}`;
+
+  // Build keywords list then convert to a single string (like your static meta)
+  const keywordsList =
+    lng === "ar"
+      ? [
+          "مشاريع",
+          "تصميم داخلي",
+          "هندسة معمارية",
+          "ديكور",
+          "المهندس احمد",
+          "مشاريع احمد المبيض",
+          "المهندس احمد المبيض",
+          projectData.name,
+          projectData.location,
+          projectData.category,
+          String(projectData.year),
+        ]
+      : [
+          "projects",
+          "interior design",
+          "architecture",
+          "decor",
+          "eng ahmed",
+          "ahmed almobayed",
+          "eng ahmed almobayed",
+          projectData.name,
+          projectData.location,
+          projectData.category,
+          String(projectData.year),
+        ];
+
+  const keywords = keywordsList.join(", "); // <-- makes it same style as your arMetaData/enMetaData
+  const meta = {
+    title: (lng === "ar" ? "تصميم " : "Design ") + projectData.name,
+    description,
+    keywords, // string, not array
+
+    openGraph: {
+      title: (lng === "ar" ? "تصميم " : "Design ") + projectData.name,
+      description,
+      url: `${baseUrl}/projects/${projectId}?lng=${lng}`,
+      type: "article",
+      locale: lng === "ar" ? "ar" : "en",
+      siteName: lng === "ar" ? "المهندس أحمد المبيض" : "Eng Ahmed Almobayed",
+      images: [
+        {
+          url: normalizedImagePath,
+          width: 1200,
+          height: 630,
+          alt: imageAlt,
+        },
+      ],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: projectData.name,
+      description,
+      images: [normalizedImagePath],
+    },
+
+    alternates: {
+      canonical: `${baseUrl}/projects/${projectId}`,
+    },
+
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  };
+  return meta;
+}
 
 export default async function page({ params, searchParams }) {
   const awaitedSearchParams = await searchParams;
@@ -18,11 +148,21 @@ export default async function page({ params, searchParams }) {
   const projects = t("projects", { returnObjects: true });
   const projectId = awaitedParams.id;
   const projectData = projects.find((project) => project.id == projectId);
+  const relatedIds = projectData?.relatedIds;
+  const relatedProjects = projects.filter((project) => {
+    return relatedIds.includes(project.id);
+  });
   const breadcrumbs = [
     <Box component={"a"} underline="hover" key="1" color="inherit" href="/">
       {lng === "ar" ? "الصفحة الرئيسية" : "Home"}
     </Box>,
-    <Box underline="hover" key="2" color="inherit" href="/projects">
+    <Box
+      component={"a"}
+      underline="hover"
+      key="2"
+      color="inherit"
+      href="/projects"
+    >
       {lng === "ar" ? "المشاريع" : "Projects"}
     </Box>,
     <Typography key="3" sx={{ color: "text.primary" }}>
@@ -45,74 +185,12 @@ export default async function page({ params, searchParams }) {
           </Typography>
           <ProjectCard data={projectData} lng={lng} />
         </Box>
-        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mt: 6 }}>
-          <Grid container size={{ xs: 12, md: 4 }} spacing={{ xs: 2, md: 3 }}>
-            <Grid size={12}>
-              <Box
-                component="img"
-                src={`/projects/project-${projectId}/1.png`}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Grid>
-            <Grid size={12}>
-              <Box
-                component="img"
-                src={`/projects/project-${projectId}/2.png`}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Grid container size={{ xs: 12, md: 4 }} spacing={{ xs: 2, md: 3 }}>
-            <Grid size={12}>
-              <Box
-                component="img"
-                src={`/projects/project-${projectId}/3.png`}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Grid>
-            <Grid size={12}>
-              <Box
-                component="img"
-                src={`/projects/project-${projectId}/4.png`}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Grid container size={{ xs: 12, md: 4 }} spacing={{ xs: 2, md: 3 }}>
-            <Grid size={12}>
-              <Box
-                component="img"
-                src={`/projects/project-${projectId}/5.png`}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Grid>
-            <Grid size={12}>
-              <Box
-                component="img"
-                src={`/projects/project-${projectId}/6.png`}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+        <Box sx={{ py: 4 }}>
+          <ProjectImagesGrid project={projectData} lng={lng} />
+        </Box>
+        <Box>
+          <ProjectRelatedSection relatedProjects={relatedProjects} lng={lng} />
+        </Box>
       </Container>
     </Box>
   );

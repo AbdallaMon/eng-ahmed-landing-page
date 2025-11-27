@@ -28,6 +28,7 @@ export async function FAQ({ lng }) {
           >
             <Typography
               variant="h3"
+              component="h1"
               mt={2}
               mb={1.2}
               sx={{

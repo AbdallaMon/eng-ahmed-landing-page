@@ -12,13 +12,44 @@ import { Testmonails } from "../sections/Testmonails";
 import { FAQ } from "../sections/FAQ";
 import { Hero } from "../sections/Hero";
 import { BooksAndCourses } from "../sections/BooksAndCourses";
-
+import {
+  getAboutWebPageJsonLd,
+  getBreadcrumbJsonLd,
+} from "../seo/jsonLdHelpers";
+import Script from "next/script";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 export default async function Home({ searchParams }) {
   const awaitedSearchParams = await searchParams;
   const lng = awaitedSearchParams.lng;
+  const aboutPageJsonLd = getAboutWebPageJsonLd({ baseUrl, lng });
 
+  // 2) Breadcrumb schema
+  const breadcrumbJsonLd = getBreadcrumbJsonLd({
+    baseUrl,
+    lng,
+    items: [
+      {
+        nameAr: "الرئيسية",
+        nameEn: "Home",
+        href: lng === "ar" ? "/?lng=ar" : "/?lng=en", // عدلها لو مسارك مختلف
+      },
+      {
+        nameAr: "عن المهندس",
+        nameEn: "About",
+        href: lng === "ar" ? "/about?lng=ar" : "/about?lng=en",
+      },
+    ],
+  });
   return (
     <Box>
+      <Script id="about-webpage-schema" type="application/ld+json">
+        {JSON.stringify(aboutPageJsonLd)}
+      </Script>
+
+      <Script id="breadcrumb-about" type="application/ld+json">
+        {JSON.stringify(breadcrumbJsonLd)}
+      </Script>
+
       <Hero lng={lng} />
       <CTASection lng={lng} />
       <About lng={lng} />

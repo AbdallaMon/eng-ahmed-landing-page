@@ -23,6 +23,7 @@ export async function OurNumbersSection({ lng }) {
       <Container maxWidth="lg">
         <Typography
           variant="h4"
+          component="h1"
           sx={{
             fontWeight: 700,
             textAlign: "center",
