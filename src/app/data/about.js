@@ -1,5 +1,5 @@
 const aboutImages = {
-  profile: "./about.png",
+  profile: "/about.png",
   blur: "./about-blur.png",
   lowerRightDecoration: "./about-lower-right.png",
   lowerLeftDecoration: "./about-lower-left.png",
