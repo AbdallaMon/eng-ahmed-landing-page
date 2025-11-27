@@ -115,6 +115,7 @@ export default function BeforeAndAfterSlider({
         component="img"
         src={BottomImgSrc}
         alt={topImage === "after" ? beforeLabel : afterLabel}
+        loading="lazy"
         sx={{
           position: "absolute",
           inset: 0,
@@ -136,6 +137,7 @@ export default function BeforeAndAfterSlider({
           component="img"
           src={TopImgSrc}
           alt={topImage === "after" ? afterLabel : beforeLabel}
+          loading="lazy"
           sx={{
             width: "100%",
             height: "100%",
@@ -240,7 +242,8 @@ export default function BeforeAndAfterSlider({
         <Box
           component="img"
           src={grabIconSrc}
-          alt=""
+          alt="grab icon"
+          loading="lazy"
           draggable={false}
           sx={{
             width: 32,

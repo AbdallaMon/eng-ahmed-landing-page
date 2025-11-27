@@ -36,7 +36,13 @@ export async function Footer({ lng }) {
               },
             }}
           >
-            <Box component="img" src="/logo.png" sx={{ width: "40px" }} />{" "}
+            <Box
+              component="img"
+              src="/logo.png"
+              sx={{ width: "40px" }}
+              loading="lazy"
+              alt="المهندس احمد logo"
+            />{" "}
           </Box>
           <Box
             sx={{
@@ -118,7 +124,13 @@ export async function Footer({ lng }) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Box component="img" src="/logo.png" sx={{ width: "40px" }} />{" "}
+                <Box
+                  component="img"
+                  src="/logo.png"
+                  sx={{ width: "40px" }}
+                  alt="المهندس احمد logo"
+                  loading="lazy"
+                />{" "}
               </Grid>
             </Grid>
 
@@ -149,6 +161,8 @@ function MyFakeInputEmail() {
                 component="img"
                 src="/email.png"
                 sx={{ width: { xs: "20px", md: "25px" }, ml: 1.5 }}
+                alt="email icon"
+                loading="lazy"
               />
             ),
           },

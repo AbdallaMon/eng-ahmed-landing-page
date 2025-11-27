@@ -164,6 +164,7 @@ export default function AboutImagesShapes({ images }) {
         }}
         src={images.upperLeftDecoration}
         component="img"
+        loading="lazy"
         alt=""
       />
       <Box
@@ -177,6 +178,7 @@ export default function AboutImagesShapes({ images }) {
         }}
         src={images.lowerLeftDecoration}
         component="img"
+        loading="lazy"
         alt=""
       />
       <Box
@@ -189,6 +191,7 @@ export default function AboutImagesShapes({ images }) {
           zIndex: -1,
         }}
         src={images.upperRightDecoration}
+        loading="lazy"
         component="img"
         alt=""
       />
@@ -202,6 +205,7 @@ export default function AboutImagesShapes({ images }) {
           zIndex: -1,
         }}
         src={images.lowerRightDecoration}
+        loading="lazy"
         component="img"
         alt=""
       />

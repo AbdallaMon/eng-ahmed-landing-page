@@ -59,6 +59,8 @@ export function Companycard({ cardData }) {
       <Box
         component="img"
         src={cardData.image}
+        loading="lazy"
+        alt="شركات المهندس احمد"
         sx={{
           width: { xs: "120px", md: "180px" },
           // height: { md: "80px" },

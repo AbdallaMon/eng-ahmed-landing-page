@@ -37,6 +37,7 @@ export default async function SocialMediaIcons({ sx, lng, includeText }) {
             <Box
               component="img"
               src={icon.iconSrc}
+              alt="social media icon"
               sx={{ width: { xs: "35px", md: "40px" } }}
             />
           </Box>
