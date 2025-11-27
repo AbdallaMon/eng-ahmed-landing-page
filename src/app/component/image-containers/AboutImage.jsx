@@ -28,7 +28,7 @@ export default function AboutImageContainer({ images, lng, aboutData }) {
           }}
           width={1200}
           height={1200}
-          src={"/" + images.profile}
+          src={images.profile}
           alt={profileAlt}
         />
 
