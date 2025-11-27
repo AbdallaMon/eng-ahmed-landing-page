@@ -5,12 +5,17 @@ import Image from "next/image";
 import ProjectImagesLightboxClient from "./ProjectImagesLightboxClient";
 
 function buildImageAlt({ project, index, lng }) {
-  const engAhmedBrand =
-    lng === "ar" ? "المهندس أحمد المبيض" : "Eng Ahmed Almobayed";
+  const brand = lng === "ar" ? "المهندس أحمد المبيض" : "Eng. Ahmed Almobayd";
 
-  return `${project.name} – ${project.description} – ${
+  if (lng === "ar") {
+    return `صورة رقم ${index + 1} من مشروع ${project.name} في ${
+      project.location
+    } – ${brand}`;
+  }
+
+  return `Image ${index + 1} from ${project.name} project in ${
     project.location
-  } – ${engAhmedBrand} – image ${index + 1}`;
+  } – ${brand}`;
 }
 
 export default function ProjectImagesGrid({ project, lng = "ar" }) {
@@ -104,6 +109,7 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
                   loading="lazy"
                   placeholder={img.blurDataURL ? "blur" : "empty"}
                   blurDataURL={img.blurDataURL}
+                  itemProp="contentUrl"
                   style={{
                     width: "100%",
                     height: "auto",
