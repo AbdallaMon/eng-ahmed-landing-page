@@ -26,11 +26,12 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
   const DEFAULT_WIDTH = 1200;
   const DEFAULT_HEIGHT = 800;
 
-  const imagesWithAlt = baseImages.map((img) => ({
+  const imagesWithAlt = baseImages.map((img, index) => ({
     ...img,
+    index, // store it explicitly
     width: img.width ?? DEFAULT_WIDTH,
     height: img.height ?? DEFAULT_HEIGHT,
-    alt: buildImageAlt({ project, index: img.index, lng }),
+    alt: buildImageAlt({ project, index, lng }),
   }));
 
   const sectionLabel =
@@ -109,7 +110,7 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
                   loading="lazy"
                   placeholder={img.blurDataURL ? "blur" : "empty"}
                   blurDataURL={img.blurDataURL}
-                  itemProp="contentUrl"
+                  itemProp="image"
                   style={{
                     width: "100%",
                     height: "auto",

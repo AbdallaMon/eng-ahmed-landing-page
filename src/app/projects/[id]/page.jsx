@@ -185,7 +185,7 @@ export default async function page({ params, searchParams }) {
   const normalizedImagePath = rawImagePath.startsWith("http")
     ? rawImagePath
     : `${baseUrl}${rawImagePath.replace("./", "/")}`;
-
+  console.log(normalizedImagePath, "normalizedImagePath");
   const breadcrumbJsonLd = getBreadcrumbJsonLd({
     baseUrl,
     lng,

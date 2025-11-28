@@ -95,14 +95,73 @@ export function getProjectArticleJsonLd({
   projectData,
   normalizedImagePath,
 }) {
+  // If عندك URLs منفصلة للعربي / الانجليزي ممكن تزود ?lng=...
   const projectUrl = `${baseUrl}/projects/${projectData.id}`;
 
-  return {
+  // ---- 1) Build gallery images for JSON-LD ----
+  const galleryImages =
+    Array.isArray(projectData.images) && projectData.images.length
+      ? projectData.images
+          .map((img, index) => {
+            // Some setups بيكون img مجرد string مش object
+            const rawSrc = typeof img === "string" ? img : img.src;
+
+            if (!rawSrc) return null;
+
+            const url = rawSrc.startsWith("http")
+              ? rawSrc
+              : `${baseUrl}${rawSrc.replace("./", "/")}`;
+
+            const width =
+              typeof img === "object" && img.width ? img.width : 1200;
+            const height =
+              typeof img === "object" && img.height ? img.height : 800;
+
+            const caption =
+              lng === "ar"
+                ? `صورة رقم ${index + 1} من مشروع ${projectData.name} في ${
+                    projectData.location
+                  }`
+                : `Image ${index + 1} from ${projectData.name} project in ${
+                    projectData.location
+                  }`;
+
+            return {
+              "@type": "ImageObject",
+              url,
+              width,
+              height,
+              caption,
+            };
+          })
+          .filter(Boolean)
+      : [
+          {
+            "@type": "ImageObject",
+            url: normalizedImagePath,
+            width: 1200,
+            height: 800,
+            caption: projectData.name,
+          },
+        ];
+  // ---- 2) Optional: dates if you have them on projectData ----
+  // لو عندك createdAt / updatedAt استخدمهم بدال السنة بس
+  const datePublished =
+    projectData.year && String(projectData.year).length === 4
+      ? `${projectData.year}-01-01`
+      : undefined;
+
+  // ---- 3) Build the Article JSON-LD ----
+  const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: projectData.name,
     description: projectData.description,
-    image: [normalizedImagePath],
+
+    // 👈 هنا بقى جوجل يشوف كل الصور مش واحدة بس
+    image: galleryImages,
+    thumbnailUrl: galleryImages[0]?.url,
+
     author: {
       "@type": "Person",
       "@id": `${baseUrl}/#person`,
@@ -124,4 +183,11 @@ export function getProjectArticleJsonLd({
     },
     inLanguage: lng === "ar" ? "ar" : "en",
   };
+
+  if (datePublished) {
+    articleJsonLd.datePublished = datePublished;
+    articleJsonLd.dateModified = datePublished;
+  }
+
+  return articleJsonLd;
 }
