@@ -4,13 +4,11 @@ export const arNavigations = [
   { label: "الرئيسية", href: "/", type: "HREF" },
   { label: "المشاريع", href: "/projects", type: "HREF" },
   { label: "التواصل", href: "/booking", type: "HREF" },
-  { label: "الخصوصية", href: "/privacy", type: "HREF" },
 ];
 export const enNavigations = [
   { label: "Home", href: "/", type: "HREF" },
   { label: "Projects", href: "/projects", type: "HREF" },
   { label: "Contact", href: "/booking", type: "HREF" },
-  { label: "Privacy", href: "/privacy", type: "HREF" },
 ];
 
 export const languagesSelector = {
@@ -21,8 +19,16 @@ export const languagesSelector = {
 
 export const arNavbar = [...arNavigations, languagesSelector];
 export const enNavbar = [...enNavigations, languagesSelector];
-export const arFooterNavigations = [...arNavigations];
-export const enFooterNavigations = [...enNavigations];
+export const arFooterNavigations = [
+  ...arNavigations,
+  { label: "الخصوصية", href: "/privacy", type: "HREF" },
+  { label: "الشروط", href: "/terms", type: "HREF" },
+];
+export const enFooterNavigations = [
+  ...enNavigations,
+  { label: "Privacy", href: "/privacy", type: "HREF" },
+  { label: "Terms", href: "/terms", type: "HREF" },
+];
 
 export const arCopyRightText = {
   title: `جميع الحقوق محفوظة © ${new Date().getFullYear()} ${arFullName}`,

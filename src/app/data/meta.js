@@ -182,6 +182,41 @@ export const arMetaData = {
       apple: "/favicon.ico",
     },
   },
+
+  /* ---------- TERMS PAGE ---------- */
+  termsPage: {
+    title: `شروط الخدمة – المهندس أحمد المبيض | DreamStudiio`,
+    description:
+      "اطلع على شروط الخدمة والقواعس المتعلقة باستخدام موقع المهندس أحمد المبيض، بما في ذلك سياسات الحجز وربط Google Calendar والملكية الفكرية.",
+    keywords:
+      "شروط الخدمة, أحمد المبيض, DreamStudiio, سياسات الاستخدام, حجوزات",
+    openGraph: {
+      title: `شروط الخدمة – المهندس أحمد المبيض`,
+      description:
+        "شروط وأحكام استخدام خدمات المهندس أحمد المبيض وموقع DreamStudiio.",
+      url: `${baseUrl}/terms`,
+      type: "website",
+      images: [
+        {
+          url: `${baseUrl}/hero.png`,
+          width: 1200,
+          height: 630,
+          alt: "شروط الخدمة – المهندس أحمد المبيض",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "شروط الخدمة – المهندس أحمد المبيض",
+      description: "اطلع على شروط وأحكام استخدام الخدمة.",
+      images: [`${baseUrl}/hero.png`],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
 };
 
 /* ---------------------------------------------
@@ -345,6 +380,41 @@ export const enMetaData = {
       title: "Privacy Policy – Eng. Ahmed Almobayd",
       description:
         "Limited Google Calendar scope: create/delete events you request; we do not read or sell your data.",
+      images: [`${baseUrl}/hero.png`],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+
+  /* ---------- TERMS PAGE ---------- */
+  termsPage: {
+    title: `Terms of Service – Eng. Ahmed Almobayd | DreamStudiio`,
+    description:
+      "Review the terms of service and usage rules for Eng. Ahmed Almobayd's website, including booking policies, Google Calendar linking, and intellectual property.",
+    keywords:
+      "terms of service, Ahmed Almobayd, DreamStudiio, usage policy, bookings",
+    openGraph: {
+      title: `Terms of Service – Eng. Ahmed Almobayd`,
+      description:
+        "Terms and conditions for using Eng. Ahmed Almobayd's services and DreamStudiio website.",
+      url: `${baseUrl}/terms`,
+      type: "website",
+      images: [
+        {
+          url: `${baseUrl}/hero.png`,
+          width: 1200,
+          height: 630,
+          alt: "Terms of Service – Eng. Ahmed Almobayd",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Terms of Service – Eng. Ahmed Almobayd",
+      description: "Review the terms and conditions of service.",
       images: [`${baseUrl}/hero.png`],
     },
     icons: {

@@ -20,6 +20,7 @@ import { arTestmonials } from "@/app/data/testmonials";
 import { arTranslatingIdeas } from "@/app/data/translating-ideas";
 import { arVisionData } from "@/app/data/vision";
 import { arPrivacy } from "@/app/data/privcay";
+import { arTerms } from "@/app/data/terms";
 
 const translation = {
   navBar: arNavbar,
@@ -44,5 +45,6 @@ const translation = {
   buttons: arButtons,
   meta: arMetaData,
   privacy: arPrivacy,
+  terms: arTerms,
 };
 export default translation;
