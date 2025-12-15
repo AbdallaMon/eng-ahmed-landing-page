@@ -101,7 +101,7 @@ export default async function PrivacyPage({ searchParams }) {
               mt: 2,
               p: 2,
               borderRadius: 2,
-              bgcolor: "info.main",
+              bgcolor: "warning.main",
               color: "common.white",
               fontWeight: 600,
             }}

@@ -59,9 +59,9 @@ export const arTerms = {
       id: "content",
       title: "6) الملكية الفكرية",
       body: [
-        "جميع محتوى الخدمة (النصوص والصور والتصاميم) ملك ${arFullName} أو مرخص له.",
+        `جميع محتوى الخدمة (النصوص والصور والتصاميم) ملك ${arFullName} أو مرخص له.`,
         "لا يسمح بنسخ أو إعادة نشر أو توزيع أي محتوى من الخدمة بدون إذن خطي.",
-        "جميع مشاريع وتصاميم ${arFullName} محمية بموجب قوانين الملكية الفكرية.",
+        `جميع مشاريع وتصاميم ${arFullName} محمية بموجب قوانين الملكية الفكرية.`,
       ],
     },
     {
@@ -77,7 +77,7 @@ export const arTerms = {
       id: "indemnity",
       title: "8) تعويض",
       body: [
-        "أنت توافق على تعويض ${arFullName} عن أي مطالبات أو نزاعات ناشئة عن انتهاكك لهذه الشروط.",
+        `أنت توافق على تعويض ${arFullName} عن أي مطالبات أو نزاعات ناشئة عن انتهاكك لهذه الشروط.`,
       ],
     },
     {
@@ -176,9 +176,9 @@ export const enTerms = {
       id: "content",
       title: "6) Intellectual Property",
       body: [
-        "All Service content (text, images, designs) is owned by or licensed to ${enFullName}.",
+        `All Service content (text, images, designs) is owned by or licensed to ${enFullName}.`,
         "Copying, republishing, or distributing any Service content without written permission is prohibited.",
-        "All projects and designs by ${enFullName} are protected under intellectual property laws.",
+        `All projects and designs by ${enFullName} are protected under intellectual property laws.`,
       ],
     },
     {
@@ -194,7 +194,7 @@ export const enTerms = {
       id: "indemnity",
       title: "8) Indemnification",
       body: [
-        "You agree to indemnify ${enFullName} against any claims or disputes arising from your violation of these terms.",
+        `You agree to indemnify ${enFullName} against any claims or disputes arising from your violation of these terms.`,
       ],
     },
     {
