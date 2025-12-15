@@ -146,6 +146,42 @@ export const arMetaData = {
       apple: "/favicon.ico",
     },
   },
+
+  /* ---------- PRIVACY PAGE ---------- */
+  privacyPage: {
+    title: `سياسة الخصوصية – المهندس أحمد المبيض | DreamStudiio`,
+    description:
+      "تعرف على كيفية جمع واستخدام بياناتك لدى المهندس أحمد المبيض (مالك DreamStudiio)، بما في ذلك صلاحية تقويم Google لإنشاء أو حذف الأحداث دون قراءة بيانات التقويم.",
+    keywords:
+      "سياسة الخصوصية, أحمد المبيض, DreamStudiio, Google Calendar, إنشاء أحداث, حذف أحداث, خصوصية",
+    openGraph: {
+      title: `سياسة الخصوصية – المهندس أحمد المبيض`,
+      description:
+        "نستخدم صلاحية تقويم Google لإنشاء أو حذف الأحداث التي تطلبها فقط ولا نقرأ بقية بيانات التقويم أو نبيع بياناتك.",
+      url: `${baseUrl}/privacy`,
+      type: "website",
+      images: [
+        {
+          url: `${baseUrl}/hero.png`,
+          width: 1200,
+          height: 630,
+          alt: "سياسة الخصوصية – المهندس أحمد المبيض",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "سياسة الخصوصية – المهندس أحمد المبيض",
+      description:
+        "استخدام محدود لبيانات Google Calendar لإنشاء أو حذف الأحداث فقط، دون قراءة أو بيع البيانات.",
+      images: [`${baseUrl}/hero.png`],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
 };
 
 /* ---------------------------------------------
@@ -273,6 +309,42 @@ export const enMetaData = {
       title: "Interior Design Projects",
       description:
         "Explore creative interior design and decor execution projects.",
+      images: [`${baseUrl}/hero.png`],
+    },
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
+  },
+
+  /* ---------- PRIVACY PAGE ---------- */
+  privacyPage: {
+    title: `Privacy Policy – Eng. Ahmed Almobayd | DreamStudiio`,
+    description:
+      "Learn how Eng. Ahmed Almobayd (owner of DreamStudiio) collects and uses data, including the limited Google Calendar scope to create or delete events without reading calendar contents.",
+    keywords:
+      "privacy policy, Ahmed Almobayd, DreamStudiio, Google Calendar, create events, delete events, data use",
+    openGraph: {
+      title: `Privacy Policy – Eng. Ahmed Almobayd`,
+      description:
+        "We use a limited Google Calendar scope to create or delete events you request. We do not read or sell your calendar data.",
+      url: `${baseUrl}/privacy`,
+      type: "website",
+      images: [
+        {
+          url: `${baseUrl}/hero.png`,
+          width: 1200,
+          height: 630,
+          alt: "Privacy Policy – Eng. Ahmed Almobayd",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Privacy Policy – Eng. Ahmed Almobayd",
+      description:
+        "Limited Google Calendar scope: create/delete events you request; we do not read or sell your data.",
       images: [`${baseUrl}/hero.png`],
     },
     icons: {

@@ -18,6 +18,7 @@ import { enSuccessJourney } from "@/app/data/successJourney";
 import { enTestmonials } from "@/app/data/testmonials";
 import { enTranslatingIdeas } from "@/app/data/translating-ideas";
 import { enVisionData } from "@/app/data/vision";
+import { enPrivacy } from "@/app/data/privcay";
 
 const translation = {
   navBar: enNavbar,
@@ -41,5 +42,6 @@ const translation = {
   footer: enFooter,
   buttons: enButtons,
   meta: enMetaData,
+  privacy: enPrivacy,
 };
 export default translation;

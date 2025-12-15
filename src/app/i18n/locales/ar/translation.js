@@ -19,6 +19,7 @@ import { arSuccessJourney } from "@/app/data/successJourney";
 import { arTestmonials } from "@/app/data/testmonials";
 import { arTranslatingIdeas } from "@/app/data/translating-ideas";
 import { arVisionData } from "@/app/data/vision";
+import { arPrivacy } from "@/app/data/privcay";
 
 const translation = {
   navBar: arNavbar,
@@ -42,5 +43,6 @@ const translation = {
   footer: arFooter,
   buttons: arButtons,
   meta: arMetaData,
+  privacy: arPrivacy,
 };
 export default translation;

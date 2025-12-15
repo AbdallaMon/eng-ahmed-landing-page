@@ -4,11 +4,13 @@ export const arNavigations = [
   { label: "الرئيسية", href: "/", type: "HREF" },
   { label: "المشاريع", href: "/projects", type: "HREF" },
   { label: "التواصل", href: "/booking", type: "HREF" },
+  { label: "الخصوصية", href: "/privacy", type: "HREF" },
 ];
 export const enNavigations = [
   { label: "Home", href: "/", type: "HREF" },
   { label: "Projects", href: "/projects", type: "HREF" },
   { label: "Contact", href: "/booking", type: "HREF" },
+  { label: "Privacy", href: "/privacy", type: "HREF" },
 ];
 
 export const languagesSelector = {

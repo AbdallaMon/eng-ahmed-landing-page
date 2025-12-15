@@ -1,0 +1,19 @@
+# Copilot Instructions
+
+- Stack: Next.js 16 App Router + React 19, MUI 7 with Emotion, i18next for SSR/CSR translations; framer-motion/gsap/swiper present for UI polish.
+- Root layout: `src/app/layout.js` is async; reads `lng` from `i18next` cookie (default `ar`), sets `<html lang dir>`, injects Rubik font, wraps children with `MUIProviders`, `ToastProvider`, `Navbar`, `Footer`, and `DotsLoader`.
+- Env: `NEXT_PUBLIC_SITE_URL` used for canonical links/JSON-LD; `NEXT_PUBLIC_URL` is the API base for form submits; `npm start` runs `next start -p 3005`.
+- Language routing: helper middleware in `src/proxy.js` enforces `?lng=` in URLs and syncs the cookie; pages usually read `searchParams.lng`, so include it in new links to avoid redirects.
+- i18n helpers: `getTranslation(lng, ns)` for server components; `useTranslation(lng, ns)` for client components keeps cookies/localStorage aligned. Config lives in `app/i18n/settings.js` (fallback `ar`, supported `ar|en`).
+- Translation data source: locale entry points `i18n/locales/{lng}/translation.js` aggregate JS data from `src/app/data/*.js` (hero, booking, meta, projects, buttons, etc.). Add/update both language files and the shared data modules.
+- Navigation: menu items and language selector options are defined in `data/navigations.js`; `NavbarClient` switches language by rewriting the current URL `?lng=` and setting `i18next` cookie/localStorage. Keep links language-aware.
+- Theming: `providers/MUIProvider.jsx` builds the palette from `data/constants.colors`, sets direction-specific body styles, and overrides MUI components (scrollbars, inputs, typography). Use `LanguageCacheProvider` for RTL-friendly Emotion cache when needed (e.g., forms).
+- Pages overview: `/` renders `MainPage` grid from `t("main")` data; `/about` composes many async sections in `app/sections/*`, each fetching its own translation slice; `/projects` lists `t("projects")` cards linking to detail pages; `/projects/[id]` pulls the same dataset by id plus `relatedIds`; `/booking` loads `t("booking")` and shows a video banner + form.
+- Metadata/SEO: base meta objects live in `data/meta.js` and are used in `generateMetadata` (layout, projects list). Structured data helpers in `seo/jsonLdHelpers.js` (person/org/breadcrumb/about page/project article) are injected via `<Script type="application/ld+json">` as in `about/page.jsx` and `projects/[id]/page.jsx`.
+- Assets: project cards expect images at `/projects/project-{id}.png`; other section imagery lives under `public/` (hero, logos, social icons). Keep filenames stable with the data refs.
+- Forms & requests: `BookingForm` builds fields from `bookingData.inputs`, validates required fields + phone via `mui-tel-input`, and posts to `${NEXT_PUBLIC_URL}/client/new-lead/register?lng=${lng}` using `handleRequestSubmit`. It relies on `ToastLoadingProvider` for the overlay and `react-toastify` for toasts; reset `formValues` and set `success` on 200.
+- Components: sections are server components that call `getTranslation` internally; cards/buttons live under `component/cards` and `component/buttons` for consistent styling (e.g., `LinkButton`, `CTACard`, `MainPageCard`). Prefer reusing these primitives.
+- Projects detail page specifics: metadata uses both current and other language datasets for breadcrumbs; images accept absolute URLs or public paths and fall back to cover/first image; `relatedIds` drives `ProjectRelatedSection` suggestions.
+- Navigation footer: `Footer` pulls navigation and copyright text from translations/data and surfaces social links + readonly email (`siteEmail` in `constants.js`).
+- Build/lint commands: `npm run dev`, `npm run build`, `npm start` (port 3005), `npm run lint`. No test suite is defined.
+- When adding sections or pages, keep them async server components unless interactivity is required (`"use client"`), fetch translation data with `returnObjects: true`, and thread `lng` through to downstream components.
