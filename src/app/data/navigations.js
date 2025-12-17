@@ -1,11 +1,12 @@
-import { arFullName, pageLanguages } from "./constants";
+import { arFullName, pageLanguages, siteEmail } from "./constants";
 
 export const arNavigations = [
   { label: "الرئيسية", href: "/", type: "HREF" },
   { label: "المشاريع", href: "/projects", type: "HREF" },
   {
     label: "التواصل",
-    href: "https://decorstores.ltd/products/consultation-with-engineer-ahmed?variant=48447274615095",
+    //redirect to eng email
+    href: `mailto:${siteEmail}?subject=استشارة%20مع%20المهندس%20أحمد&body=مرحباً%20المهندس%20أحمد%2C%0A%0Aأود%20أن%20أستشيرك%20في%20...`,
     type: "HREF",
   },
   { label: "الخصوصية", href: "/privacy", type: "HREF" },
@@ -16,7 +17,8 @@ export const enNavigations = [
   { label: "Projects", href: "/projects", type: "HREF" },
   {
     label: "Contact",
-    href: "https://decorstores.ltd/en/products/consultation-with-engineer-ahmed?variant=48447274615095",
+    //redirect to eng email
+    href: `mailto:${siteEmail}?subject=Consultation%20with%20Engineer%20Ahmed&body=Hello%20Engineer%20Ahmed%2C%0A%0AI%20would%20like%20to%20consult%20you%20about%20...`,
     type: "HREF",
   },
   { label: "Privacy", href: "/privacy", type: "HREF" },
