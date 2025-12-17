@@ -18,7 +18,6 @@ import SocialMediaIcons from "./SolcialMediaIcons";
 export async function Footer({ lng }) {
   const { t } = await getTranslation(lng);
   const data = t("footer", { returnObjects: true });
-  const buttons = t("buttons", { returnObjects: true });
   return (
     <Box component="footer" sx={{ py: { xs: 4, md: 6 } }}>
       <Container maxWidth="xxl">

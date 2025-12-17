@@ -35,6 +35,20 @@
     <priority>0.80</priority>
   </url>
 
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://ahmadmobayed.com/privacy</loc>
+    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
+    <priority>0.50</priority>
+  </url>
+
+  <!-- Terms of Service -->
+  <url>
+    <loc>https://ahmadmobayed.com/terms</loc>
+    <lastmod>2025-11-25T17:02:46+00:00</lastmod>
+    <priority>0.50</priority>
+  </url>
+
   <!-- Project 1 -->
   <url>
     <loc>https://ahmadmobayed.com/projects/1</loc>
