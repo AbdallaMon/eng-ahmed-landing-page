@@ -3,14 +3,22 @@ import { arFullName, pageLanguages } from "./constants";
 export const arNavigations = [
   { label: "الرئيسية", href: "/", type: "HREF" },
   { label: "المشاريع", href: "/projects", type: "HREF" },
-  { label: "التواصل", href: "/booking", type: "HREF" },
+  {
+    label: "التواصل",
+    href: "https://decorstores.ltd/products/consultation-with-engineer-ahmed?variant=48447274615095",
+    type: "HREF",
+  },
   { label: "الخصوصية", href: "/privacy", type: "HREF" },
   { label: "الشروط", href: "/terms", type: "HREF" },
 ];
 export const enNavigations = [
   { label: "Home", href: "/", type: "HREF" },
   { label: "Projects", href: "/projects", type: "HREF" },
-  { label: "Contact", href: "/booking", type: "HREF" },
+  {
+    label: "Contact",
+    href: "https://decorstores.ltd/en/products/consultation-with-engineer-ahmed?variant=48447274615095",
+    type: "HREF",
+  },
   { label: "Privacy", href: "/privacy", type: "HREF" },
   { label: "Terms", href: "/terms", type: "HREF" },
 ];

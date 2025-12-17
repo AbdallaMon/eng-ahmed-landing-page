@@ -1,6 +1,6 @@
 export const arMainPageData = [
   {
-    title: "احجز تصميمك",
+    title: "من هو المهندس أحمد؟",
     // subTitle: "وهذا السبب اللي خلّاني أبدأ",
     href: "/about",
     image: "/main-page-hero.png",
@@ -20,7 +20,7 @@ export const arMainPageData = [
 
 export const enMainPageData = [
   {
-    title: "Book Your Design",
+    title: "Who is Engineer Ahmed?",
     // subTitle: "And that's the reason I started",
     href: "/about",
     image: "/main-page-hero.png",

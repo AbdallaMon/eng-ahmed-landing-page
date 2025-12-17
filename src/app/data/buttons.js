@@ -1,8 +1,8 @@
 // Arabic buttons
 export const arButtons = {
   booking: {
-    name: "احجز جلسة سريعة",
-    href: "/booking",
+    name: "احجز استشارة",
+    href: "https://decorstores.ltd/products/consultation-with-engineer-ahmed?variant=48447274615095",
     icon: "/arrow-left.png",
   },
   viewPortfolio: { name: "شاهد بعض من أعمالي", href: "/projects" },
@@ -20,8 +20,8 @@ export const arButtons = {
 // English buttons
 export const enButtons = {
   booking: {
-    name: "Book a Quick Session",
-    href: "/booking",
+    name: "Book a Consultation",
+    href: "https://decorstores.ltd/en/products/consultation-with-engineer-ahmed?variant=48447274615095",
     icon: "/arrow-left.png",
     lng: "en",
   },
