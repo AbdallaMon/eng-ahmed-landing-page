@@ -6,6 +6,6 @@ export default async function page({ searchParams }) {
   const lng = awaitedSearchParams.lng || "ar";
   const { t } = await getTranslation(lng);
   const bookingData = t("booking", { returnObjects: true });
-  return;
+  // return;
   return <BookingPage bookingData={bookingData} lng={lng} />;
 }

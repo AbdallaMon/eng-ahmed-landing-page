@@ -83,28 +83,6 @@ export function BookingPage({ bookingData, lng }) {
               </Typography>
             </Box>
             <BookingForm bookingData={bookingData} lng={lng} />
-            {/* <Box
-              sx={{
-                mt: 4,
-                textAlign: "center",
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: { xs: "0.8rem", md: "1rem" },
-                }}
-              >
-                {bookingData.callToActionText.light}
-              </Typography>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontSize: { xs: "0.8rem", md: "1rem" },
-                }}
-              >
-                {bookingData.callToActionText.highlight}
-              </Typography>
-            </Box> */}
           </Paper>
         </Grid>
       </Grid>
