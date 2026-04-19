@@ -2,6 +2,7 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 import { LinkButton } from "../component/buttons/LinkButton";
 import { colors } from "../data/constants";
 import { getTranslation } from "../i18n";
+import { handleOpenWhatsApp } from "../utility/redirectToWhatsapp";
 
 export default async function CompaniesSection({ lng }) {
   const { t } = await getTranslation(lng);
@@ -73,12 +74,14 @@ export function Companycard({ cardData }) {
       >
         {cardData.text}
       </Typography>
+
       <LinkButton
         href={cardData.href}
         bgColor={colors.highlight}
         textColor={colors.primary}
         borderColor={colors.primary}
         name={cardData.buttonText}
+        type="WHATSAPP"
         sx={{
           textAlign: "center",
           paddingX: 6,

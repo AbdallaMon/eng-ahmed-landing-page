@@ -1,5 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import { MainPageCard } from "../cards/MainPageCard";
+import FloatingWhatsAppButton from "../buttons/FloatingWhatsAppButton";
 
 export function MainPage({ mainData, lng }) {
   return (
@@ -18,6 +19,7 @@ export function MainPage({ mainData, lng }) {
           ))}
         </Grid>
       </Box>
+      <FloatingWhatsAppButton />
     </Container>
   );
 }

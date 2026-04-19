@@ -61,3 +61,4 @@ export const socialMediaIconsLinks = [
 
 export const imageBannerSrc = "/video-banner-pc.png";
 export const imageBannerMobileSrc = "/video-banner-mobile.png";
+export const whatsAppNumber = "+971585564778";
