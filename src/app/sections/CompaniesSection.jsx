@@ -81,7 +81,7 @@ export function Companycard({ cardData }) {
         textColor={colors.primary}
         borderColor={colors.primary}
         name={cardData.buttonText}
-        type="WHATSAPP"
+        type={cardData.type}
         sx={{
           textAlign: "center",
           paddingX: 6,
