@@ -31,37 +31,53 @@ export function proxy(request) {
     return NextResponse.next();
   }
 
-  // Host-based routing for the /register (booking) section — PRODUCTION ONLY.
-  // In dev (and whenever the domain env vars are unset) this is skipped entirely,
-  // so localhost serves /register on the same domain with no rewrites/redirects.
-  const bookingDomain = process.env.NEXT_PUBLIC_BOOKING_DOMAIN;
-  const mainDomain = process.env.NEXT_PUBLIC_MAIN_DOMAIN;
-  const isProduction = process.env.NODE_ENV === "production";
-
-  if (isProduction && bookingDomain && mainDomain) {
-    const requestHost =
-      request.headers.get("x-forwarded-host") || request.headers.get("host");
-
-    // Booking domain: serve the /register subtree with the prefix stripped.
-    if (
-      requestHost === bookingDomain &&
-      !url.pathname.startsWith("/register")
-    ) {
-      const rewriteUrl = url.clone();
-      rewriteUrl.pathname = `/register${url.pathname}`;
-      return NextResponse.rewrite(rewriteUrl);
+  // ── Sub-domain mapping (booking.<domain>) ──────────────────────────────────
+  // The /register booking flow lives in src/app/register/* but is served from
+  // its own domain. NEXT_PUBLIC_BOOKING_DOMAIN = the booking host (e.g.
+  // eng-booking.example.com), set at BUILD time in production. Two directions so
+  // the booking domain is the single canonical URL:
+  //   1. ON the booking host → REWRITE "/x" to "/register/x" internally (clean
+  //      URL, no /register prefix in the address bar).
+  //   2. On any OTHER host → REDIRECT "/register/x" to the booking host "/x".
+  // Gated purely on the env var (NOT NODE_ENV): unset locally → skipped, so
+  // /register renders directly on localhost with no rewrites/redirects.
+  const BOOKING_DOMAIN = process.env.NEXT_PUBLIC_BOOKING_DOMAIN;
+  if (BOOKING_DOMAIN) {
+    // Accept either a bare host ("eng-booking.example.com") or a full URL
+    // ("https://eng-booking.example.com/..."). Normalize to host + origin.
+    let bookingHost;
+    let bookingOrigin;
+    try {
+      const u = new URL(
+        BOOKING_DOMAIN.includes("://") ? BOOKING_DOMAIN : `https://${BOOKING_DOMAIN}`,
+      );
+      bookingHost = u.hostname;
+      bookingOrigin = u.origin;
+    } catch {
+      bookingHost = BOOKING_DOMAIN.replace(/^https?:\/\//, "").split("/")[0].split(":")[0];
+      bookingOrigin = `https://${bookingHost}`;
     }
 
-    // Non-booking host hitting /register: redirect to the booking domain
-    // with the /register prefix stripped, preserving the query string.
-    if (requestHost !== bookingDomain && url.pathname.startsWith("/register")) {
-      const proto = request.headers.get("x-forwarded-proto") || "https";
-      const strippedPath = url.pathname.replace(/^\/register/, "") || "/";
-      const target = new URL(
-        `${strippedPath}${url.search}`,
-        `${proto}://${bookingDomain}`,
-      );
-      return NextResponse.redirect(target);
+    const host = (
+      request.headers.get("x-forwarded-host") ||
+      request.headers.get("host") ||
+      ""
+    ).split(":")[0];
+    const isRegisterPath =
+      url.pathname === "/register" || url.pathname.startsWith("/register/");
+
+    if (host === bookingHost) {
+      // (1) On the booking host: render the /register tree without the prefix.
+      if (!isRegisterPath) {
+        const rewriteUrl = url.clone();
+        rewriteUrl.pathname =
+          url.pathname === "/" ? "/register" : `/register${url.pathname}`;
+        return NextResponse.rewrite(rewriteUrl);
+      }
+    } else if (isRegisterPath) {
+      // (2) On another host: send /register/* to the booking host, prefix stripped.
+      const rest = url.pathname.slice("/register".length) || "/";
+      return NextResponse.redirect(`${bookingOrigin}${rest}${url.search}`);
     }
   }
 
