@@ -120,5 +120,6 @@ export const personProfileImages = [
   "/profile/ahmad-16x9.jpg",
 ];
 
-// آخر تحديث لصفحة البروفايل (حدّثه يدوياً عند تغيير بيانات الشخص)
-export const profileLastModified = "2026-06-11";
+// آخر تحديث لصفحة البروفايل — لازم ISO 8601 كاملة بالوقت والـ timezone
+// (توقيت الإمارات +04:00). حدّثه يدوياً عند تغيير بيانات الشخص.
+export const profileLastModified = "2026-06-11T12:00:00+04:00";
