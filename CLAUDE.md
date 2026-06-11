@@ -71,6 +71,19 @@ MUI `sx` prop + theme. Minimal `globals.css` (project-card hover, scrollbar) + o
 - Add new pages with a `layout.jsx` exporting `generateMetadata()`.
 - Project images live at `public/projects/project-{id}/{n}.jpg`.
 
+## `/register` section — migrated booking flow (self-contained)
+Migrated from the separate `ahmed-almobyd` "booking-landing" app into `src/app/register/` as a **self-contained, scoped section** (its own theme/providers/i18n). Lives under `/register/*`; in production it is served from a **separate domain** via `src/proxy.js` host routing.
+
+- **Routes**: `/register` (lead capture → category/location selection, GSAP-animated → lead form), `/register/checkout` (auto-pay), `/register/success`, `/register/cancel`, `/register/complete`, `/register/booking` (the 9-step wizard, uses `react-hook-form`).
+- **Backend**: same `NEXT_PUBLIC_URL` as the main site (`client/new-lead/register`, `client/new-lead/complete-register/{leadId}`, `client/upload`, `client/pay`, `client/payment-status`; wizard uses `v2/client/booking-leads`). Payment is a redirect-to-hosted-checkout flow (`client/pay` → `{url}`), returning to `/register/success` or `/register/cancel`.
+- **Scoped, independent of the main site**: its own gold/beige MUI theme + RTL emotion cache (`register/providers/RegisterThemeProvider.jsx`, keys `register-mui*`), its own flat-dictionary i18n (`register/data/dictionary/`, `translate(key)` via `useLanguage()`), its own providers (`RegisterProviders` = Language → Alert → Theme → Upload → LoadingToast). The root `layout.js`/`MUIProvider` and the main site's RTL are **not** touched.
+- **Animation**: all GSAP. The timelines in `register/lib/animations.js` target DOM by **className** (`.page-container`, `.form-page`, `.cloned-location-title`, `.reverse-button`, `.lead-card`, the category/location value classes, etc.) — if you rename a class, rename it in BOTH `animations.js` and the JSX.
+- **Folder shape**: `register/{layout.jsx, page.jsx, <route>/page.jsx, providers/, theme/, lib/, data/, hooks/, component/{forms,leadSelection,checkout,success,cancel,consultLevels,booking,layout,feedback,PayButton}}`. No barrels; `@/app/register/...` imports.
+- **Host routing** (`src/proxy.js`): **production only** (`NODE_ENV === "production"` + both domain env vars set). Then requests to the booking domain are **rewritten** to `/register/*` (prefix hidden in the URL), and `mainDomain/register/*` **redirects** to `bookingDomain/*`. In dev (or when env vars are unset) host routing is fully skipped and `/register` serves on the same localhost domain.
+- **Improvements added**: deep-linking (resume from `?leadId=`/`?step=` instead of always starting at email capture) + a **reset/"start over"** control on both the lead flow and the wizard.
+- **Dropped as unused during migration**: `@shopify/storefront-api-client`, `framer-motion`, the vestigial `AuthProvider`, and the source's `PROTOCOL`/`HOST`/`SHOPIFY_*` env vars (all had zero real usage).
+- **Note**: `register/component/feedback/DotsLoader.jsx` carries the same pre-existing `react-hooks/set-state-in-effect` lint warning as the root loader (faithful copy; non-blocking).
+
 ## Fixed (June 2026 cleanup pass)
 - ✅ Removed dead deps `framer-motion` + `react-slick` (zero imports) and the stray `// react-slick` comment.
 - ✅ Deleted dead file `projects/[id]/OldPage.jsx`.

@@ -12,6 +12,7 @@ import { getTranslation } from "./i18n";
 import DotsLoader from "./component/feedback/loaders/DotsLoader";
 import { getOrganizationJsonLd, getPersonJsonLd } from "./seo/jsonLdHelpers";
 import JsonLd from "./seo/JsonLd";
+import ChromeGate from "./component/navigations/ChromeGate";
 
 const rubic = Rubik({
   weight: ["400", "500", "600", "700"],
@@ -52,11 +53,13 @@ export default async function RootLayout({ children, params }) {
         />
         <MUIProviders lng={lng}>
           <ToastProvider>
-            <Navbar lng={lng} />
             <DotsLoader />
-
-            {children}
-            <Footer lng={lng} />
+            <ChromeGate
+              navbar={<Navbar lng={lng} />}
+              footer={<Footer lng={lng} />}
+            >
+              {children}
+            </ChromeGate>
           </ToastProvider>
         </MUIProviders>
       </body>

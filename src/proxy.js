@@ -31,6 +31,40 @@ export function proxy(request) {
     return NextResponse.next();
   }
 
+  // Host-based routing for the /register (booking) section — PRODUCTION ONLY.
+  // In dev (and whenever the domain env vars are unset) this is skipped entirely,
+  // so localhost serves /register on the same domain with no rewrites/redirects.
+  const bookingDomain = process.env.NEXT_PUBLIC_BOOKING_DOMAIN;
+  const mainDomain = process.env.NEXT_PUBLIC_MAIN_DOMAIN;
+  const isProduction = process.env.NODE_ENV === "production";
+
+  if (isProduction && bookingDomain && mainDomain) {
+    const requestHost =
+      request.headers.get("x-forwarded-host") || request.headers.get("host");
+
+    // Booking domain: serve the /register subtree with the prefix stripped.
+    if (
+      requestHost === bookingDomain &&
+      !url.pathname.startsWith("/register")
+    ) {
+      const rewriteUrl = url.clone();
+      rewriteUrl.pathname = `/register${url.pathname}`;
+      return NextResponse.rewrite(rewriteUrl);
+    }
+
+    // Non-booking host hitting /register: redirect to the booking domain
+    // with the /register prefix stripped, preserving the query string.
+    if (requestHost !== bookingDomain && url.pathname.startsWith("/register")) {
+      const proto = request.headers.get("x-forwarded-proto") || "https";
+      const strippedPath = url.pathname.replace(/^\/register/, "") || "/";
+      const target = new URL(
+        `${strippedPath}${url.search}`,
+        `${proto}://${bookingDomain}`,
+      );
+      return NextResponse.redirect(target);
+    }
+  }
+
   if (url.searchParams.has("lng")) {
     const qLng = url.searchParams.get("lng");
 
