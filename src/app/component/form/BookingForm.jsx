@@ -2,7 +2,7 @@
 import { Box, Button, Snackbar, Alert } from "@mui/material";
 import { PhoneInput } from "./inputs/PhoneInput";
 import { TextInput } from "./inputs/TextInput";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { handleRequestSubmit } from "@/app/utility/handleSubmit";
 import { useToastContext } from "@/app/providers/ToastLoadingProvider";
 import { SuccessPage } from "../pages/booking/SuccessPage";
@@ -34,7 +34,8 @@ export function BookingForm({ bookingData }) {
     });
   };
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e?.preventDefault?.();
     // 1) Check if all required fields are filled
     const hasEmptyRequired = bookingData.inputs.some((input) => {
       if (!input.isRequired) return false;
@@ -88,6 +89,7 @@ export function BookingForm({ bookingData }) {
     <LanguageCacheProvider rtl={lng === "ar"}>
       <Box
         component="form"
+        onSubmit={handleSubmit}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -96,10 +98,9 @@ export function BookingForm({ bookingData }) {
         }}
       >
         {bookingData.inputs.map((input) => (
-          <>
+          <Fragment key={input.id}>
             {input.type === "tel" ? (
               <PhoneInput
-                key={input.id}
                 input={input}
                 lng={bookingData.lng}
                 handleChange={handleChange}
@@ -109,18 +110,18 @@ export function BookingForm({ bookingData }) {
               />
             ) : (
               <TextInput
-                key={input.id}
                 input={input}
                 lng={bookingData.lng}
                 handleChange={handleChange}
                 value={formValues[input.id]}
               />
             )}
-          </>
+          </Fragment>
         ))}
 
         <Button
           fullWidth
+          type="submit"
           variant="contained"
           sx={{
             mt: 3,
@@ -132,7 +133,6 @@ export function BookingForm({ bookingData }) {
             fontSize: { xs: "0.8rem", md: "1.1rem" },
             flexDirection: lng === "en" ? "row-reverse" : "row",
           }}
-          onClick={handleSubmit}
           disabled={loading}
         >
           {bookingData.buttonText}

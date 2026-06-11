@@ -2,10 +2,23 @@
 import {
   arFullName,
   enFullName,
-  arProfession,
-  enProfession,
+  arName,
+  enName,
   siteEmail,
   socialMediaIconsLinks,
+  arJobTitle,
+  enJobTitle,
+  personBirthYear,
+  arNationality,
+  enNationality,
+  livingCountryCode,
+  arLivingCountry,
+  enLivingCountry,
+  arKnowsAbout,
+  enKnowsAbout,
+  personCompanies,
+  personProfileImages,
+  profileLastModified,
 } from "@/app/data/constants";
 import { arAboutData, enAboutData } from "../data/about";
 
@@ -14,23 +27,76 @@ function getLocalizedName(lng) {
   return lng === "ar" ? arFullName : enFullName;
 }
 
-// 1) Person schema (شخص واحد: أحمد المبيض)
-export function getPersonJsonLd(baseUrl) {
-  const sameAs = socialMediaIconsLinks
+// روابط الحسابات الرسمية الخاصة بالشخص
+function getPersonSameAs() {
+  return socialMediaIconsLinks
     .filter((link) => link.href && link.href.startsWith("http"))
     .map((link) => link.href);
+}
+
+// الشركات اللي بيقودها (تُستخدم في worksFor) — كل شركة Organization مستقلة
+function getCompaniesJsonLd(baseUrl, lng) {
+  return personCompanies.map((company) => {
+    const org = {
+      "@type": "Organization",
+      name: lng === "ar" ? company.arName : company.enName,
+      logo: `${baseUrl}${company.logo}`,
+    };
+    if (company.url) org.sameAs = [company.url];
+    return org;
+  });
+}
+
+// 1) Person schema (شخص واحد: أحمد المبيض) — النسخة الدسمة
+export function getPersonJsonLd(baseUrl, lng = "ar") {
+  const description = (
+    lng === "ar" ? arAboutData.description : enAboutData.description
+  ).trim();
 
   return {
     "@context": "https://schema.org",
     "@type": "Person",
     "@id": `${baseUrl}/#person`, // ID ثابت نستخدمه في بقيّة الSchemas
-    name: arFullName, // الاسم الرئيسي بالعربي
-    alternateName: [enFullName], // اسم إنجليزي كـ alias
-    jobTitle: arProfession, // ممكن تخليها "مهندس تصميم داخلي" لو حابب
+    name: lng === "ar" ? arFullName : enFullName,
+    alternateName: lng === "ar" ? [enFullName, enName] : [arFullName, arName],
+    description,
+    jobTitle: lng === "ar" ? arJobTitle : enJobTitle,
+    gender: "Male",
+    birthDate: personBirthYear,
+    nationality: {
+      "@type": "Country",
+      name: lng === "ar" ? arNationality : enNationality,
+    },
+    homeLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: livingCountryCode,
+        addressRegion: lng === "ar" ? arLivingCountry : enLivingCountry,
+      },
+    },
+    knowsAbout: lng === "ar" ? arKnowsAbout : enKnowsAbout,
+    worksFor: getCompaniesJsonLd(baseUrl, lng),
     url: baseUrl,
-    image: `${baseUrl}/hero.png`,
+    // صور بنِسب 1x1 / 4x3 / 16x9 (يفضّلها جوجل) بدون المساس بصورة الموقع
+    image: personProfileImages.map((src) => `${baseUrl}${src}`),
     email: `mailto:${siteEmail}`,
-    sameAs,
+    sameAs: getPersonSameAs(),
+  };
+}
+
+// 1.b) ProfilePage schema — الغلاف الرسمي لصفحة "عن المهندس"
+// ده النوع اللي جوجل عامله مخصوص لصفحات الأشخاص، وبيلف حوالين نفس الـ Person
+export function getProfilePageJsonLd({ baseUrl, lng = "ar" }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": `${baseUrl}/about#profilepage`,
+    url: `${baseUrl}/about`,
+    dateModified: profileLastModified,
+    inLanguage: lng === "ar" ? "ar" : "en",
+    // الكيان الأساسي للصفحة = نفس الـ Person (بنفس الـ @id فيتدمجوا عند جوجل)
+    mainEntity: getPersonJsonLd(baseUrl, lng),
   };
 }
 

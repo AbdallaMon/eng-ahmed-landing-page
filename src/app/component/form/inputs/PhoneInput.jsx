@@ -13,7 +13,6 @@ export function PhoneInput({ input, value, lng, handleChange }) {
         `https://api.bigdatacloud.net/data/reverse-geocode-client?`
       );
       const geoData = await geoRes.json();
-      console.log("Geo Data:", geoData);
       if (geoData && geoData.countryCode) {
         setDefaultCountry(geoData.countryCode);
         return geoData.countryCode;

@@ -15,13 +15,17 @@ import { BooksAndCourses } from "../sections/BooksAndCourses";
 import {
   getAboutWebPageJsonLd,
   getBreadcrumbJsonLd,
+  getProfilePageJsonLd,
 } from "../seo/jsonLdHelpers";
-import Script from "next/script";
+import JsonLd from "../seo/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 export default async function Home({ searchParams }) {
   const awaitedSearchParams = await searchParams;
   const lng = awaitedSearchParams.lng;
   const aboutPageJsonLd = getAboutWebPageJsonLd({ baseUrl, lng });
+
+  // ProfilePage schema (الغلاف الرسمي لصفحة الشخص + بياناته الكاملة)
+  const profilePageJsonLd = getProfilePageJsonLd({ baseUrl, lng });
 
   // 2) Breadcrumb schema
   const breadcrumbJsonLd = getBreadcrumbJsonLd({
@@ -42,13 +46,11 @@ export default async function Home({ searchParams }) {
   });
   return (
     <Box>
-      <Script id="about-webpage-schema" type="application/ld+json">
-        {JSON.stringify(aboutPageJsonLd)}
-      </Script>
+      <JsonLd id="profile-page-schema" data={profilePageJsonLd} />
 
-      <Script id="breadcrumb-about" type="application/ld+json">
-        {JSON.stringify(breadcrumbJsonLd)}
-      </Script>
+      <JsonLd id="about-webpage-schema" data={aboutPageJsonLd} />
+
+      <JsonLd id="breadcrumb-about" data={breadcrumbJsonLd} />
 
       <Hero lng={lng} />
       <CTASection lng={lng} />

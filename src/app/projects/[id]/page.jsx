@@ -16,7 +16,8 @@ import {
   Typography,
 } from "@mui/material";
 import { cookies } from "next/headers";
-import Script from "next/script";
+import { notFound } from "next/navigation";
+import JsonLd from "../../seo/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 
 export async function generateMetadata({ params }) {
@@ -155,10 +156,11 @@ export default async function page({ params, searchParams }) {
 
   const projectId = awaitedParams.id;
   const projectData = projects.find((project) => project.id == projectId);
+  if (!projectData) notFound();
   const otherLngProject = otherLngProjects?.find(
     (project) => project.id == projectId
   );
-  const relatedIds = projectData?.relatedIds;
+  const relatedIds = projectData.relatedIds || [];
   const relatedProjects = projects.filter((project) => {
     return relatedIds.includes(project.id);
   });
@@ -185,7 +187,6 @@ export default async function page({ params, searchParams }) {
   const normalizedImagePath = rawImagePath.startsWith("http")
     ? rawImagePath
     : `${baseUrl}${rawImagePath.replace("./", "/")}`;
-  console.log(normalizedImagePath, "normalizedImagePath");
   const breadcrumbJsonLd = getBreadcrumbJsonLd({
     baseUrl,
     lng,
@@ -201,8 +202,14 @@ export default async function page({ params, searchParams }) {
         href: lng === "ar" ? "/projects?lng=ar" : "/projects?lng=en",
       },
       {
-        nameAr: lng === "ar" ? projectData.name : otherLngProject.name,
-        nameEn: lng === "en" ? projectData.name : otherLngProject.name,
+        nameAr:
+          lng === "ar"
+            ? projectData.name
+            : otherLngProject?.name || projectData.name,
+        nameEn:
+          lng === "en"
+            ? projectData.name
+            : otherLngProject?.name || projectData.name,
         href:
           lng === "ar"
             ? `/projects/${projectId}?lng=ar`
@@ -220,13 +227,9 @@ export default async function page({ params, searchParams }) {
   });
   return (
     <>
-      <Script id={`breadcrumb-project-${projectId}`} type="application/ld+json">
-        {JSON.stringify(breadcrumbJsonLd)}
-      </Script>
+      <JsonLd id={`breadcrumb-project-${projectId}`} data={breadcrumbJsonLd} />
 
-      <Script id={`article-project-${projectId}`} type="application/ld+json">
-        {JSON.stringify(articleJsonLd)}
-      </Script>
+      <JsonLd id={`article-project-${projectId}`} data={articleJsonLd} />
       <Box>
         <Container maxWidth="xl">
           <Breadcrumbs
@@ -237,7 +240,11 @@ export default async function page({ params, searchParams }) {
             {breadcrumbs}
           </Breadcrumbs>
           <Box>
-            <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold" }}>
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{ mb: 3, fontWeight: "bold" }}
+            >
               {lng === "ar" ? "تفاصيل المشروع" : "Project Details"}
             </Typography>
             <ProjectCard data={projectData} lng={lng} />

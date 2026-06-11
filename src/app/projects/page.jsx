@@ -2,7 +2,7 @@ import { Box, Chip, Container, Grid, Typography } from "@mui/material";
 import { getTranslation } from "../i18n";
 import { cookies } from "next/headers";
 import { getBreadcrumbJsonLd } from "../seo/jsonLdHelpers";
-import Script from "next/script";
+import JsonLd from "../seo/JsonLd";
 import Image from "next/image";
 export async function generateMetadata({ params }) {
   const cookieStore = await cookies();
@@ -35,9 +35,7 @@ export default async function page({ searchParams }) {
   });
   return (
     <Box>
-      <Script id="breadcrumb-projects" type="application/ld+json">
-        {JSON.stringify(breadcrumbJsonLd)}
-      </Script>
+      <JsonLd id="breadcrumb-projects" data={breadcrumbJsonLd} />
 
       <Container maxWidth="xl">
         <Box sx={{ mb: 3, mt: 2 }}>
