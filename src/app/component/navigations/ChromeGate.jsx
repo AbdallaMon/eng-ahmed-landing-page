@@ -4,16 +4,15 @@ import { usePathname } from "next/navigation";
 
 /**
  * Decides whether the global site chrome (navbar + footer) is rendered for the
- * current route. The booking/payment pages are shown "bare" (no navbar/footer);
- * everything else keeps the normal chrome.
+ * current route. The whole /register booking section is shown "bare" (no
+ * navbar/footer) — it is a self-contained flow served from its own domain in
+ * production; everything else keeps the normal chrome.
  *
- * To bring the chrome back for any of these pages, just remove its path from
- * BARE_PATHS below (or clear the list to show chrome everywhere).
+ * To bring the chrome back for a path, remove it from BARE_PATHS below (or use
+ * a more specific subset, e.g. only the payment pages).
  */
 const BARE_PATHS = [
-  "/register/checkout", // payment page / redirect-to-payment
-  "/register/success", // payment confirmation
-  "/register/cancel", // payment failure
+  "/register", // the whole booking/register section (lead flow, booking, payment)
 ];
 
 export default function ChromeGate({ navbar, footer, children }) {

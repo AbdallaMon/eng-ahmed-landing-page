@@ -8,7 +8,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { IoArrowForward } from "react-icons/io5";
 
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { designLeadTypes } from "@/app/register/data/constants";
@@ -19,18 +18,28 @@ import {
 
 const MotionBox = motion.create(Box);
 
+// The original design's warm brand overlay — keeps the image readable while the
+// big gold title sits centred on top of it. Strengthened slightly on the
+// selected card so the choice reads clearly.
+const OVERLAY =
+  "linear-gradient(169deg, rgba(45,35,30,0.30) 0%, rgba(45,35,30,0.85) 100%)";
+const OVERLAY_SELECTED =
+  "linear-gradient(169deg, rgba(45,35,30,0.45) 0%, rgba(45,35,30,0.92) 100%)";
+
 /**
- * Location selection (Inside UAE / Outside UAE) for the DESIGN flow. Premium
- * image cards with a clear title, an affordance arrow and accessible button
- * semantics. Replaces the old GSAP-hooked DesignLeadGrid + LeadCard combo.
+ * Location selection (Inside UAE / Outside UAE) for the DESIGN flow.
+ *
+ * Restores the ORIGINAL image-card identity — real photography, the warm
+ * brand gradient overlay and a big centred gold title — but polished: rounded
+ * cards, a clear selected ring, a small hint affordance and smooth
+ * framer-motion reveal. Accessible (real buttons, alt text, focus-visible).
  *
  * @param {{ onSelect: (value: string) => void, selected?: string }} props
  */
 export function LocationSelect({ onSelect, selected }) {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
-  const { translate, lng } = useLanguage();
-  const isRtl = lng === "ar";
+  const { translate } = useLanguage();
 
   return (
     <Box>
@@ -70,7 +79,7 @@ export function LocationSelect({ onSelect, selected }) {
             <MotionBox
               key={lead.value}
               variants={listItemVariants()}
-              whileHover={isDesktop ? { y: -4 } : undefined}
+              whileHover={isDesktop ? { y: -6 } : undefined}
               whileTap={{ scale: 0.985 }}
               component="button"
               type="button"
@@ -82,29 +91,37 @@ export function LocationSelect({ onSelect, selected }) {
                 m: 0,
                 border: "none",
                 cursor: "pointer",
-                textAlign: "start",
-                borderRadius: 4,
+                borderRadius: "16px",
                 overflow: "hidden",
-                minHeight: { xs: 160, md: 240 },
-                display: "flex",
+                minHeight: { xs: 180, md: 240 },
+                display: "block",
+                width: "100%",
                 color: "common.white",
                 boxShadow: isSelected
-                  ? `0 0 0 3px ${theme.palette.primary.main}, 0 12px 28px ${alpha(
+                  ? `0 0 0 3px ${theme.palette.primary.main}, 0 16px 34px ${alpha(
                       theme.palette.primary.dark,
-                      0.35,
+                      0.4,
                     )}`
-                  : "0 8px 22px rgba(0,0,0,0.18)",
+                  : "0 6px 18px rgba(0,0,0,0.22)",
                 transition: "box-shadow .25s ease",
+                "& .lead-card-image": {
+                  transition: "transform .5s ease",
+                },
+                "&:hover .lead-card-image": {
+                  transform: isDesktop ? "scale(1.06)" : "none",
+                },
                 "&:focus-visible": {
                   outline: `3px solid ${theme.palette.primary.dark}`,
-                  outlineOffset: 2,
+                  outlineOffset: 3,
                 },
               }}
             >
-              <img
+              <Box
+                component="img"
+                className="lead-card-image"
                 src={lead.image}
                 alt={lead.alt}
-                style={{
+                sx={{
                   position: "absolute",
                   inset: 0,
                   width: "100%",
@@ -112,51 +129,74 @@ export function LocationSelect({ onSelect, selected }) {
                   objectFit: "cover",
                 }}
               />
+              {/* Warm brand gradient overlay (original identity). */}
               <Box
                 sx={{
                   position: "absolute",
                   inset: 0,
-                  background:
-                    "linear-gradient(160deg, rgba(45,35,30,0.15) 0%, rgba(45,35,30,0.85) 100%)",
+                  background: isSelected ? OVERLAY_SELECTED : OVERLAY,
                 }}
               />
+
+              {/* Selected check badge */}
+              {isSelected && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 12,
+                    insetInlineEnd: 12,
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: theme.palette.primary.main,
+                    color: "#2d231e",
+                    fontWeight: 800,
+                    fontSize: "1rem",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
+                  }}
+                  aria-hidden
+                >
+                  ✓
+                </Box>
+              )}
+
+              {/* Big centred gold title — the original's signature treatment. */}
               <Stack
-                direction="row"
+                spacing={0.75}
                 alignItems="center"
-                justifyContent="space-between"
+                justifyContent="center"
                 sx={{
-                  position: "relative",
-                  width: "100%",
-                  alignSelf: "flex-end",
-                  p: { xs: 2, md: 2.5 },
+                  position: "absolute",
+                  inset: 0,
+                  textAlign: "center",
+                  px: 2,
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h4"
                   sx={{
                     fontWeight: 700,
-                    color: "common.white",
-                    textShadow: "0 1px 8px rgba(0,0,0,0.45)",
+                    color: "primary.main",
+                    letterSpacing: "0.5px",
+                    fontSize: { xs: "1.6rem", md: "2rem" },
+                    textShadow: "0 2px 12px rgba(0,0,0,0.5)",
                   }}
                 >
                   {translate(lead.title)}
                 </Typography>
-                <Box
+                <Typography
+                  variant="caption"
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    backgroundColor: alpha("#ffffff", 0.92),
-                    color: theme.palette.primary.dark,
-                    transform: isRtl ? "scaleX(-1)" : "none",
-                    flexShrink: 0,
+                    color: alpha("#ffffff", 0.9),
+                    fontWeight: 500,
+                    textShadow: "0 1px 6px rgba(0,0,0,0.5)",
                   }}
                 >
-                  <IoArrowForward size={18} />
-                </Box>
+                  {translate("register.locationCardHint")}
+                </Typography>
               </Stack>
             </MotionBox>
           );

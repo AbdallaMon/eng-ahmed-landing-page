@@ -1,12 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import {
-  Box,
-  Stack,
-  Typography,
-  alpha,
-  useTheme,
-} from "@mui/material";
+import { Box, Stack, Typography, alpha, useTheme } from "@mui/material";
 import { IoChevronForward } from "react-icons/io5";
 
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
@@ -23,10 +17,17 @@ import {
 
 const MotionBox = motion.create(Box);
 
+const DESIGN_OVERLAY =
+  "linear-gradient(169deg, rgba(45,35,30,0.30) 0%, rgba(45,35,30,0.88) 100%)";
+
 /**
- * Project-type selection (Apartment / Villa / Part of home, …). Clean,
- * accessible list rows with title + optional price hint and a clear chevron
- * affordance. Replaces the old GSAP-hooked LeadCategoryGrid + LeadCategoryItem.
+ * Project-type selection (Apartment / Villa / Part of home, …).
+ *
+ * Restores the original's image-rich, content-rich feel: a real design photo
+ * banner (`/design.jpg`) with the warm brand gradient + a category badge and
+ * the original "choose from the options" prompt, followed by polished,
+ * accessible option rows (title + price hint + clear selected state). Keeps the
+ * framer-motion staggered reveal.
  *
  * @param {{
  *   leadCategory: string,
@@ -43,25 +44,88 @@ export function ItemSelect({ leadCategory, onSelect, selected }) {
 
   return (
     <Box>
-      <Stack spacing={1} sx={{ textAlign: "center", mb: { xs: 3, md: 4 } }}>
-        <Typography
-          variant="h4"
-          component="h2"
+      {/* ── Design image banner — brings back the original imagery ───────── */}
+      <Box
+        sx={{
+          position: "relative",
+          borderRadius: "16px",
+          overflow: "hidden",
+          minHeight: { xs: 150, md: 190 },
+          mb: { xs: 3, md: 4 },
+          boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
+        }}
+      >
+        <Box
+          component="img"
+          src="/design.jpg"
+          alt={translate("category.interiorDesign")}
           sx={{
-            fontWeight: 700,
-            color: "primary.dark",
-            fontSize: { xs: "1.5rem", md: "2rem" },
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
           }}
+        />
+        <Box
+          sx={{ position: "absolute", inset: 0, background: DESIGN_OVERLAY }}
+        />
+        <Stack
+          spacing={1}
+          justifyContent="flex-end"
+          sx={{ position: "relative", height: "100%", p: { xs: 2.5, md: 3 } }}
         >
-          {translate("register.chooseItemTitle")}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ color: "text.secondary", maxWidth: 460, mx: "auto" }}
-        >
-          {translate("register.chooseItemSubtitle")}
-        </Typography>
-      </Stack>
+          <Box
+            sx={{
+              alignSelf: "flex-start",
+              px: 1.25,
+              py: 0.5,
+              borderRadius: 999,
+              backgroundColor: alpha(theme.palette.primary.main, 0.95),
+              color: "#2d231e",
+              fontWeight: 700,
+              fontSize: "0.72rem",
+              letterSpacing: 0.5,
+            }}
+          >
+            {translate("register.designBadge")}
+          </Box>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 700,
+              color: "common.white",
+              textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+              fontSize: { xs: "1.25rem", md: "1.6rem" },
+            }}
+          >
+            {translate("register.chooseItemTitle")}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: alpha("#ffffff", 0.92),
+              maxWidth: 520,
+              textShadow: "0 1px 6px rgba(0,0,0,0.5)",
+            }}
+          >
+            {translate("register.designIntro")}
+          </Typography>
+        </Stack>
+      </Box>
+
+      <Typography
+        variant="overline"
+        sx={{
+          display: "block",
+          textAlign: "center",
+          color: "text.secondary",
+          letterSpacing: 1,
+          mb: 1.5,
+        }}
+      >
+        {translate("register.chooseFromOptions")}
+      </Typography>
 
       <MotionBox
         variants={listContainerVariants()}
@@ -100,7 +164,9 @@ export function ItemSelect({ leadCategory, onSelect, selected }) {
                 px: { xs: 2, md: 3 },
                 py: { xs: 2, md: 2.5 },
                 borderRadius: 3,
-                backgroundColor: "background.paper",
+                backgroundColor: isSelected
+                  ? alpha(theme.palette.primary.main, 0.08)
+                  : "background.paper",
                 border: `1.5px solid ${
                   isSelected
                     ? theme.palette.primary.main
@@ -123,7 +189,11 @@ export function ItemSelect({ leadCategory, onSelect, selected }) {
               <Box>
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 700, color: "text.primary", lineHeight: 1.3 }}
+                  sx={{
+                    fontWeight: 700,
+                    color: "text.primary",
+                    lineHeight: 1.3,
+                  }}
                 >
                   {translate(LeadType[item.value])}
                 </Typography>
@@ -145,9 +215,12 @@ export function ItemSelect({ leadCategory, onSelect, selected }) {
                   height: 32,
                   borderRadius: "50%",
                   flexShrink: 0,
-                  color: "primary.dark",
-                  backgroundColor: alpha(theme.palette.primary.main, 0.12),
+                  color: isSelected ? "#2d231e" : "primary.dark",
+                  backgroundColor: isSelected
+                    ? theme.palette.primary.main
+                    : alpha(theme.palette.primary.main, 0.12),
                   transform: isRtl ? "scaleX(-1)" : "none",
+                  transition: "background-color .2s ease, color .2s ease",
                 }}
               >
                 <IoChevronForward size={18} />

@@ -71,4 +71,20 @@ export const register = {
     en: "Let's design your dream home",
     ar: "لنصمم منزل أحلامك",
   },
+  "register.chooseFromOptions": {
+    en: "Choose from the options below",
+    ar: "اختر من الخيارات التالية",
+  },
+  "register.locationCardHint": {
+    en: "Tap to choose",
+    ar: "اضغط للاختيار",
+  },
+  "register.designIntro": {
+    en: "Interior design tailored to your space — pick what best describes your project.",
+    ar: "تصميم داخلي مصمم خصيصًا لمساحتك — اختر ما يصف مشروعك بأفضل شكل.",
+  },
+  "register.designBadge": {
+    en: "Interior Design",
+    ar: "تصميم داخلي",
+  },
 };
