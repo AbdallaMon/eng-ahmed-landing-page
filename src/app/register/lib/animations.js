@@ -37,8 +37,18 @@ function getUrlSpeed() {
  * specific animation run faster/slower than normal (multiplied on top of the
  * URL ?speed), e.g. the deep-link direct entry runs snappier by default.
  */
-function createTimeline(vars, baseSpeed = 1) {
-  const tl = gsap.timeline(vars);
+function createTimeline(vars = {}, baseSpeed = 1) {
+  // Smooth, premium defaults applied to every tween in the flow's timelines so
+  // the motion feels fluid and consistent — this smooths the MOVEMENT without
+  // changing the animation approach. Individual tweens still override as needed.
+  const tl = gsap.timeline({
+    ...vars,
+    defaults: {
+      ease: "power3.out",
+      duration: 0.8,
+      ...(vars.defaults || {}),
+    },
+  });
   tl.timeScale(getUrlSpeed() * baseSpeed);
   return tl;
 }
