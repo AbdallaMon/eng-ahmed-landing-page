@@ -87,4 +87,12 @@ export const register = {
     en: "Interior Design",
     ar: "تصميم داخلي",
   },
+  "register.designLabel": {
+    en: "Design",
+    ar: "تصميم",
+  },
+  "register.designIntroLoading": {
+    en: "Preparing your design space…",
+    ar: "نُجهّز مساحة التصميم الخاصة بك…",
+  },
 };

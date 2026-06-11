@@ -1,10 +1,14 @@
 // Motion helpers for the lead-selection flow.
 //
-// The flow was rebuilt on framer-motion (declarative variants + AnimatePresence)
-// to replace the previous brittle GSAP clone-node timelines. These helpers keep
-// the old URL-driven speed control (?speed= / ?fast) and honour the user's
-// reduced-motion preference, exposing both to the view layer as plain numbers /
-// framer-motion variant objects.
+// The flow is built on framer-motion (declarative variants + AnimatePresence +
+// shared-layout `layoutId` morphs). These helpers keep the URL-driven speed
+// control (?speed= / ?fast) and honour the user's reduced-motion preference,
+// exposing both to the view layer as plain numbers / framer-motion objects.
+//
+// The signature mechanic of this flow is "card expands to fill the screen":
+// a selected image card morphs (via a shared `layoutId`) into a full-screen
+// backdrop, and the next step's options reveal on top of it. See
+// `StageBackdrop.jsx` + `LeadSelectionFlow.jsx`.
 
 /**
  * Read an animation-speed multiplier from the URL so a link can fast-forward
@@ -41,10 +45,35 @@ export function motionTransition(base = 0.45) {
 }
 
 /**
- * Horizontal slide+fade variants for stepping between wizard stages.
- * `direction` is 1 (forward) or -1 (back). Collapses to a plain fade when the
- * user prefers reduced motion. `isRtl` mirrors the slide so "forward" always
- * reads as advancing in the reading direction.
+ * The spring used for the card → full-screen `layoutId` morph (and back). A
+ * touch of softness reads as "the card grows to fill the screen" rather than a
+ * hard snap. Collapses to an instant transition under reduced-motion.
+ */
+export function expandTransition() {
+  if (prefersReducedMotion()) return { duration: 0.01 };
+  const speed = getUrlSpeed();
+  return {
+    type: "spring",
+    stiffness: 260 * speed,
+    damping: 32,
+    mass: 0.9,
+  };
+}
+
+/**
+ * Cross-fade for the full-screen backdrop image when the active stage image
+ * changes (e.g. design intro → selected location photo).
+ */
+export function backdropFade() {
+  if (prefersReducedMotion()) return { duration: 0.01 };
+  return { duration: 0.6 / getUrlSpeed(), ease: [0.22, 1, 0.36, 1] };
+}
+
+/**
+ * Horizontal slide+fade variants for stepping between non-image stages (email,
+ * form). `direction` is 1 (forward) or -1 (back). Collapses to a plain fade
+ * under reduced-motion. `isRtl` mirrors the slide so "forward" always reads as
+ * advancing in the reading direction.
  */
 export function stepVariants(direction, isRtl = false) {
   if (prefersReducedMotion()) {
@@ -84,6 +113,35 @@ export function listItemVariants() {
       opacity: 1,
       y: 0,
       transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
+}
+
+/**
+ * Reveal variants for the content (title + options) that appears ON TOP of the
+ * full-screen backdrop after a card has expanded. Slightly delayed so the
+ * expand "lands" first, then the options rise into view.
+ */
+export function overlayRevealVariants() {
+  if (prefersReducedMotion()) {
+    return {
+      hidden: { opacity: 0 },
+      show: { opacity: 1, transition: { duration: 0.01 } },
+    };
+  }
+  const speed = getUrlSpeed();
+  return {
+    hidden: { opacity: 0, y: 24 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 0.18 / speed,
+        duration: 0.5 / speed,
+        ease: [0.22, 1, 0.36, 1],
+        when: "beforeChildren",
+        staggerChildren: 0.07 / speed,
+      },
     },
   };
 }
