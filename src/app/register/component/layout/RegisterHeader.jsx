@@ -6,29 +6,21 @@ import {
   MenuItem,
   Select,
   Toolbar,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
-import { IoArrowBackOutline } from "react-icons/io5";
 import { MdRestartAlt } from "react-icons/md";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 
 /**
- * Fixed top header for the lead-selection pages: logo, language switcher,
- * the GSAP reverse (back) button, and a reset / start-over control.
- *
- * The `.reverse-button` className is a GSAP hook — keep it verbatim.
+ * Fixed top header for the lead-selection pages: logo, language switcher and a
+ * reset / start-over control. Back navigation now lives in the flow itself.
  *
  * @param {{
  *   sx?: object,
- *   reverseAnimation?: Function,
  *   onReset?: Function,
  *   canReset?: boolean,
  * }} props
  */
-export function RegisterHeader({ sx, reverseAnimation, onReset, canReset }) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+export function RegisterHeader({ sx, onReset, canReset }) {
   const { lng, changeLanguage, translate } = useLanguage();
   const isRtl = lng === "ar";
 
@@ -40,9 +32,9 @@ export function RegisterHeader({ sx, reverseAnimation, onReset, canReset }) {
       <Toolbar
         sx={{
           justifyContent: "space-between",
-          background: theme.palette.background.paper,
+          bgcolor: "background.paper",
           borderRadius: "16px",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.12)",
           margin: "0 12px",
           backgroundImage: "url('/logo-bg-full.jpg')",
           backgroundSize: "cover",
@@ -53,38 +45,12 @@ export function RegisterHeader({ sx, reverseAnimation, onReset, canReset }) {
           ...sx,
         }}
       >
-        {reverseAnimation && (
-          <Box
-            className="reverse-button"
-            onClick={() => reverseAnimation()}
-            sx={{
-              ...(isRtl ? { right: 0 } : { left: 0 }),
-              display: "none",
-              zIndex: 2000,
-              backgroundColor: "primary.main",
-              color: "white",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-              cursor: "pointer",
-              position: "absolute",
-            }}
-          >
-            <IoArrowBackOutline size={26} />
-          </Box>
-        )}
-
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box
             component="img"
             src="/main-logo.jpg"
             alt="Dream Studio - Dream Design & Luxurious Home Solutions"
-            className="logo"
-            style={{ marginLeft: isMobile ? "-20px" : "-24px" }}
-            sx={{ height: 0, width: "auto" }}
+            sx={{ height: 44, width: "auto", display: "block" }}
           />
         </Box>
 
@@ -101,6 +67,7 @@ export function RegisterHeader({ sx, reverseAnimation, onReset, canReset }) {
                 textTransform: "none",
                 fontWeight: 600,
                 whiteSpace: "nowrap",
+                backgroundColor: "rgba(255,255,255,0.85)",
                 ...(isRtl && { "& .MuiButton-startIcon": { ml: 0.5, mr: -0.5 } }),
               }}
             >
@@ -116,6 +83,8 @@ export function RegisterHeader({ sx, reverseAnimation, onReset, canReset }) {
             sx={{
               color: "primary.main",
               minWidth: 80,
+              backgroundColor: "rgba(255,255,255,0.85)",
+              borderRadius: "12px",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "transparent",
               },

@@ -14,7 +14,6 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery,
   useTheme,
   alpha,
 } from "@mui/material";
@@ -71,7 +70,6 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
   const externalLeadId = searchParams.get("leadId");
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [showPriceConfirm, setShowPriceConfirm] = useState(false);
   const [formData, setFormData] = useState({
@@ -176,14 +174,7 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
   const fieldSx = { "& .MuiInputBase-root": { borderRadius: 2 } };
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        overflowY: "auto",
-        minWidth: isMobile ? "100%" : "800px",
-      }}
-      className="final-selection-form"
-    >
+    <Box sx={{ width: "100%", mx: "auto", maxWidth: 720 }}>
       {showPriceConfirm ? (
         <>
           <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.5 }}>

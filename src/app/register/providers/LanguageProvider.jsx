@@ -23,18 +23,6 @@ export default function LanguageProvider({
   function changeLanguage(value) {
     setLng(value);
     window.localStorage.setItem("lng", value);
-
-    // The location-title clone is detached from React; re-translate it manually.
-    const clonedTitle = document.querySelector(".cloned-location-title");
-    if (clonedTitle) {
-      const otherLng = value === "ar" ? "en" : "ar";
-      const matchedKey = Object.keys(dictionary).find(
-        (k) => dictionary[k]?.[otherLng] === clonedTitle.textContent,
-      );
-      if (matchedKey) {
-        clonedTitle.textContent = dictionary[matchedKey][value];
-      }
-    }
   }
 
   useEffect(() => {

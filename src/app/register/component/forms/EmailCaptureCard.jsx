@@ -1,16 +1,27 @@
 "use client";
 import { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Stack,
+  TextField,
+  Typography,
+  alpha,
+  useTheme,
+} from "@mui/material";
+import { IoMailOutline } from "react-icons/io5";
+
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { useToastContext } from "@/app/register/providers/LoadingToastProvider";
 
 /**
- * Email-capture card — the first step of the lead flow.
- * The `.email-lead-card` className (and its `h4`) are GSAP hooks.
+ * Email-capture card — the first step of the lead flow. Plain in-flow card
+ * (the wizard handles transitions), real <form> semantics, accessible labels.
  *
  * @param {{ onSubmit: (email: string) => void }} props
  */
 export function EmailCaptureCard({ onSubmit }) {
+  const theme = useTheme();
   const [email, setEmail] = useState("");
   const { translate } = useLanguage();
   const { loading } = useToastContext();
@@ -27,65 +38,80 @@ export function EmailCaptureCard({ onSubmit }) {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      className="email-lead-card"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 3,
-        maxWidth: 440,
-        mx: "auto",
-        px: { xs: 2.5, sm: 4 },
-        py: { xs: 3.5, sm: 4.5 },
-        bgcolor: "background.default",
-        border: 1,
-        borderColor: "divider",
-        borderRadius: 3,
-        boxShadow: 3,
-        width: "calc(100% - 48px)",
-        position: "absolute",
-        left: "50%",
-        top: "100px",
-        transform: "translatex(-50%)",
-        zIndex: 100000,
-      }}
+      sx={{ maxWidth: 480, mx: "auto", width: "100%" }}
     >
-      <Box sx={{ textAlign: "center" }}>
-        <Typography
-          variant="h5"
-          component="h4"
-          sx={{ fontWeight: 700, color: "text.primary" }}
+      <Stack spacing={3} alignItems="center" sx={{ textAlign: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 64,
+            height: 64,
+            borderRadius: "50%",
+            color: "primary.dark",
+            backgroundColor: alpha(theme.palette.primary.main, 0.14),
+          }}
         >
-          {translate("register.enterEmail")}
+          <IoMailOutline size={30} />
+        </Box>
+
+        <Box>
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{
+              fontWeight: 700,
+              color: "primary.dark",
+              fontSize: { xs: "1.6rem", md: "2rem" },
+            }}
+          >
+            {translate("register.emailWelcomeTitle")}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ mt: 1, color: "text.secondary" }}
+          >
+            {translate("register.emailDescription")}
+          </Typography>
+        </Box>
+
+        <TextField
+          fullWidth
+          required
+          type="email"
+          autoComplete="email"
+          autoFocus
+          label={translate("register.emailLabel")}
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          disabled={loading}
+          slotProps={{ htmlInput: { inputMode: "email" } }}
+          sx={{ "& .MuiInputBase-root": { borderRadius: 2 } }}
+        />
+
+        <Button
+          fullWidth
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          disabled={loading || !normalizedEmail}
+          sx={{
+            minHeight: 52,
+            fontWeight: 700,
+            borderRadius: 2,
+            textTransform: "none",
+            fontSize: "1.05rem",
+          }}
+        >
+          {loading ? translate("register.loading") : translate("register.next")}
+        </Button>
+
+        <Typography variant="caption" sx={{ color: "text.secondary" }}>
+          {translate("register.emailPrivacy")}
         </Typography>
-
-        <Typography variant="body2" sx={{ mt: 1, color: "text.secondary" }}>
-          {translate("register.emailDescription")}
-        </Typography>
-      </Box>
-
-      <TextField
-        fullWidth
-        required
-        type="email"
-        autoComplete="email"
-        label={translate("register.emailLabel")}
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        disabled={loading}
-        slotProps={{ htmlInput: { inputMode: "email" } }}
-      />
-
-      <Button
-        fullWidth
-        type="submit"
-        variant="contained"
-        color="primary"
-        size="large"
-        disabled={loading || !normalizedEmail}
-        sx={{ minHeight: 48, fontWeight: 700, borderRadius: 2 }}
-      >
-        {loading ? translate("register.loading") : translate("register.next")}
-      </Button>
+      </Stack>
     </Box>
   );
 }

@@ -12,7 +12,6 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -64,7 +63,6 @@ function DesignLeadForm({ category, item, location, leadId }) {
   const { defaultCountry } = useGeoCountry(location);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [formData, setFormData] = useState({
     emirate: null,
@@ -150,14 +148,7 @@ function DesignLeadForm({ category, item, location, leadId }) {
   if (!item) return null;
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        overflowY: "auto",
-        minWidth: isMobile ? "100%" : "800px",
-      }}
-      className="final-selection-form"
-    >
+    <Box sx={{ width: "100%", mx: "auto", maxWidth: 720 }}>
       {renderSuccess ? (
         <FormSuccessView showLevels={true} />
       ) : (

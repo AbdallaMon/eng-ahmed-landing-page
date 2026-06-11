@@ -78,7 +78,6 @@ export const DesignLeadPrice = {
 };
 
 // ── UAE vs non-UAE location cards (for the design flow) ──────────────────────
-// Mobile shows in natural order; desktop reverses (handled in DesignLeadGrid).
 export const designLeadTypes = [
   {
     title: "location.insideUAE",
