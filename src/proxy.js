@@ -22,14 +22,18 @@ export function proxy(request) {
 
   const url = request.nextUrl;
 
-  const isPublicAsset =
+  // Any request for a static file living in the shared `public/` folder
+  // (images, fonts, media, manifest, …). The booking flow references root
+  // assets like "/design.jfif" and "/inside-uae.webp", so the list must cover
+  // every image/media extension — NOT just the classic jpg/png set — otherwise
+  // those requests fall through to the /register rewrite below and 404 on the
+  // booking host.
+  const isStaticAsset =
     url.pathname.startsWith("/public") ||
     url.pathname.startsWith("/assets") ||
-    url.pathname.match(/\.(jpg|jpeg|png|gif|svg|ico|webmanifest|xml|json)$/);
-
-  if (isPublicAsset || url.pathname.startsWith("/_next")) {
-    return NextResponse.next();
-  }
+    /\.(jpe?g|png|gif|svg|ico|webp|avif|jfif|bmp|tiff?|webmanifest|xml|json|txt|pdf|mp4|webm|mov|ogg|mp3|wav|woff2?|ttf|otf|eot)$/i.test(
+      url.pathname,
+    );
 
   // ── Sub-domain mapping (booking.<domain>) ──────────────────────────────────
   // The /register booking flow lives in src/app/register/* but is served from
@@ -42,11 +46,17 @@ export function proxy(request) {
   // Gated purely on the env var (NOT NODE_ENV): unset locally → skipped, so
   // /register renders directly on localhost with no rewrites/redirects.
   const BOOKING_DOMAIN = process.env.NEXT_PUBLIC_BOOKING_DOMAIN;
+  const requestHost = (
+    request.headers.get("x-forwarded-host") ||
+    request.headers.get("host") ||
+    ""
+  ).split(":")[0];
+
+  let bookingHost;
+  let bookingOrigin;
   if (BOOKING_DOMAIN) {
     // Accept either a bare host ("eng-booking.example.com") or a full URL
     // ("https://eng-booking.example.com/..."). Normalize to host + origin.
-    let bookingHost;
-    let bookingOrigin;
     try {
       const u = new URL(
         BOOKING_DOMAIN.includes("://") ? BOOKING_DOMAIN : `https://${BOOKING_DOMAIN}`,
@@ -57,16 +67,34 @@ export function proxy(request) {
       bookingHost = BOOKING_DOMAIN.replace(/^https?:\/\//, "").split("/")[0].split(":")[0];
       bookingOrigin = `https://${bookingHost}`;
     }
+  }
 
-    const host = (
-      request.headers.get("x-forwarded-host") ||
-      request.headers.get("host") ||
-      ""
-    ).split(":")[0];
+  const onBookingHost = Boolean(bookingHost) && requestHost === bookingHost;
+
+  // ── Static assets ──────────────────────────────────────────────────────────
+  // `public/` only physically lives with the MAIN site. On the booking host the
+  // request path has NO /register prefix, so a static file like "/design.jfif"
+  // would otherwise be rewritten to "/register/design.jfif" and 404. Serve every
+  // static asset on the booking host straight from the main domain
+  // (NEXT_PUBLIC_SITE_URL) so there is a single source of truth for assets.
+  if (url.pathname.startsWith("/_next")) {
+    return NextResponse.next();
+  }
+  if (isStaticAsset) {
+    const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+    if (onBookingHost && SITE_URL) {
+      return NextResponse.rewrite(
+        new URL(`${url.pathname}${url.search}`, SITE_URL),
+      );
+    }
+    return NextResponse.next();
+  }
+
+  if (BOOKING_DOMAIN) {
     const isRegisterPath =
       url.pathname === "/register" || url.pathname.startsWith("/register/");
 
-    if (host === bookingHost) {
+    if (onBookingHost) {
       // (1) On the booking host: render the /register tree without the prefix.
       if (!isRegisterPath) {
         const rewriteUrl = url.clone();
