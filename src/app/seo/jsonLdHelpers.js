@@ -8,15 +8,23 @@ import {
   socialMediaIconsLinks,
   arJobTitle,
   enJobTitle,
-  personBirthYear,
+  personBirthDate,
+  arBirthPlace,
+  enBirthPlace,
   arNationality,
   enNationality,
   livingCountryCode,
   arLivingCountry,
   enLivingCountry,
+  arLivingCity,
+  enLivingCity,
+  personEducation,
   arKnowsAbout,
   enKnowsAbout,
   personCompanies,
+  extraPersonSameAs,
+  mediaAboutPerson,
+  personBook,
   personProfileImages,
   profileLastModified,
 } from "@/app/data/constants";
@@ -27,24 +35,64 @@ function getLocalizedName(lng) {
   return lng === "ar" ? arFullName : enFullName;
 }
 
-// روابط الحسابات الرسمية الخاصة بالشخص
+// روابط الحسابات الرسمية الخاصة بالشخص (أيقونات الموقع + حسابات إضافية للـ schema)
 function getPersonSameAs() {
-  return socialMediaIconsLinks
+  const fromIcons = socialMediaIconsLinks
     .filter((link) => link.href && link.href.startsWith("http"))
     .map((link) => link.href);
+  return [...fromIcons, ...extraPersonSameAs];
 }
 
-// الشركات اللي بيقودها (تُستخدم في worksFor) — كل شركة Organization مستقلة
+// الشركات اللي يملكها (تُستخدم في worksFor) — هو founder للكل
+// ديكور ستورز = متجر أونلاين (OnlineStore) تابع لدريم استديو
 function getCompaniesJsonLd(baseUrl, lng) {
+  const byKey = (key) => personCompanies.find((c) => c.key === key);
   return personCompanies.map((company) => {
     const org = {
-      "@type": "Organization",
+      "@type": company.key === "decor" ? "OnlineStore" : "Organization",
       name: lng === "ar" ? company.arName : company.enName,
       logo: `${baseUrl}${company.logo}`,
+      founder: { "@id": `${baseUrl}/#person` }, // هو مؤسّس الشركة
     };
-    if (company.url) org.sameAs = [company.url];
+    if (company.foundingDate) org.foundingDate = company.foundingDate;
+    if (company.url) {
+      // لو الرابط موقع رسمي نخليه url، ولو سوشيال نخليه sameAs
+      if (company.url.includes("instagram.com")) org.sameAs = [company.url];
+      else org.url = company.url;
+    }
+    // الشركة الفرعية تشير لشركتها الأم
+    if (company.parentKey) {
+      const parent = byKey(company.parentKey);
+      if (parent) {
+        org.parentOrganization = {
+          "@type": "Organization",
+          name: lng === "ar" ? parent.arName : parent.enName,
+        };
+      }
+    }
     return org;
   });
+}
+
+// المحتوى الإعلامي اللي اتعمل *عنه* (مقابلات/مقالات) — subjectOf
+function getMediaAboutPerson(lng) {
+  return mediaAboutPerson.map((item) => ({
+    "@type": item.type,
+    name: lng === "ar" ? item.arName : item.enName,
+    url: item.url,
+    publisher: {
+      "@type": "Organization",
+      name: lng === "ar" ? item.arPublisher : item.enPublisher,
+    },
+  }));
+}
+
+// التعليم (alumniOf)
+function getAlumniOf(lng) {
+  return personEducation.map((edu) => ({
+    "@type": "EducationalOrganization",
+    name: lng === "ar" ? edu.arName : edu.enName,
+  }));
 }
 
 // 1) Person schema (شخص واحد: أحمد المبيض) — النسخة الدسمة
@@ -62,7 +110,11 @@ export function getPersonJsonLd(baseUrl, lng = "ar") {
     description,
     jobTitle: lng === "ar" ? arJobTitle : enJobTitle,
     gender: "Male",
-    birthDate: personBirthYear,
+    birthDate: personBirthDate,
+    birthPlace: {
+      "@type": "Place",
+      name: lng === "ar" ? arBirthPlace : enBirthPlace,
+    },
     nationality: {
       "@type": "Country",
       name: lng === "ar" ? arNationality : enNationality,
@@ -73,15 +125,34 @@ export function getPersonJsonLd(baseUrl, lng = "ar") {
         "@type": "PostalAddress",
         addressCountry: livingCountryCode,
         addressRegion: lng === "ar" ? arLivingCountry : enLivingCountry,
+        addressLocality: lng === "ar" ? arLivingCity : enLivingCity,
       },
     },
+    alumniOf: getAlumniOf(lng),
     knowsAbout: lng === "ar" ? arKnowsAbout : enKnowsAbout,
     worksFor: getCompaniesJsonLd(baseUrl, lng),
+    subjectOf: getMediaAboutPerson(lng),
     url: baseUrl,
     // صور بنِسب 1x1 / 4x3 / 16x9 (يفضّلها جوجل) بدون المساس بصورة الموقع
     image: personProfileImages.map((src) => `${baseUrl}${src}`),
     email: `mailto:${siteEmail}`,
     sameAs: getPersonSameAs(),
+  };
+}
+
+// 1.c) Book schema — كتاب من تأليف الشخص (نشر ذاتي)
+export function getBookJsonLd({ baseUrl, lng = "ar" }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: lng === "ar" ? personBook.arName : personBook.enName,
+    url: personBook.url,
+    inLanguage: lng === "ar" ? "ar" : "en",
+    author: {
+      "@id": `${baseUrl}/#person`, // نفس الشخص = المؤلف
+      "@type": "Person",
+      name: lng === "ar" ? arFullName : enFullName,
+    },
   };
 }
 

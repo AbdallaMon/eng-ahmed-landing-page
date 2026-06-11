@@ -16,6 +16,7 @@ import {
   getAboutWebPageJsonLd,
   getBreadcrumbJsonLd,
   getProfilePageJsonLd,
+  getBookJsonLd,
 } from "../seo/jsonLdHelpers";
 import JsonLd from "../seo/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
@@ -26,6 +27,9 @@ export default async function Home({ searchParams }) {
 
   // ProfilePage schema (الغلاف الرسمي لصفحة الشخص + بياناته الكاملة)
   const profilePageJsonLd = getProfilePageJsonLd({ baseUrl, lng });
+
+  // Book schema (كتاب من تأليفه)
+  const bookJsonLd = getBookJsonLd({ baseUrl, lng });
 
   // 2) Breadcrumb schema
   const breadcrumbJsonLd = getBreadcrumbJsonLd({
@@ -47,6 +51,8 @@ export default async function Home({ searchParams }) {
   return (
     <Box>
       <JsonLd id="profile-page-schema" data={profilePageJsonLd} />
+
+      <JsonLd id="book-schema" data={bookJsonLd} />
 
       <JsonLd id="about-webpage-schema" data={aboutPageJsonLd} />
 

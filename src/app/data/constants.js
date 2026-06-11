@@ -69,15 +69,34 @@ export const whatsAppNumber = "+971585564778";
 export const arJobTitle = "مهندس معماري";
 export const enJobTitle = "Architect";
 
-// سنة الميلاد — العمر 30 مبدئياً (مؤقت، عدّلها لما تتأكد)
-export const personBirthYear = "1996";
+// تاريخ الميلاد (4 يناير 1998) — صيغة ISO 8601
+export const personBirthDate = "1998-01-04";
 
-// الجنسية ومكان الإقامة (سوري مقيم في الإمارات)
+// محل الميلاد (حماة، سوريا)
+export const arBirthPlace = "حماة، سوريا";
+export const enBirthPlace = "Hama, Syria";
+
+// الجنسية (سوري)
 export const arNationality = "سوري";
 export const enNationality = "Syrian";
+
+// مكان الإقامة الحالي (دبي، الإمارات)
 export const livingCountryCode = "AE";
 export const arLivingCountry = "الإمارات العربية المتحدة";
 export const enLivingCountry = "United Arab Emirates";
+export const arLivingCity = "دبي";
+export const enLivingCity = "Dubai";
+
+// التعليم (alumniOf)
+export const personEducation = [
+  {
+    arName: "جامعة البعث",
+    enName: "Al-Baath University",
+    arField: "هندسة معمارية",
+    enField: "Architecture",
+    year: "2022",
+  },
+];
 
 // مجالات الخبرة (knowsAbout)
 export const arKnowsAbout = [
@@ -85,6 +104,7 @@ export const arKnowsAbout = [
   "التصميم الداخلي",
   "الديكور",
   "صناعة المحتوى",
+  "التسويق",
   "التصميم التجاري",
   "التصميم السكني",
 ];
@@ -93,31 +113,88 @@ export const enKnowsAbout = [
   "Interior Design",
   "Decor",
   "Content Creation",
+  "Marketing",
   "Commercial Design",
   "Residential Design",
 ];
 
-// الشركات التي يقودها (worksFor / founder)
+// الشركات التي يملكها (هو founder للاتنين)
+// دريم استديو = الأساسية، وديكور ستورز = شركة ديكور فرعية تابعة ليها
 export const personCompanies = [
   {
+    key: "dream",
     arName: "دريم استديو",
     enName: "Dream Studio",
     url: "https://www.instagram.com/dreamstudiio.ae/",
     logo: "/dream-studio-logo.png",
+    foundingDate: "2025",
+    primary: true,
   },
   {
+    key: "decor",
     arName: "ديكور ستورز",
     enName: "Decor Stores",
-    url: "",
+    url: "https://decorstores.ltd/",
     logo: "/decor-stores-logo.png",
+    foundingDate: "2022",
+    parentKey: "dream", // شركة فرعية تابعة لدريم استديو
   },
 ];
 
-// صور البروفايل المقصوصة بنِسب مختلفة (يفضّلها جوجل في ProfilePage)
+// روابط حسابات إضافية تُستخدم في schema فقط (لا تظهر كأيقونات في الموقع)
+export const extraPersonSameAs = [
+  "https://www.facebook.com/engahmedalmobayed/",
+  "https://www.threads.com/@eng.ahmad_almobayed",
+];
+
+// محتوى إعلامي اتعمل *عنه* (subjectOf) — مقابلات ومقالات من طرف ثالث
+export const mediaAboutPerson = [
+  {
+    type: "VideoObject",
+    arName: "مقابلة المهندس أحمد المبيض على تلفزيون أبوظبي",
+    enName: "Eng. Ahmad Almobayed interview on Abu Dhabi TV",
+    url: "https://www.instagram.com/abudhabitv/reel/DQrzYtFlce2/",
+    arPublisher: "تلفزيون أبوظبي",
+    enPublisher: "Abu Dhabi TV",
+  },
+  {
+    type: "VideoObject",
+    arName: "ظهور المهندس أحمد المبيض على تلفزيون أبوظبي",
+    enName: "Eng. Ahmad Almobayed feature on Abu Dhabi TV",
+    url: "https://www.instagram.com/abudhabitv/reel/DPCD9JBCY0Q/",
+    arPublisher: "تلفزيون أبوظبي",
+    enPublisher: "Abu Dhabi TV",
+  },
+  {
+    type: "VideoObject",
+    arName: "لقاء المهندس أحمد المبيض على تلفزيون أبوظبي",
+    enName: "Eng. Ahmad Almobayed segment on Abu Dhabi TV",
+    url: "https://www.instagram.com/abudhabitv/reel/DT0qQKzD4NE/",
+    arPublisher: "تلفزيون أبوظبي",
+    enPublisher: "Abu Dhabi TV",
+  },
+  {
+    type: "Article",
+    arName: "رحلة المهندس أحمد المبيض المُلهمة في التصميم",
+    enName: "Ahmad Almobayed's Inspiring Design Journey",
+    url: "https://uaestories.com/ahmad-almobayeds-inspiring-design-journey/",
+    arPublisher: "يو إيه إي ستوريز",
+    enPublisher: "UAE Stories",
+  },
+];
+
+// كتاب من تأليفه (نشر ذاتي — لا توجد دار نشر)
+export const personBook = {
+  arName: "كتاب ستايلات التصميم الداخلي",
+  enName: "Interior Design Styles Book",
+  url: "https://decorstores.ltd/products/book",
+};
+
+// صور البروفايل المعتمدة (مقصوصة من صورة الـ entity) بنِسب 1x1 / 4x3 / 16x9
 export const personProfileImages = [
-  "/profile/ahmad-1x1.jpg",
-  "/profile/ahmad-4x3.jpg",
-  "/profile/ahmad-16x9.jpg",
+  "/profile/ahmed-almobayed-1x1.jpg",
+  "/profile/ahmed-almobayed-4x3.jpg",
+  "/profile/ahmed-almobayed-16x9.jpg",
 ];
 
 // آخر تحديث لصفحة البروفايل — لازم ISO 8601 كاملة بالوقت والـ timezone
