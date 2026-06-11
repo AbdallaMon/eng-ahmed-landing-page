@@ -26,10 +26,14 @@ const OVERLAY =
  */
 export function StageBackdrop({ image, layoutId }) {
   return (
+    // Key by layoutId so each stage mounts a FRESH backdrop element: framer then
+    // morphs it from the just-unmounted card sharing that same layoutId (the
+    // DESIGN intro card, then the selected location card) — i.e. the card grows
+    // to fill the screen on EVERY step, not just the first.
     <AnimatePresence>
       {image && (
         <MotionDiv
-          key="stage-backdrop"
+          key={layoutId || "stage-backdrop"}
           layoutId={layoutId}
           aria-hidden
           initial={{ opacity: 0 }}
