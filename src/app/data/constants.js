@@ -145,6 +145,7 @@ export const personCompanies = [
 export const extraPersonSameAs = [
   "https://www.facebook.com/engahmedalmobayed/",
   "https://www.threads.com/@eng.ahmad_almobayed",
+  "https://www.wikidata.org/wiki/Q140180035",
 ];
 
 // محتوى إعلامي اتعمل *عنه* (subjectOf) — مقابلات ومقالات من طرف ثالث
