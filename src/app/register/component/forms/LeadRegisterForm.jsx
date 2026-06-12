@@ -227,9 +227,10 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
       ) : (
         <MotionPaper
           elevation={0}
-          // The form's own background appears as its OWN beat — after the colour
-          // panel has grown — then its fields cascade in.
-          variants={paperRevealVariants(0.15)}
+          // The form's own surface fades in as the light panel finishes covering
+          // the screen — one continuous beat, not a separate flash — then its
+          // fields cascade in.
+          variants={paperRevealVariants(0.3)}
           initial="hidden"
           animate="show"
           sx={{
@@ -304,7 +305,7 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
               has grown and the title has settled into its chip. */}
           <MotionStack
             spacing={4}
-            variants={formFieldsContainerVariants(1.25)}
+            variants={formFieldsContainerVariants(0.8)}
             initial="hidden"
             animate="show"
           >

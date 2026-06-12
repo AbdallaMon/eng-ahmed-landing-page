@@ -6,6 +6,7 @@ import { handleRequestSubmit } from "@/app/register/lib/request";
 import { designLeadTypes } from "@/app/register/data/constants";
 import {
   getUrlSpeed,
+  MOTION_SCALE,
   prefersReducedMotion,
 } from "@/app/register/lib/animations";
 
@@ -97,7 +98,7 @@ function introHoldMs() {
   if (prefersReducedMotion()) return 0;
   // Kick off EARLY: the card snaps in (~0.5s) and "تصميم" reads for a brief
   // beat, then it expands into the backdrop — no long dead wait up front.
-  return 800 / getUrlSpeed();
+  return (800 * MOTION_SCALE) / getUrlSpeed();
 }
 
 /**
@@ -130,6 +131,10 @@ export function useLeadFlow() {
   // The item currently being chosen — drives the "other cards fly away" beat
   // BEFORE the flow actually moves to the form.
   const [selectingItem, setSelectingItem] = useState("");
+  // The item we're stepping BACK from (form → item). Drives the REVERSE entrance
+  // in ItemSelect: the word morphs back, the chosen box shrinks back into its
+  // card, THEN the other cards return.
+  const [returningItem, setReturningItem] = useState("");
 
   const leadCategory = "DESIGN";
 
@@ -145,6 +150,8 @@ export function useLeadFlow() {
   const animTimerRef = useRef(null);
   // Timer that advances item → form after the "other cards fly away" beat.
   const itemAdvanceRef = useRef(null);
+  // Timer that drops the reverse flag once the back animation has settled.
+  const returningTimerRef = useRef(null);
 
   function setAnimating(value) {
     isAnimatingRef.current = value;
@@ -156,7 +163,7 @@ export function useLeadFlow() {
   // near-instant).
   function lockAnimation(targetStep) {
     if (prefersReducedMotion()) return;
-    const ms = (LOCK_MS[targetStep] ?? 900) / getUrlSpeed();
+    const ms = ((LOCK_MS[targetStep] ?? 900) * MOTION_SCALE) / getUrlSpeed();
     setAnimating(true);
     if (animTimerRef.current) clearTimeout(animTimerRef.current);
     animTimerRef.current = setTimeout(() => setAnimating(false), ms);
@@ -194,10 +201,13 @@ export function useLeadFlow() {
       if (!prefersReducedMotion()) {
         isAnimatingRef.current = true;
         setIsAnimating(true);
-        animTimerRef.current = setTimeout(() => {
-          isAnimatingRef.current = false;
-          setIsAnimating(false);
-        }, LOCK_MS.email / getUrlSpeed());
+        animTimerRef.current = setTimeout(
+          () => {
+            isAnimatingRef.current = false;
+            setIsAnimating(false);
+          },
+          (LOCK_MS.email * MOTION_SCALE) / getUrlSpeed(),
+        );
       }
       setStep("email");
     }, introHoldMs());
@@ -206,6 +216,7 @@ export function useLeadFlow() {
       if (introTimerRef.current) clearTimeout(introTimerRef.current);
       if (animTimerRef.current) clearTimeout(animTimerRef.current);
       if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
+      if (returningTimerRef.current) clearTimeout(returningTimerRef.current);
     };
   }, []);
 
@@ -214,12 +225,11 @@ export function useLeadFlow() {
     const response = await handleRequestSubmit(
       { email },
       setLoading,
-      `v2/client/new-lead/register?lng=${lng}`,
+      `client/new-lead/register?lng=${lng}`,
       false,
       translate("loading.submitting"),
     );
 
-    // Old server: 200. Migrated server: 201 (created). Accept both.
     if (response.status === 200 || response.status === 201) {
       setLeadEmail(email);
       const leadId = response.data?.id;
@@ -255,6 +265,10 @@ export function useLeadFlow() {
   function handleLeadItemClick(value) {
     if (isAnimatingRef.current) return;
     deepLinkRef.current = null;
+    // A fresh forward selection — drop any pending reverse flag so the chosen
+    // card animates the normal "expand into the form" way.
+    if (returningTimerRef.current) clearTimeout(returningTimerRef.current);
+    setReturningItem("");
     setLeadItem(value);
     setSelectingItem(value);
     patchUrlParam("item", value);
@@ -268,14 +282,17 @@ export function useLeadFlow() {
     const speed = getUrlSpeed();
     // Hold long enough for: the colour change to be seen, then the other cards to
     // slide away — before the flow moves to the form.
-    const cardsOutMs = prefersReducedMotion() ? 0 : 850 / speed;
+    const cardsOutMs = prefersReducedMotion()
+      ? 0
+      : (700 * MOTION_SCALE) / speed;
     setAnimating(true);
     if (animTimerRef.current) clearTimeout(animTimerRef.current);
     if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
     itemAdvanceRef.current = setTimeout(() => setStep("form"), cardsOutMs);
     animTimerRef.current = setTimeout(
       () => setAnimating(false),
-      cardsOutMs + (prefersReducedMotion() ? 0 : LOCK_MS.form / speed),
+      cardsOutMs +
+        (prefersReducedMotion() ? 0 : (LOCK_MS.form * MOTION_SCALE) / speed),
     );
   }
 
@@ -286,12 +303,24 @@ export function useLeadFlow() {
     deepLinkRef.current = null;
 
     if (step === "form") {
+      // Reverse choreography: remember the chosen item (returningItem) so
+      // ItemSelect can play its entrance BACKWARDS — the word morphs back to its
+      // card, the chosen box shrinks back into that card, THEN the other cards
+      // return. leadItem is cleared so the card is no longer marked "selected".
+      setReturningItem(leadItem);
       setLeadItem("");
       setSelectingItem("");
       if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
       patchUrlParam("item", null);
       patchUrlParam("step", "item");
       goBack("item");
+      // Drop the reverse flag once it has settled so the next forward selection
+      // animates normally.
+      if (returningTimerRef.current) clearTimeout(returningTimerRef.current);
+      returningTimerRef.current = setTimeout(
+        () => setReturningItem(""),
+        prefersReducedMotion() ? 0 : (1300 * MOTION_SCALE) / getUrlSpeed(),
+      );
       return;
     }
 
@@ -382,6 +411,7 @@ export function useLeadFlow() {
     reduceMotion,
     isAnimating,
     selectingItem,
+    returningItem,
     leadCategory,
     leadEmail,
     location,

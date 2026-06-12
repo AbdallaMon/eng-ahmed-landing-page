@@ -36,6 +36,26 @@ export function RegisterHeader({
   const { lng, changeLanguage, translate } = useLanguage();
   const isRtl = lng === "ar";
 
+  // One shared "glass pill" recipe so Back / Reset / Language are visually
+  // identical: same fixed height, same radius, same translucent surface and
+  // soft shadow, no hard borders. Each control then only adds what's unique to
+  // it (icon spacing, the Select's inner alignment).
+  const PILL_HEIGHT = 36;
+  const pillSx = {
+    height: PILL_HEIGHT,
+    minHeight: PILL_HEIGHT,
+    borderRadius: "12px",
+    textTransform: "none",
+    fontWeight: 600,
+    fontSize: "0.875rem",
+    whiteSpace: "nowrap",
+    color: "primary.main",
+    backgroundColor: "rgba(255,255,255,0.85)",
+    backdropFilter: "blur(6px)",
+    boxShadow: "0 1px 4px rgba(0,0,0,0.10)",
+    "&:hover": { backgroundColor: "rgba(255,255,255,0.95)" },
+  };
+
   return (
     <Container
       maxWidth="md"
@@ -78,13 +98,8 @@ export function RegisterHeader({
                 </Box>
               }
               sx={{
-                borderRadius: "12px",
-                textTransform: "none",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-                color: "primary.main",
-                backgroundColor: "rgba(255,255,255,0.85)",
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.95)" },
+                ...pillSx,
+                px: 1.5,
                 ...(isRtl && { "& .MuiButton-startIcon": { ml: 0.5, mr: -0.5 } }),
               }}
             >
@@ -98,16 +113,12 @@ export function RegisterHeader({
             <Button
               onClick={() => onReset()}
               disabled={disabled}
-              variant="outlined"
+              variant="text"
               size="small"
-              color="primary"
               startIcon={<MdRestartAlt size={18} />}
               sx={{
-                borderRadius: "12px",
-                textTransform: "none",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-                backgroundColor: "rgba(255,255,255,0.85)",
+                ...pillSx,
+                px: 1.5,
                 ...(isRtl && { "& .MuiButton-startIcon": { ml: 0.5, mr: -0.5 } }),
               }}
             >
@@ -121,13 +132,17 @@ export function RegisterHeader({
             variant="outlined"
             size="small"
             sx={{
-              color: "primary.main",
-              minWidth: 80,
-              backgroundColor: "rgba(255,255,255,0.85)",
-              borderRadius: "12px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "transparent",
+              ...pillSx,
+              minWidth: 96,
+              "& .MuiSelect-select": {
+                display: "flex",
+                alignItems: "center",
+                height: PILL_HEIGHT,
+                py: 0,
+                boxSizing: "border-box",
               },
+              "& .MuiSelect-icon": { color: "primary.main" },
+              "& .MuiOutlinedInput-notchedOutline": { borderColor: "transparent" },
               "&:hover .MuiOutlinedInput-notchedOutline": {
                 borderColor: "transparent",
               },

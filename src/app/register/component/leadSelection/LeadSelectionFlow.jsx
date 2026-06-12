@@ -54,6 +54,7 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
     hydrated,
     isAnimating,
     selectingItem,
+    returningItem,
     leadCategory,
     leadEmail,
     location,
@@ -110,6 +111,7 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
           leadCategory={leadCategory}
           location={location}
           selectingItem={selectingItem}
+          returningItem={returningItem}
           onSelect={handleLeadItemClick}
           selected={leadItem}
         />

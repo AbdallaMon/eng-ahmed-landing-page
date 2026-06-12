@@ -26,6 +26,23 @@ export function getUrlSpeed() {
   return Math.min(10, Math.max(0.25, raw));
 }
 
+/**
+ * Global slow-mo factor for the WHOLE flow. Every base duration AND delay is
+ * stretched by this, so the animation reads a touch slower and smoother. Tune the
+ * overall pace from this ONE place. Higher → slower. (The orchestration timers in
+ * `useLeadFlow` apply the same factor, so the choreography stays in sync.)
+ */
+export const MOTION_SCALE = 1.2;
+
+/**
+ * Effective tempo used by every timing helper: the URL speed control divided by
+ * the global slow-mo factor. `?speed=` still fast-forwards, just on a calmer
+ * baseline. Lower number → slower animation (longer durations + delays).
+ */
+function tempo() {
+  return getUrlSpeed() / MOTION_SCALE;
+}
+
 /** Whether the user has asked the OS to minimise motion. */
 export function prefersReducedMotion() {
   if (typeof window === "undefined" || !window.matchMedia) return false;
@@ -39,7 +56,7 @@ export function prefersReducedMotion() {
 export function motionTransition(base = 0.45) {
   if (prefersReducedMotion()) return { duration: 0.01 };
   return {
-    duration: base / getUrlSpeed(),
+    duration: base / tempo(),
     ease: [0.22, 1, 0.36, 1], // expo-out: smooth, premium settle
   };
 }
@@ -52,7 +69,7 @@ export function motionTransition(base = 0.45) {
  */
 export function expandTransition(delay = 0) {
   if (prefersReducedMotion()) return { duration: 0.01 };
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     type: "tween",
     duration: 0.6 / speed,
@@ -70,7 +87,7 @@ export function itemsPanelVariants(delay = 0, stagger = 0.06) {
   if (prefersReducedMotion()) {
     return { hidden: { opacity: 0 }, show: { opacity: 1 } };
   }
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     hidden: { opacity: 0, y: 16 },
     show: {
@@ -94,7 +111,7 @@ export function itemsPanelVariants(delay = 0, stagger = 0.06) {
  */
 export function titleMorphTransition(delay = 0, duration = 0.5) {
   if (prefersReducedMotion()) return { duration: 0.01 };
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     type: "tween",
     duration: duration / speed,
@@ -112,7 +129,7 @@ export function headerRevealVariants(delay = 0) {
   if (prefersReducedMotion()) {
     return { hidden: { opacity: 0 }, show: { opacity: 1 } };
   }
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     hidden: { opacity: 0, y: 14 },
     show: {
@@ -132,7 +149,7 @@ export function paperRevealVariants(delay = 0) {
   if (prefersReducedMotion()) {
     return { hidden: { opacity: 0 }, show: { opacity: 1 } };
   }
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     hidden: { opacity: 0, scale: 0.97, y: 14 },
     show: {
@@ -150,24 +167,7 @@ export function paperRevealVariants(delay = 0) {
  */
 export function backdropFade() {
   if (prefersReducedMotion()) return { duration: 0.01 };
-  return { duration: 0.6 / getUrlSpeed(), ease: [0.22, 1, 0.36, 1] };
-}
-
-/**
- * The colour "settle" of the item-expand panel: the selected item row grows to
- * fill the screen in its own brand-gold colour (the `layoutId` morph), then this
- * eases the panel from gold → a calm light tone so the form that lands on top
- * stays readable. Slightly delayed so the grow "reads" as gold first. Honours
- * reduced-motion + the ?speed control.
- */
-export function panelSettleTransition() {
-  if (prefersReducedMotion()) return { duration: 0.01 };
-  const speed = getUrlSpeed();
-  return {
-    duration: 0.55 / speed,
-    delay: 0.15 / speed,
-    ease: [0.22, 1, 0.36, 1],
-  };
+  return { duration: 0.6 / tempo(), ease: [0.22, 1, 0.36, 1] };
 }
 
 /**
@@ -202,7 +202,7 @@ export function listContainerVariants(stagger = 0.07, delay = 0) {
   if (prefersReducedMotion()) {
     return { hidden: {}, show: {} };
   }
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     hidden: {},
     show: {
@@ -223,7 +223,7 @@ export function listItemVariants() {
     show: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.4 / tempo(), ease: [0.22, 1, 0.36, 1] },
     },
   };
 }
@@ -240,7 +240,7 @@ export function overlayRevealVariants() {
       show: { opacity: 1, transition: { duration: 0.01 } },
     };
   }
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     hidden: { opacity: 0, y: 24 },
     show: {
@@ -267,7 +267,7 @@ export function formFieldsContainerVariants(delay = 1.25) {
   if (prefersReducedMotion()) {
     return { hidden: {}, show: { transition: { staggerChildren: 0 } } };
   }
-  const speed = getUrlSpeed();
+  const speed = tempo();
   return {
     hidden: {},
     show: {
@@ -290,7 +290,7 @@ export function formGroupVariants() {
   }
   return {
     hidden: {},
-    show: { transition: { staggerChildren: 0.1 / getUrlSpeed() } },
+    show: { transition: { staggerChildren: 0.1 / tempo() } },
   };
 }
 
@@ -304,7 +304,7 @@ export function formFieldVariants() {
     show: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.45 / tempo(), ease: [0.22, 1, 0.36, 1] },
     },
   };
 }

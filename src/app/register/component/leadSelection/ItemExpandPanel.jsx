@@ -1,22 +1,25 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import colors from "@/app/register/theme/colors";
-import {
-  expandTransition,
-  panelSettleTransition,
-} from "@/app/register/lib/animations";
+import { expandTransition } from "@/app/register/lib/animations";
 
 const MotionDiv = motion.create("div");
 
 /**
  * Full-screen panel the SELECTED item row expands into — the "box grows to fill
- * the screen" mechanic, but in COLOUR instead of a photo.
+ * the screen" mechanic, as a calm light surface (no photo, no colour flip).
  *
  * It shares the selected row's `layoutId` (`item-{value}`), so framer morphs the
- * gold option row up to full-screen. It starts in the row's own brand-gold tone
- * (seamless with the row) then eases to a calm light tone so the form that
- * reveals on top of it (see `LeadSelectionFlow`) stays readable.
+ * chosen option row up to full-screen. The row is already light (a soft gold
+ * HIGHLIGHT, not a gold fill) and the panel is the same calm light tone, so the
+ * morph is a pure SIZE growth — the card simply expands to fill the screen and
+ * becomes the form's surface, with no jarring gold → light wash.
+ *
+ * Deliberately NOT wrapped in AnimatePresence: on the way back the panel must
+ * SHRINK back into the chosen card, which framer does as a clean `layoutId`
+ * transfer (panel unmounts ↔ card mounts in the same commit). An exit fade would
+ * keep two elements sharing the id at once and break that reverse morph.
  *
  * Purely the backdrop layer (aria-hidden); the heading + inputs render above it.
  * Renders nothing until an item has been chosen.
@@ -24,32 +27,29 @@ const MotionDiv = motion.create("div");
  * @param {{ layoutId?: string }} props
  */
 export function ItemExpandPanel({ layoutId }) {
+  if (!layoutId) return null;
   return (
-    <AnimatePresence>
-      {layoutId && (
-        <MotionDiv
-          key={layoutId}
-          layoutId={layoutId}
-          aria-hidden
-          initial={{ backgroundColor: colors.primary }}
-          animate={{ backgroundColor: colors.bgSecondary }}
-          exit={{ opacity: 0 }}
-          transition={{
-            // Hold so the item NAME visibly travels to its chip first, THEN the
-            // background grows to fill the screen.
-            layout: expandTransition(0.55),
-            backgroundColor: panelSettleTransition(),
-            opacity: { duration: 0.3 },
-          }}
-          style={{
-            // Above the photo backdrops (incl. a lingering location photo) so
-            // the colour panel grows OVER them and stays clean under the form.
-            position: "fixed",
-            inset: 0,
-            zIndex: 2,
-          }}
-        />
-      )}
-    </AnimatePresence>
+    <MotionDiv
+      key={layoutId}
+      layoutId={layoutId}
+      aria-hidden
+      // No colour flip. The panel grows in ONE calm light tone — the form's own
+      // surface — so the chosen card simply EXPANDS to fill the screen (the
+      // signature "box grows") instead of flashing gold → light.
+      transition={{
+        // Grow promptly to cover the dark photo so the form lands on a clean
+        // light surface (no dark edges peeking around it). On the way back the
+        // CARD owns the reverse (shrink) transition.
+        layout: expandTransition(0.1),
+      }}
+      style={{
+        // Above the photo backdrops (incl. a lingering location photo) so the
+        // panel grows OVER them and stays clean under the form.
+        position: "fixed",
+        inset: 0,
+        zIndex: 2,
+        backgroundColor: colors.bgSecondary,
+      }}
+    />
   );
 }

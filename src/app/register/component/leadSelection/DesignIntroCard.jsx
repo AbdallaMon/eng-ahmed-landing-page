@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Box, Stack, Typography, alpha, useTheme } from "@mui/material";
 
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
+import { MOTION_SCALE } from "@/app/register/lib/animations";
 
 const MotionDiv = motion.create("div");
 
@@ -22,7 +23,7 @@ export function DesignIntroCard() {
     <MotionDiv
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.55 * MOTION_SCALE, ease: [0.22, 1, 0.36, 1] }}
       style={{ width: "100%" }}
     >
       <Stack

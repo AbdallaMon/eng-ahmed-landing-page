@@ -2,7 +2,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Box } from "@mui/material";
 
-import { backdropFade, expandTransition } from "@/app/register/lib/animations";
+import {
+  backdropFade,
+  expandTransition,
+  MOTION_SCALE,
+} from "@/app/register/lib/animations";
 
 const MotionDiv = motion.create("div");
 
@@ -53,7 +57,11 @@ export function StageBackdrop({ image, layoutId, expandDelay = 0 }) {
             // flash/gap: the old photo is never removed before the new covers.
             exit: {
               opacity: [1, 1, 0],
-              transition: { duration: 1.5, times: [0, 0.82, 1], ease: "linear" },
+              transition: {
+                duration: 1.5 * MOTION_SCALE,
+                times: [0, 0.82, 1],
+                ease: "linear",
+              },
             },
           }}
           initial="initial"
@@ -72,7 +80,7 @@ export function StageBackdrop({ image, layoutId, expandDelay = 0 }) {
             alt=""
             initial={{ scale: 1.08 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.4 * MOTION_SCALE, ease: [0.22, 1, 0.36, 1] }}
             sx={{
               position: "absolute",
               inset: 0,
