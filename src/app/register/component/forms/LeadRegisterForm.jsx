@@ -61,7 +61,10 @@ const MotionChip = motion.create(Chip);
 // while still being a motion item (so name / phone reveal independently).
 function Field({ children, style }) {
   return (
-    <MotionDiv variants={formFieldVariants()} style={{ width: "100%", ...style }}>
+    <MotionDiv
+      variants={formFieldVariants()}
+      style={{ width: "100%", ...style }}
+    >
       {children}
     </MotionDiv>
   );
@@ -245,7 +248,7 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
           {/* Visible WITH the paper (not in the delayed field cascade) so the
               chosen item title can MORPH straight into the type chip — it
               shrinks into its place inside the form. */}
-          <Stack spacing={2} alignItems="center" sx={{ mb: 4 }}>
+          <Stack spacing={2} alignItems="center" sx={{ mb: 2 }}>
             <Typography
               variant="h5"
               component="h4"
@@ -304,7 +307,7 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
           {/* The fields cascade in one by one (واحده واحده) after the background
               has grown and the title has settled into its chip. */}
           <MotionStack
-            spacing={4}
+            spacing={2}
             variants={formFieldsContainerVariants(0.8)}
             initial="hidden"
             animate="show"
