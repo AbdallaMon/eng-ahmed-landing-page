@@ -145,12 +145,13 @@ export const personCompanies = [
 export const extraPersonSameAs = [
   "https://www.facebook.com/engahmedalmobayed/",
   "https://www.threads.com/@eng.ahmad_almobayed",
+  "https://www.wikidata.org/wiki/Q140180035",
 ];
 
 // محتوى إعلامي اتعمل *عنه* (subjectOf) — مقابلات ومقالات من طرف ثالث
 export const mediaAboutPerson = [
   {
-    type: "VideoObject",
+    type: "CreativeWork",
     arName: "مقابلة المهندس أحمد المبيض على تلفزيون أبوظبي",
     enName: "Eng. Ahmad Almobayed interview on Abu Dhabi TV",
     url: "https://www.instagram.com/abudhabitv/reel/DQrzYtFlce2/",
@@ -158,7 +159,7 @@ export const mediaAboutPerson = [
     enPublisher: "Abu Dhabi TV",
   },
   {
-    type: "VideoObject",
+    type: "CreativeWork",
     arName: "ظهور المهندس أحمد المبيض على تلفزيون أبوظبي",
     enName: "Eng. Ahmad Almobayed feature on Abu Dhabi TV",
     url: "https://www.instagram.com/abudhabitv/reel/DPCD9JBCY0Q/",
@@ -166,7 +167,7 @@ export const mediaAboutPerson = [
     enPublisher: "Abu Dhabi TV",
   },
   {
-    type: "VideoObject",
+    type: "CreativeWork",
     arName: "لقاء المهندس أحمد المبيض على تلفزيون أبوظبي",
     enName: "Eng. Ahmad Almobayed segment on Abu Dhabi TV",
     url: "https://www.instagram.com/abudhabitv/reel/DT0qQKzD4NE/",
@@ -174,7 +175,7 @@ export const mediaAboutPerson = [
     enPublisher: "Abu Dhabi TV",
   },
   {
-    type: "Article",
+    type: "CreativeWork",
     arName: "رحلة المهندس أحمد المبيض المُلهمة في التصميم",
     enName: "Ahmad Almobayed's Inspiring Design Journey",
     url: "https://uaestories.com/ahmad-almobayeds-inspiring-design-journey/",
