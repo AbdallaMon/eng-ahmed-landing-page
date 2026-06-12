@@ -223,7 +223,7 @@ export function useLeadFlow() {
   async function handleEmailSubmit(email) {
     if (isAnimatingRef.current) return;
     const response = await handleRequestSubmit(
-      { email },
+      { email, lng },
       setLoading,
       `client/new-lead/register?lng=${lng}`,
       false,
