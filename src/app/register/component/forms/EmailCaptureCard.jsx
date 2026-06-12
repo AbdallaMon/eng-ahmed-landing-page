@@ -66,7 +66,7 @@ export function EmailCaptureCard({ onSubmit }) {
               fontSize: { xs: "1.6rem", md: "2rem" },
             }}
           >
-            {translate("register.emailWelcomeTitle")}
+            {translate("register.enterEmail")}
           </Typography>
           <Typography
             variant="body1"
@@ -107,10 +107,6 @@ export function EmailCaptureCard({ onSubmit }) {
         >
           {loading ? translate("register.loading") : translate("register.next")}
         </Button>
-
-        <Typography variant="caption" sx={{ color: "text.secondary" }}>
-          {translate("register.emailPrivacy")}
-        </Typography>
       </Stack>
     </Box>
   );

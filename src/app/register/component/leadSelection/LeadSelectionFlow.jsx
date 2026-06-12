@@ -1,23 +1,18 @@
 "use client";
 
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { Box, Button, Container, Paper, alpha, useTheme } from "@mui/material";
-import { IoArrowBack } from "react-icons/io5";
+import { LayoutGroup, motion } from "framer-motion";
+import { Box, Container, Paper, useTheme } from "@mui/material";
 
 import colors from "@/app/register/theme/colors";
-import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import {
   progressIndexFor,
   useLeadFlow,
 } from "@/app/register/component/leadSelection/useLeadFlow";
-import {
-  motionTransition,
-  overlayRevealVariants,
-  stepVariants,
-} from "@/app/register/lib/animations";
+import { overlayRevealVariants } from "@/app/register/lib/animations";
 import { RegisterHeader } from "@/app/register/component/layout/RegisterHeader";
 import { StepProgress } from "@/app/register/component/leadSelection/StepProgress";
 import { StageBackdrop } from "@/app/register/component/leadSelection/StageBackdrop";
+import { ItemExpandPanel } from "@/app/register/component/leadSelection/ItemExpandPanel";
 import { DesignIntroCard } from "@/app/register/component/leadSelection/DesignIntroCard";
 import { LocationSelect } from "@/app/register/component/leadSelection/LocationSelect";
 import { ItemSelect } from "@/app/register/component/leadSelection/ItemSelect";
@@ -27,8 +22,12 @@ import { CompleteRegisterForm } from "@/app/register/component/forms/CompleteReg
 
 const MotionDiv = motion.create("div");
 
-// Steps rendered over the full-screen photo backdrop (light-on-dark treatment).
-const OVERLAY_STEPS = new Set(["designIntro", "location", "item"]);
+// Steps shown over the full-screen DARK photo backdrop → progress + back use the
+// light-on-dark treatment. (designIntro is the light intro card; form is light.)
+const DARK_BACKDROP_STEPS = new Set(["email", "location", "item"]);
+// Steps whose content reveals (rises) on top of the backdrop after a card has
+// expanded into it. email keeps its own light card; designIntro renders bare.
+const REVEAL_STEPS = new Set(["location", "item"]);
 
 /**
  * Shared lead-selection wizard used by both /register and /register/complete.
@@ -49,19 +48,19 @@ const OVERLAY_STEPS = new Set(["designIntro", "location", "item"]);
  */
 export function LeadSelectionFlow({ mode = "register", leadId }) {
   const theme = useTheme();
-  const { translate, lng } = useLanguage();
-  const isRtl = lng === "ar";
 
   const {
     step,
-    direction,
     hydrated,
+    isAnimating,
+    selectingItem,
     leadCategory,
     leadEmail,
     location,
     leadItem,
     activeImage,
     backdropLayoutId,
+    formExpandLayoutId,
     canGoBack,
     canReset,
     handleEmailSubmit,
@@ -71,9 +70,9 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
     handleReset,
   } = useLeadFlow();
 
-  const variants = stepVariants(direction, isRtl);
   const isFormStep = step === "form";
-  const isOverlay = OVERLAY_STEPS.has(step);
+  const onDark = DARK_BACKDROP_STEPS.has(step);
+  const isReveal = REVEAL_STEPS.has(step);
 
   const renderForm = () =>
     mode === "complete" ? (
@@ -109,6 +108,8 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
       return (
         <ItemSelect
           leadCategory={leadCategory}
+          location={location}
+          selectingItem={selectingItem}
           onSelect={handleLeadItemClick}
           selected={leadItem}
         />
@@ -122,122 +123,105 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
 
   return (
     <LayoutGroup>
-      <RegisterHeader onReset={handleReset} canReset={canReset} />
+      <RegisterHeader
+        onReset={handleReset}
+        canReset={canReset}
+        onBack={handleBack}
+        canGoBack={canGoBack}
+        disabled={isAnimating}
+      />
 
       {/* Full-screen photo backdrop the active card expands into. Its shared
           `layoutId` follows the active stage so each new step morphs from the
           card the user just selected (design intro card, then location card). */}
-      <StageBackdrop image={activeImage} layoutId={backdropLayoutId} />
+      <StageBackdrop
+        image={activeImage}
+        layoutId={backdropLayoutId}
+        expandDelay={step === "item" ? 0.3 : 0}
+      />
+
+      {/* Colour-expand panel for the LAST step: the chosen item row grows (in
+          its own gold) to fill the screen, then settles light under the form. */}
+      <ItemExpandPanel layoutId={formExpandLayoutId} />
 
       <Container
         maxWidth="md"
         sx={{
           position: "relative",
-          zIndex: 1,
+          // Above every backdrop layer (photos z0/1, colour panel z2).
+          zIndex: 3,
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-          pt: { xs: 11, md: 12 },
+          // Sit close under the fixed header so the stepper reads right beneath
+          // it (back now lives IN the header, freeing this space).
+          pt: { xs: 9, md: 9.5 },
           pb: { xs: 6, md: 8 },
         }}
       >
-        {/* Back control (in-flow, accessible) — shown once past email capture. */}
-        {canGoBack && (
-          <Box sx={{ mb: 2 }}>
-            <Button
-              onClick={handleBack}
-              variant="text"
-              startIcon={
-                <Box
-                  component="span"
-                  sx={{
-                    display: "inline-flex",
-                    transform: isRtl ? "scaleX(-1)" : "none",
-                  }}
-                >
-                  <IoArrowBack size={18} />
-                </Box>
-              }
-              sx={{
-                textTransform: "none",
-                fontWeight: 600,
-                color: isOverlay ? "common.white" : "primary.main",
-                ...(isOverlay && {
-                  backgroundColor: alpha("#2d231e", 0.35),
-                  borderRadius: 999,
-                  px: 1.75,
-                  "&:hover": { backgroundColor: alpha("#2d231e", 0.5) },
-                }),
-                ...(isRtl && {
-                  "& .MuiButton-startIcon": { ml: 0.5, mr: -0.5 },
-                }),
-              }}
-            >
-              {translate("register.back")}
-            </Button>
-          </Box>
-        )}
-
         <StepProgress
           activeIndex={progressIndexFor(step)}
-          onDark={isOverlay}
+          onDark={onDark}
         />
 
         {/* Avoid a flash of the email step before hydration resolves the
-            deep-link target. */}
+            deep-link target. Pointer events are cut while a transition is
+            animating so no click can fire over a running animation. */}
         <Box
           sx={{
             visibility: hydrated ? "visible" : "hidden",
+            pointerEvents: isAnimating ? "none" : "auto",
             flex: isFormStep ? "0 0 auto" : "1 1 auto",
             display: "flex",
             flexDirection: "column",
-            justifyContent: isFormStep ? "flex-start" : "center",
+            justifyContent: "flex-start",
+            // Keep the option cards sitting just under the stepper.
+            pt: isFormStep ? 0 : { xs: 0.5, md: 1 },
           }}
         >
           {step === "designIntro" ? (
             // The DESIGN card renders bare so its self-driven entrance + the
             // shared layoutId morph aren't disturbed by a wrapping transform.
+            // This is the FIRST thing shown; it then grows into the backdrop.
             renderContent()
-          ) : isOverlay ? (
-            // Overlay steps live on the backdrop; the shared layoutId morph
-            // drives the expand, and the content reveals over it.
+          ) : isReveal ? (
+            // location / item render BARE — each component self-animates (the
+            // persistent word MORPHS without fading, while its header + option
+            // cards reveal on their own delayed beat after the image expands).
+            // A wrapping opacity layer here would fade the morphing word too.
+            renderContent()
+          ) : isFormStep ? (
+            // The chosen item row has just expanded (gold → settling light) into
+            // the full-screen ItemExpandPanel behind. The item NAME morphs (shared
+            // `layoutId`) straight into the form's TYPE CHIP — it shrinks into its
+            // place inside the form rather than sitting as a heading above it.
+            <Box key="form">{renderForm()}</Box>
+          ) : (
+            // email: a light card that RISES in on the DESIGN backdrop AFTER the
+            // intro card has grown to fill the screen ("design grows → email
+            // enters"). Reveal is delayed so the expand lands first.
             <MotionDiv
-              key={step}
+              key="email"
               variants={overlayRevealVariants()}
               initial="hidden"
               animate="show"
             >
-              {renderContent()}
+              <Paper
+                elevation={0}
+                sx={{
+                  maxWidth: 520,
+                  mx: "auto",
+                  p: { xs: 2.5, md: 4 },
+                  borderRadius: 4,
+                  backgroundColor: colors.bgSecondary,
+                  border: `1px solid ${theme.palette.divider}`,
+                  boxShadow: "0 18px 50px rgba(0,0,0,0.28)",
+                  overflow: "hidden",
+                }}
+              >
+                {renderContent()}
+              </Paper>
             </MotionDiv>
-          ) : (
-            // email + form: light card with the classic slide/fade swap.
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 2.5, md: 4 },
-                borderRadius: 4,
-                backgroundColor: isFormStep ? "transparent" : colors.bgSecondary,
-                border: isFormStep
-                  ? "none"
-                  : `1px solid ${theme.palette.divider}`,
-                boxShadow: isFormStep ? "none" : "0 10px 30px rgba(0,0,0,0.06)",
-                overflow: "hidden",
-              }}
-            >
-              <AnimatePresence mode="wait" custom={direction}>
-                <MotionDiv
-                  key={step}
-                  custom={direction}
-                  variants={variants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  transition={motionTransition()}
-                >
-                  {renderContent()}
-                </MotionDiv>
-              </AnimatePresence>
-            </Paper>
           )}
         </Box>
       </Container>

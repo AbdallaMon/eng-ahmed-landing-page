@@ -40,8 +40,11 @@ export default function PayButton({
       false,
       "Redirecting...",
     );
-    if (data?.url) {
-      window.location.href = data.url;
+    // Old server returned `{ url }`; the migrated server nests it as
+    // `{ data: { url } }`. Handle old || new.
+    const checkoutUrl = data?.url || data?.data?.url;
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl;
     }
   };
 

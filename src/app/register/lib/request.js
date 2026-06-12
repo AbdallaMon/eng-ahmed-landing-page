@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { Success, Failed } from "@/app/register/lib/toast";
+import { resolveServerMessage } from "@/app/register/lib/serverMessages";
 
 const BASE_URL = process.env.NEXT_PUBLIC_URL;
 
@@ -48,11 +49,18 @@ export async function handleRequestSubmit(
     const result = await response.json();
     result.status = status;
 
-    if (status === 200) {
-      toast.update(toastId, Success(result.message));
+    // Old server replied 200; the migrated server replies 201 on create and
+    // carries a `success` flag — treat both as success (handle old || new).
+    const isSuccess =
+      status === 200 || status === 201 || result?.success === true;
+    // The migrated server sends language-neutral CODES in `message`; resolve
+    // them to readable text (old prose passes through unchanged).
+    const shownMessage = resolveServerMessage(result.message);
+    if (isSuccess) {
+      toast.update(toastId, Success(shownMessage));
       if (setRedirect) setRedirect((prev) => !prev);
     } else {
-      toast.update(toastId, Failed(result.message));
+      toast.update(toastId, Failed(shownMessage));
     }
 
     return result;

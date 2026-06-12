@@ -37,7 +37,10 @@ export async function uploadInChunks(file, setProgress, setOverlay) {
       });
 
       const json = await res.json();
-      if (json.url) finalFileUrl = json.url;
+      // Old server returned `{ url }`; the migrated server nests it as
+      // `{ data: { url } }`. Handle old || new.
+      const chunkUrl = json.url || json.data?.url;
+      if (chunkUrl) finalFileUrl = chunkUrl;
 
       setProgress(Math.round(((i + 1) / totalChunks) * 100));
     }

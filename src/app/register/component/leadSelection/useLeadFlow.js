@@ -12,21 +12,23 @@ import {
 const VALID_LOCATIONS = ["INSIDE_UAE", "OUTSIDE_UAE"];
 
 // The category image used for the expand intro (DESIGN is the only category).
-const DESIGN_IMAGE = "/design.jpg";
+const DESIGN_IMAGE = "/design.jfif";
 
-// Ordered stages of the lead-selection wizard. `designIntro` is a short,
-// auto-advancing visual phase: the DESIGN image card appears and expands to
-// fill the screen, then we land on the location options. It is collapsed to a
+// Ordered stages of the lead-selection wizard. `designIntro` is the FIRST,
+// auto-advancing visual phase: the moment the page loads, the "تصميم/Design"
+// word shows inside its image card, the card expands to fill the screen, and
+// THEN the email step enters on top of that backdrop. It is collapsed to a
 // near-instant transition when deep-linking or under reduced-motion.
-export const STEPS = ["email", "designIntro", "location", "item", "form"];
+export const STEPS = ["designIntro", "email", "location", "item", "form"];
 
-// The four logical stages shown in the progress indicator. `designIntro` maps
-// to the "location" slot so the counter still reads as a clean 4-step flow.
+// The four logical stages shown in the progress indicator. `designIntro` is a
+// pre-email intro, so it maps to the "email" slot — the counter still reads as
+// a clean 4-step flow.
 export const PROGRESS_STEPS = ["email", "location", "item", "form"];
 
 /** Map a (possibly transient) step to its progress slot. */
 export function progressIndexFor(step) {
-  if (step === "designIntro") return PROGRESS_STEPS.indexOf("location");
+  if (step === "designIntro") return PROGRESS_STEPS.indexOf("email");
   const idx = PROGRESS_STEPS.indexOf(step);
   return idx < 0 ? 0 : idx;
 }
@@ -41,7 +43,13 @@ export function progressIndexFor(step) {
  */
 function readDeepLink() {
   if (typeof window === "undefined") {
-    return { leadId: null, email: null, location: null, item: null, step: null };
+    return {
+      leadId: null,
+      email: null,
+      location: null,
+      item: null,
+      step: null,
+    };
   }
   const params = new URLSearchParams(window.location.search);
   const location = params.get("location");
@@ -83,10 +91,13 @@ function resolveDeepLinkStep({ item, location, step }) {
   return "location";
 }
 
-/** Duration (ms) the DESIGN intro card lingers before it expands. */
+/** Duration (ms) the DESIGN intro card lingers (so "تصميم" is readable inside
+ *  the image) before it expands and the email step enters. */
 function introHoldMs() {
   if (prefersReducedMotion()) return 0;
-  return 650 / getUrlSpeed();
+  // Kick off EARLY: the card snaps in (~0.5s) and "تصميم" reads for a brief
+  // beat, then it expands into the backdrop — no long dead wait up front.
+  return 800 / getUrlSpeed();
 }
 
 /**
@@ -95,19 +106,30 @@ function introHoldMs() {
  * view layer.
  *
  * The DESIGN category is always selected. On a normal first visit the flow
- * starts at email capture; submitting it plays the DESIGN "card expands to
- * fill the screen" intro, then lands on the location options. Selecting a
- * location expands that card to the screen too, then the item options appear.
- * When the URL carries a leadId (deep-link) the intro is skipped and the flow
+ * OPENS on the DESIGN intro: the "تصميم/Design" card appears, expands to fill
+ * the screen, and the email step then enters on top of that backdrop.
+ * Submitting the email lands on the location options; selecting a location
+ * expands that card to the screen too, then the item options appear. When the
+ * URL carries a leadId (deep-link) the intro + email are skipped and the flow
  * resumes from the matching stage.
  */
+// Roughly how long each step's entrance animation runs (ms, at normal speed).
+// While a transition is mid-flight the whole flow is locked so no second action
+// (a click or a back) can fire over a running animation.
+const LOCK_MS = { email: 800, location: 900, item: 1100, form: 1300 };
+
 export function useLeadFlow() {
-  const [step, setStep] = useState("email");
+  const [step, setStep] = useState("designIntro");
   const [direction, setDirection] = useState(1); // 1 = forward, -1 = back
   const [leadEmail, setLeadEmail] = useState("");
   const [location, setLocation] = useState("");
   const [leadItem, setLeadItem] = useState("");
   const [hydrated, setHydrated] = useState(false);
+  // True while a step transition is animating — gates every user action.
+  const [isAnimating, setIsAnimating] = useState(false);
+  // The item currently being chosen — drives the "other cards fly away" beat
+  // BEFORE the flow actually moves to the form.
+  const [selectingItem, setSelectingItem] = useState("");
 
   const leadCategory = "DESIGN";
 
@@ -118,8 +140,29 @@ export function useLeadFlow() {
   const deepLinkRef = useRef(null);
   // Track the pending intro timer so we can clear it on unmount / fast paths.
   const introTimerRef = useRef(null);
+  // Animation-lock: a ref mirrors the state so handlers read it synchronously.
+  const isAnimatingRef = useRef(false);
+  const animTimerRef = useRef(null);
+  // Timer that advances item → form after the "other cards fly away" beat.
+  const itemAdvanceRef = useRef(null);
 
-  // ── Mount: start at email capture, or resume from a deep-link ───────────────
+  function setAnimating(value) {
+    isAnimatingRef.current = value;
+    setIsAnimating(value);
+  }
+
+  // Lock the flow for the duration of the transition INTO `targetStep`, then
+  // release it. Reduced-motion users aren't locked (their transitions are
+  // near-instant).
+  function lockAnimation(targetStep) {
+    if (prefersReducedMotion()) return;
+    const ms = (LOCK_MS[targetStep] ?? 900) / getUrlSpeed();
+    setAnimating(true);
+    if (animTimerRef.current) clearTimeout(animTimerRef.current);
+    animTimerRef.current = setTimeout(() => setAnimating(false), ms);
+  }
+
+  // ── Mount: play the DESIGN intro → email, or resume from a deep-link ─────────
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -133,53 +176,75 @@ export function useLeadFlow() {
       setLeadEmail(deepLink.email || deepLink.leadId);
       if (deepLink.location) setLocation(deepLink.location);
       if (deepLink.item) setLeadItem(deepLink.item);
-      // Deep-links jump straight to the resolved stage — the expand intro is
-      // collapsed (instant) so resuming never replays the animation.
+      // Deep-links jump straight to the resolved stage — the intro + email are
+      // skipped so resuming never replays the animation.
       setStep(resolveDeepLinkStep(deepLink));
+      setHydrated(true);
+      return;
     }
 
+    // Normal first visit: the page opens on the DESIGN intro card; after it
+    // lingers (so "تصميم" reads inside the image) it expands to fill the screen
+    // and the email step enters on top. Reduced-motion makes the hold 0ms.
     setHydrated(true);
+    introTimerRef.current = setTimeout(() => {
+      setDirection(1);
+      // Inline lock for the auto-advance (keeps the mount effect free of
+      // component-scope deps); released after the email card has entered.
+      if (!prefersReducedMotion()) {
+        isAnimatingRef.current = true;
+        setIsAnimating(true);
+        animTimerRef.current = setTimeout(() => {
+          isAnimatingRef.current = false;
+          setIsAnimating(false);
+        }, LOCK_MS.email / getUrlSpeed());
+      }
+      setStep("email");
+    }, introHoldMs());
 
     return () => {
       if (introTimerRef.current) clearTimeout(introTimerRef.current);
+      if (animTimerRef.current) clearTimeout(animTimerRef.current);
+      if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
     };
   }, []);
 
   async function handleEmailSubmit(email) {
+    if (isAnimatingRef.current) return;
     const response = await handleRequestSubmit(
       { email },
       setLoading,
-      `client/new-lead/register?lng=${lng}`,
+      `v2/client/new-lead/register?lng=${lng}`,
       false,
       translate("loading.submitting"),
     );
 
-    if (response.status === 200) {
+    // Old server: 200. Migrated server: 201 (created). Accept both.
+    if (response.status === 200 || response.status === 201) {
       setLeadEmail(email);
       const leadId = response.data?.id;
       if (leadId) patchUrlParam("leadId", leadId);
-      // Play the DESIGN "card expands to fullscreen" intro, then reveal the
-      // location options. Reduced-motion collapses the hold to 0ms.
-      setDirection(1);
-      setStep("designIntro");
-      if (introTimerRef.current) clearTimeout(introTimerRef.current);
-      introTimerRef.current = setTimeout(() => {
-        setStep("location");
-      }, introHoldMs());
+      // The DESIGN backdrop is already filling the screen (the intro grew into
+      // it before the email step), so submitting just reveals the location
+      // options on top of it.
+      goForward("location");
     }
   }
 
   function goForward(next) {
     setDirection(1);
+    lockAnimation(next);
     setStep(next);
   }
 
   function goBack(prev) {
     setDirection(-1);
+    lockAnimation(prev);
     setStep(prev);
   }
 
   function handleLocationClick(value) {
+    if (isAnimatingRef.current) return;
     deepLinkRef.current = null;
     setLocation(value);
     patchUrlParam("location", value);
@@ -188,19 +253,42 @@ export function useLeadFlow() {
   }
 
   function handleLeadItemClick(value) {
+    if (isAnimatingRef.current) return;
     deepLinkRef.current = null;
     setLeadItem(value);
+    setSelectingItem(value);
     patchUrlParam("item", value);
     patchUrlParam("step", "form");
-    goForward("form");
+    setDirection(1);
+
+    // Lock the whole choreography. Stage 1: the OTHER cards fly away + the fee
+    // text drops (handled in ItemSelect via `selectingItem`). Stage 2: move to
+    // the form, where the chosen title morphs into the type chip and the
+    // background grows.
+    const speed = getUrlSpeed();
+    // Hold long enough for: the colour change to be seen, then the other cards to
+    // slide away — before the flow moves to the form.
+    const cardsOutMs = prefersReducedMotion() ? 0 : 850 / speed;
+    setAnimating(true);
+    if (animTimerRef.current) clearTimeout(animTimerRef.current);
+    if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
+    itemAdvanceRef.current = setTimeout(() => setStep("form"), cardsOutMs);
+    animTimerRef.current = setTimeout(
+      () => setAnimating(false),
+      cardsOutMs + (prefersReducedMotion() ? 0 : LOCK_MS.form / speed),
+    );
   }
 
-  /** Step back one stage. Returning past the first interactive stage goes home. */
+  /** Step back one stage. From the first interactive stages it walks back toward
+   *  email, and only leaves the flow from the email step. */
   function handleBack() {
+    if (isAnimatingRef.current) return;
     deepLinkRef.current = null;
 
     if (step === "form") {
       setLeadItem("");
+      setSelectingItem("");
+      if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
       patchUrlParam("item", null);
       patchUrlParam("step", "item");
       goBack("item");
@@ -215,13 +303,22 @@ export function useLeadFlow() {
       return;
     }
 
-    if (step === "location" || step === "designIntro") {
-      // At the first interactive stage, going back leaves the flow.
+    if (step === "location") {
+      // Nothing chosen here yet — step back to the email capture, don't leave.
+      patchUrlParam("location", null);
+      patchUrlParam("step", null);
+      goBack("email");
+      return;
+    }
+
+    if (step === "email" || step === "designIntro") {
+      // At the email capture, going back leaves the flow.
       window.location.href = "/";
     }
   }
 
   function handleReset() {
+    if (isAnimatingRef.current) return;
     // Clear lead state + strip deep-link params, then restart from email
     // capture via a full reload so the flow begins from a clean slate.
     deepLinkRef.current = null;
@@ -230,16 +327,16 @@ export function useLeadFlow() {
     window.location.href = `/register?lng=${lng}`;
   }
 
-  // The image that currently fills the full-screen backdrop. The DESIGN photo
-  // appears the moment the intro starts and stays until a location is chosen,
-  // after which the selected location's photo takes over. No image during the
-  // email step or once the form is shown.
+  // The image that currently fills the full-screen backdrop. The DESIGN photo is
+  // present from the very first frame (the intro now simply scales it in, no
+  // small card to morph) and stays through email + location; once a location is
+  // chosen its photo takes over (growing ON TOP of the design photo). No image
+  // once the form shows.
   const activeImage = useMemo(() => {
-    if (step === "email" || step === "form") return null;
-    // During the intro only the small DESIGN card is shown; the backdrop is
-    // held back so the card can then MORPH into it (no duplicate layoutId).
-    if (step === "designIntro") return null;
-    if (step === "location") return DESIGN_IMAGE;
+    if (step === "form") return null;
+    if (step === "designIntro" || step === "email" || step === "location") {
+      return DESIGN_IMAGE;
+    }
     if (step === "item") {
       const match = designLeadTypes.find((l) => l.value === location);
       return match?.image ?? DESIGN_IMAGE;
@@ -247,17 +344,31 @@ export function useLeadFlow() {
     return null;
   }, [step, location]);
 
-  // The shared-layout id the expanding card morphs into. Each expandable card
-  // owns a stable id; the backdrop adopts the id of whichever card expanded.
+  // The shared-layout id the expanding card morphs into. ONLY the location → item
+  // step morphs (the chosen location card grows into the backdrop). The DESIGN
+  // backdrop has no layoutId — it just scales/fades in, which reads far cleaner
+  // than morphing a tiny card to full-screen.
   const backdropLayoutId = useMemo(() => {
-    if (step === "designIntro" || step === "location") return "stage-design";
     if (step === "item") return `stage-${location}`;
     return undefined;
   }, [step, location]);
 
-  // Back/reset only make sense once the user is past email capture.
-  const canGoBack = step !== "email";
-  const canReset = step !== "email";
+  // On the LAST step the selected item ROW expands (in its own gold colour) into
+  // the full-screen form panel — the colour-morph that replaces a photo here.
+  // The panel (ItemExpandPanel) adopts the chosen row's `item-{value}` id.
+  const formExpandLayoutId = useMemo(() => {
+    if (step === "form" && leadItem) return `item-${leadItem}`;
+    return undefined;
+  }, [step, leadItem]);
+
+  // Back is available from email onward (email → home; location → email; …).
+  const canGoBack =
+    step === "email" ||
+    step === "location" ||
+    step === "item" ||
+    step === "form";
+  // Reset (start over) only once the user is actually into the selection.
+  const canReset = step === "location" || step === "item" || step === "form";
 
   const reduceMotion = useMemo(
     () => (hydrated ? prefersReducedMotion() : false),
@@ -269,12 +380,15 @@ export function useLeadFlow() {
     direction,
     hydrated,
     reduceMotion,
+    isAnimating,
+    selectingItem,
     leadCategory,
     leadEmail,
     location,
     leadItem,
     activeImage,
     backdropLayoutId,
+    formExpandLayoutId,
     canGoBack,
     canReset,
     handleEmailSubmit,

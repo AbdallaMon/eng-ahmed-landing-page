@@ -134,7 +134,7 @@ function DesignLeadForm({ category, item, location, leadId }) {
       translate("loading.submitting"),
     );
 
-    if (request.status === 200) {
+    if (request.status === 200 || request.status === 201) {
       setRenderSuccess(true);
     }
   };

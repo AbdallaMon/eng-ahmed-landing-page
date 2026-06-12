@@ -34,7 +34,7 @@ export function StepProgress({ activeIndex, onDark = false }) {
   const idleBar = onDark ? alpha("#ffffff", 0.28) : theme.palette.action.hover;
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 520, mx: "auto", mb: { xs: 3, md: 4 } }}>
+    <Box sx={{ width: "100%", maxWidth: 520, mx: "auto", mb: { xs: 2, md: 2.5 } }}>
       <Stack
         direction="row"
         justifyContent="space-between"

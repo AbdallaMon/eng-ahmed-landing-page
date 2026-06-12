@@ -45,18 +45,102 @@ export function motionTransition(base = 0.45) {
 }
 
 /**
- * The spring used for the card → full-screen `layoutId` morph (and back). A
- * touch of softness reads as "the card grows to fill the screen" rather than a
- * hard snap. Collapses to an instant transition under reduced-motion.
+ * The transition for the card → full-screen `layoutId` morph (and back). A slow,
+ * smooth expo-out tween reads as "the card grows GENTLY to fill the screen"
+ * (براحه) — no bouncy spring snap, which felt harsh on the first open. Collapses
+ * to an instant transition under reduced-motion.
  */
-export function expandTransition() {
+export function expandTransition(delay = 0) {
   if (prefersReducedMotion()) return { duration: 0.01 };
   const speed = getUrlSpeed();
   return {
-    type: "spring",
-    stiffness: 260 * speed,
-    damping: 32,
-    mass: 0.9,
+    type: "tween",
+    duration: 0.6 / speed,
+    delay: delay / speed, // hold the image still, THEN grow (text moves first)
+    ease: [0.22, 1, 0.36, 1], // expo-out: smooth, premium settle
+  };
+}
+
+/**
+ * The frosted options PANEL itself fades in (so it isn't visible empty before
+ * its cards), then staggers its children. `delay` holds it back until the photo
+ * behind has expanded.
+ */
+export function itemsPanelVariants(delay = 0, stagger = 0.06) {
+  if (prefersReducedMotion()) {
+    return { hidden: { opacity: 0 }, show: { opacity: 1 } };
+  }
+  const speed = getUrlSpeed();
+  return {
+    hidden: { opacity: 0, y: 16 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: delay / speed,
+        duration: 0.4 / speed,
+        delayChildren: delay / speed,
+        staggerChildren: stagger / speed,
+      },
+    },
+  };
+}
+
+/**
+ * A persistent title (the chosen location / item word) morphing from its card
+ * position to its heading position. It moves FIRST (no delay) while the image
+ * stays put, so the word travels to its new home before the picture grows
+ * (النص يتحرك الأول، الصورة ثابتة، بعدين الصورة تتحرك).
+ */
+export function titleMorphTransition(delay = 0, duration = 0.5) {
+  if (prefersReducedMotion()) return { duration: 0.01 };
+  const speed = getUrlSpeed();
+  return {
+    type: "tween",
+    duration: duration / speed,
+    delay: delay / speed,
+    ease: [0.22, 1, 0.36, 1],
+  };
+}
+
+/**
+ * Fade/rise-in for headings + helper text that should appear AFTER the image has
+ * expanded (a distinct beat from the morph). `delay` sequences it behind the
+ * grow.
+ */
+export function headerRevealVariants(delay = 0) {
+  if (prefersReducedMotion()) {
+    return { hidden: { opacity: 0 }, show: { opacity: 1 } };
+  }
+  const speed = getUrlSpeed();
+  return {
+    hidden: { opacity: 0, y: 14 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { delay: delay / speed, duration: 0.45 / speed, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
+}
+
+/**
+ * The form's own card background appearing as its own step — after the colour
+ * panel has grown and the heading settled, the paper fades/rises in, and only
+ * THEN do its inputs cascade.
+ */
+export function paperRevealVariants(delay = 0) {
+  if (prefersReducedMotion()) {
+    return { hidden: { opacity: 0 }, show: { opacity: 1 } };
+  }
+  const speed = getUrlSpeed();
+  return {
+    hidden: { opacity: 0, scale: 0.97, y: 14 },
+    show: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { delay: delay / speed, duration: 0.5 / speed, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 }
 
@@ -67,6 +151,23 @@ export function expandTransition() {
 export function backdropFade() {
   if (prefersReducedMotion()) return { duration: 0.01 };
   return { duration: 0.6 / getUrlSpeed(), ease: [0.22, 1, 0.36, 1] };
+}
+
+/**
+ * The colour "settle" of the item-expand panel: the selected item row grows to
+ * fill the screen in its own brand-gold colour (the `layoutId` morph), then this
+ * eases the panel from gold → a calm light tone so the form that lands on top
+ * stays readable. Slightly delayed so the grow "reads" as gold first. Honours
+ * reduced-motion + the ?speed control.
+ */
+export function panelSettleTransition() {
+  if (prefersReducedMotion()) return { duration: 0.01 };
+  const speed = getUrlSpeed();
+  return {
+    duration: 0.55 / speed,
+    delay: 0.15 / speed,
+    ease: [0.22, 1, 0.36, 1],
+  };
 }
 
 /**
@@ -92,14 +193,24 @@ export function stepVariants(direction, isRtl = false) {
   };
 }
 
-/** Staggered list container/child variants for revealing option cards. */
-export function listContainerVariants(stagger = 0.07) {
+/**
+ * Staggered list container/child variants for revealing option cards. `delay`
+ * holds the whole reveal back so the cards rise in only after the backdrop has
+ * expanded.
+ */
+export function listContainerVariants(stagger = 0.07, delay = 0) {
   if (prefersReducedMotion()) {
     return { hidden: {}, show: {} };
   }
+  const speed = getUrlSpeed();
   return {
     hidden: {},
-    show: { transition: { staggerChildren: stagger / getUrlSpeed() } },
+    show: {
+      transition: {
+        delayChildren: delay / speed,
+        staggerChildren: stagger / speed,
+      },
+    },
   };
 }
 
@@ -142,6 +253,58 @@ export function overlayRevealVariants() {
         when: "beforeChildren",
         staggerChildren: 0.07 / speed,
       },
+    },
+  };
+}
+
+/**
+ * Form-fields reveal: after the chosen item row has grown into the full-screen
+ * panel (the colour morph) and the heading has settled, the inputs rise into
+ * view ONE BY ONE (واحده واحده). The container's extra delay lets the grow land
+ * first; the children stagger in from below.
+ */
+export function formFieldsContainerVariants(delay = 1.25) {
+  if (prefersReducedMotion()) {
+    return { hidden: {}, show: { transition: { staggerChildren: 0 } } };
+  }
+  const speed = getUrlSpeed();
+  return {
+    hidden: {},
+    show: {
+      transition: {
+        delayChildren: delay / speed,
+        staggerChildren: 0.12 / speed,
+      },
+    },
+  };
+}
+
+/**
+ * A nested group (e.g. the fields inside one form section). No extra start
+ * delay — it just staggers its own children once the section itself reveals, so
+ * the cascade keeps flowing one field at a time within each section.
+ */
+export function formGroupVariants() {
+  if (prefersReducedMotion()) {
+    return { hidden: {}, show: { transition: { staggerChildren: 0 } } };
+  }
+  return {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.1 / getUrlSpeed() } },
+  };
+}
+
+/** A single form field rising into view. Inherits the container's stagger. */
+export function formFieldVariants() {
+  if (prefersReducedMotion()) {
+    return { hidden: { opacity: 0 }, show: { opacity: 1 } };
+  }
+  return {
+    hidden: { opacity: 0, y: 22 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
     },
   };
 }

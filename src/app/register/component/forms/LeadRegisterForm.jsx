@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Box,
   Button,
@@ -42,6 +43,29 @@ import {
 import { CountrySelectField } from "@/app/register/component/forms/inputs/CountrySelectField";
 import { FileUploadField } from "@/app/register/component/forms/inputs/FileUploadField";
 import FormSuccessView from "@/app/register/component/feedback/FormSuccessView";
+import {
+  formFieldVariants,
+  formFieldsContainerVariants,
+  formGroupVariants,
+  paperRevealVariants,
+  titleMorphTransition,
+} from "@/app/register/lib/animations";
+
+const MotionStack = motion.create(Stack);
+const MotionBox = motion.create(Box);
+const MotionDiv = motion.create("div");
+const MotionPaper = motion.create(Paper);
+const MotionChip = motion.create(Chip);
+
+// A single field rising into view. `style` lets row items keep their flex sizing
+// while still being a motion item (so name / phone reveal independently).
+function Field({ children, style }) {
+  return (
+    <MotionDiv variants={formFieldVariants()} style={{ width: "100%", ...style }}>
+      {children}
+    </MotionDiv>
+  );
+}
 
 /**
  * Main lead contact form for /register. Collects contact details + project
@@ -134,7 +158,13 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
         false,
         translate("loading.submitting"),
       ));
-    if (!email && initialRequest.status !== 200) return;
+    // Old server: 200. Migrated server: 201 (created). Accept both.
+    if (
+      !email &&
+      initialRequest.status !== 200 &&
+      initialRequest.status !== 201
+    )
+      return;
 
     const leadId = externalLeadId || initialRequest.data.id;
 
@@ -159,8 +189,12 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
       translate("loading.submitting"),
     );
 
-    if (request.status === 200) {
-      window.location.href = `/register/checkout?lng=${lng}&leadId=${request.data.leadId}&clientId=${request.data.clientId}`;
+    if (request.status === 200 || request.status === 201) {
+      // Old server returned `data.leadId`; the migrated server returns the lead
+      // object as `data` (so the id is `data.id`). Handle old || new.
+      const completedLeadId = request.data?.leadId || request.data?.id;
+      const completedClientId = request.data?.clientId;
+      window.location.href = `/register/checkout?lng=${lng}&leadId=${completedLeadId}&clientId=${completedClientId}`;
     }
   };
 
@@ -191,8 +225,13 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
       ) : renderSuccess ? (
         <FormSuccessView showLevels={false} />
       ) : (
-        <Paper
+        <MotionPaper
           elevation={0}
+          // The form's own background appears as its OWN beat — after the colour
+          // panel has grown — then its fields cascade in.
+          variants={paperRevealVariants(0.15)}
+          initial="hidden"
+          animate="show"
           sx={{
             padding: { xs: 2.5, md: 5 },
             borderRadius: 3,
@@ -202,6 +241,9 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
           }}
         >
           {/* ---------- Header ---------- */}
+          {/* Visible WITH the paper (not in the delayed field cascade) so the
+              chosen item title can MORPH straight into the type chip — it
+              shrinks into its place inside the form. */}
           <Stack spacing={2} alignItems="center" sx={{ mb: 4 }}>
             <Typography
               variant="h5"
@@ -229,7 +271,12 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
                 variant="outlined"
                 color="primary"
               />
-              <Chip
+              {/* The morph landing zone — the item card's title travels here
+                  SLOWLY (so the movement is clearly seen) and shrinks into the
+                  chip before the rest of the form fills in. */}
+              <MotionChip
+                layoutId={`item-title-${item}`}
+                transition={titleMorphTransition(0, 0.8)}
                 label={translate(LeadType[item]) || ""}
                 size="small"
                 color="primary"
@@ -253,9 +300,16 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
             </Typography>
           </Stack>
 
-          <Stack spacing={4}>
+          {/* The fields cascade in one by one (واحده واحده) after the background
+              has grown and the title has settled into its chip. */}
+          <MotionStack
+            spacing={4}
+            variants={formFieldsContainerVariants(1.25)}
+            initial="hidden"
+            animate="show"
+          >
             {/* ---------- Contact details ---------- */}
-            <Box>
+            <MotionBox variants={formFieldVariants()}>
               <Typography
                 variant="overline"
                 sx={{ color: "text.secondary", letterSpacing: 1 }}
@@ -264,55 +318,67 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
               </Typography>
               <Divider sx={{ mb: 2.5, mt: 0.5 }} />
 
-              <Stack spacing={2.5}>
-                <Stack direction={{ xs: "column", md: "row" }} spacing={2.5}>
-                  <TextField
-                    fullWidth
-                    label={translate("form.name")}
-                    name="name"
-                    variant="outlined"
-                    value={formData.name}
-                    onChange={handleChange}
-                    InputProps={{ sx: { borderRadius: 2 } }}
-                  />
+              <MotionStack spacing={2.5} variants={formGroupVariants()}>
+                <MotionStack
+                  direction={{ xs: "column", md: "row" }}
+                  spacing={2.5}
+                  variants={formGroupVariants()}
+                >
+                  <Field style={{ flex: 1 }}>
+                    <TextField
+                      fullWidth
+                      label={translate("form.name")}
+                      name="name"
+                      variant="outlined"
+                      value={formData.name}
+                      onChange={handleChange}
+                      InputProps={{ sx: { borderRadius: 2 } }}
+                    />
+                  </Field>
 
-                  <MuiTelInput
-                    defaultCountry={defaultCountry}
-                    value={formData.phone}
-                    id="phone"
-                    name="phone"
-                    label={translate("form.phone")}
-                    onChange={handlePhoneChange}
-                    error={
-                      formData.phone !== "" && !matchIsValidTel(formData.phone)
-                    }
-                    helperText={
-                      formData.phone !== "" && !matchIsValidTel(formData.phone)
-                        ? translate("validation.invalidPhone")
-                        : ""
-                    }
-                    fullWidth
-                    sx={fieldSx}
-                  />
-                </Stack>
+                  <Field style={{ flex: 1 }}>
+                    <MuiTelInput
+                      defaultCountry={defaultCountry}
+                      value={formData.phone}
+                      id="phone"
+                      name="phone"
+                      label={translate("form.phone")}
+                      onChange={handlePhoneChange}
+                      error={
+                        formData.phone !== "" &&
+                        !matchIsValidTel(formData.phone)
+                      }
+                      helperText={
+                        formData.phone !== "" &&
+                        !matchIsValidTel(formData.phone)
+                          ? translate("validation.invalidPhone")
+                          : ""
+                      }
+                      fullWidth
+                      sx={fieldSx}
+                    />
+                  </Field>
+                </MotionStack>
 
                 {!leadEmail && (
-                  <TextField
-                    fullWidth
-                    label={translate("form.email")}
-                    name="email"
-                    type="email"
-                    variant="outlined"
-                    value={formData.email}
-                    onChange={handleChange}
-                    InputProps={{ sx: { borderRadius: 2 } }}
-                  />
+                  <Field>
+                    <TextField
+                      fullWidth
+                      label={translate("form.email")}
+                      name="email"
+                      type="email"
+                      variant="outlined"
+                      value={formData.email}
+                      onChange={handleChange}
+                      InputProps={{ sx: { borderRadius: 2 } }}
+                    />
+                  </Field>
                 )}
-              </Stack>
-            </Box>
+              </MotionStack>
+            </MotionBox>
 
             {/* ---------- Location / project details ---------- */}
-            <Box>
+            <MotionBox variants={formFieldVariants()}>
               <Typography
                 variant="overline"
                 sx={{ color: "text.secondary", letterSpacing: 1 }}
@@ -323,84 +389,95 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
               </Typography>
               <Divider sx={{ mb: 2.5, mt: 0.5 }} />
 
-              <Stack spacing={2.5}>
+              <MotionStack spacing={2.5} variants={formGroupVariants()}>
                 {location === "INSIDE_UAE" && (
                   <>
-                    <FormControl fullWidth variant="outlined">
-                      <InputLabel id="emirate-label">
-                        {translate("form.selectLocation")}
-                      </InputLabel>
-                      <Select
-                        labelId="emirate-label"
-                        label={translate("form.selectLocation")}
-                        value={formData.emirate || ""}
-                        onChange={handleEmirateChange}
-                        sx={{ borderRadius: 2 }}
-                      >
-                        {emiratesOptions.map((option) => (
-                          <MenuItem value={option.key} key={option.key}>
-                            {translate(option.label)}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Field>
+                      <FormControl fullWidth variant="outlined">
+                        <InputLabel id="emirate-label">
+                          {translate("form.selectLocation")}
+                        </InputLabel>
+                        <Select
+                          labelId="emirate-label"
+                          label={translate("form.selectLocation")}
+                          value={formData.emirate || ""}
+                          onChange={handleEmirateChange}
+                          sx={{ borderRadius: 2 }}
+                        >
+                          {emiratesOptions.map((option) => (
+                            <MenuItem value={option.key} key={option.key}>
+                              {translate(option.label)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Field>
 
-                    <TextField
-                      fullWidth
-                      label={translate("form.additionalInfo")}
-                      name="clientDescription"
-                      variant="outlined"
-                      multiline
-                      minRows={2}
-                      value={formData.clientDescription || ""}
-                      onChange={handleChange}
-                      InputProps={{ sx: { borderRadius: 2 } }}
-                    />
+                    <Field>
+                      <TextField
+                        fullWidth
+                        label={translate("form.additionalInfo")}
+                        name="clientDescription"
+                        variant="outlined"
+                        multiline
+                        minRows={2}
+                        value={formData.clientDescription || ""}
+                        onChange={handleChange}
+                        InputProps={{ sx: { borderRadius: 2 } }}
+                      />
+                    </Field>
                   </>
                 )}
 
                 {location !== "INSIDE_UAE" && (
-                  <CountrySelectField
-                    label={translate("form.country")}
-                    name="country"
-                    onChange={handleChange}
-                    value={formData.country}
-                    fullWidth
-                  />
+                  <Field>
+                    <CountrySelectField
+                      label={translate("form.country")}
+                      name="country"
+                      onChange={handleChange}
+                      value={formData.country}
+                      fullWidth
+                    />
+                  </Field>
                 )}
 
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel id="discovery-source-label">
-                    {translate("form.whereHeard")}
-                  </InputLabel>
-                  <Select
-                    labelId="discovery-source-label"
-                    label={translate("form.whereHeard")}
-                    value={formData.discoverySource || ""}
-                    onChange={handleChange}
-                    name="discoverySource"
-                    sx={{ borderRadius: 2 }}
-                  >
-                    {Object.entries(LEAD_SOURCE_LABELS).map(
-                      ([key, labelKey]) => (
-                        <MenuItem value={key} key={key}>
-                          {translate(labelKey)}
-                        </MenuItem>
-                      ),
-                    )}
-                  </Select>
-                </FormControl>
+                <Field>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="discovery-source-label">
+                      {translate("form.whereHeard")}
+                    </InputLabel>
+                    <Select
+                      labelId="discovery-source-label"
+                      label={translate("form.whereHeard")}
+                      value={formData.discoverySource || ""}
+                      onChange={handleChange}
+                      name="discoverySource"
+                      sx={{ borderRadius: 2 }}
+                    >
+                      {Object.entries(LEAD_SOURCE_LABELS).map(
+                        ([key, labelKey]) => (
+                          <MenuItem value={key} key={key}>
+                            {translate(labelKey)}
+                          </MenuItem>
+                        ),
+                      )}
+                    </Select>
+                  </FormControl>
+                </Field>
 
-                <FileUploadField
-                  label={translate("form.addAttachmentOptional")}
-                  id="file"
-                  setData={setFormData}
-                />
-              </Stack>
-            </Box>
+                <Field>
+                  <FileUploadField
+                    label={translate("form.addAttachmentOptional")}
+                    id="file"
+                    setData={setFormData}
+                  />
+                </Field>
+              </MotionStack>
+            </MotionBox>
 
             {/* ---------- Guarantee + CTA ---------- */}
-            <Box
+            <MotionBox
+              variants={formFieldVariants()}
               sx={{
                 p: { xs: 2, md: 3 },
                 borderRadius: 2,
@@ -431,9 +508,9 @@ function DesignLeadForm({ category, item, location, leadEmail }) {
               >
                 {translate("form.buttons.proceedToCheckout")}
               </Button>
-            </Box>
-          </Stack>
-        </Paper>
+            </MotionBox>
+          </MotionStack>
+        </MotionPaper>
       )}
     </Box>
   );

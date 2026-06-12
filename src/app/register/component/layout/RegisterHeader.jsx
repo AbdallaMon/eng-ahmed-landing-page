@@ -8,19 +8,31 @@ import {
   Toolbar,
 } from "@mui/material";
 import { MdRestartAlt } from "react-icons/md";
+import { IoArrowBack } from "react-icons/io5";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 
 /**
- * Fixed top header for the lead-selection pages: logo, language switcher and a
- * reset / start-over control. Back navigation now lives in the flow itself.
+ * Fixed top header for the lead-selection pages: a leading Back control plus a
+ * language switcher and a reset / start-over control. Back lives INSIDE the
+ * header (not in the page flow) so it stays anchored to the top chrome.
  *
  * @param {{
  *   sx?: object,
  *   onReset?: Function,
  *   canReset?: boolean,
+ *   onBack?: Function,
+ *   canGoBack?: boolean,
+ *   disabled?: boolean,
  * }} props
  */
-export function RegisterHeader({ sx, onReset, canReset }) {
+export function RegisterHeader({
+  sx,
+  onReset,
+  canReset,
+  onBack,
+  canGoBack,
+  disabled = false,
+}) {
   const { lng, changeLanguage, translate } = useLanguage();
   const isRtl = lng === "ar";
 
@@ -45,19 +57,47 @@ export function RegisterHeader({ sx, onReset, canReset }) {
           ...sx,
         }}
       >
+        {/* Leading: Back — anchored in the header chrome, shown once past
+            email capture. */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Box
-            component="img"
-            src="/main-logo.jpg"
-            alt="Dream Studio - Dream Design & Luxurious Home Solutions"
-            sx={{ height: 44, width: "auto", display: "block" }}
-          />
+          {onBack && canGoBack && (
+            <Button
+              onClick={() => onBack()}
+              disabled={disabled}
+              variant="text"
+              size="small"
+              startIcon={
+                <Box
+                  component="span"
+                  sx={{
+                    display: "inline-flex",
+                    transform: isRtl ? "scaleX(-1)" : "none",
+                  }}
+                >
+                  <IoArrowBack size={18} />
+                </Box>
+              }
+              sx={{
+                borderRadius: "12px",
+                textTransform: "none",
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+                color: "primary.main",
+                backgroundColor: "rgba(255,255,255,0.85)",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.95)" },
+                ...(isRtl && { "& .MuiButton-startIcon": { ml: 0.5, mr: -0.5 } }),
+              }}
+            >
+              {translate("register.back")}
+            </Button>
+          )}
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {onReset && canReset && (
             <Button
               onClick={() => onReset()}
+              disabled={disabled}
               variant="outlined"
               size="small"
               color="primary"

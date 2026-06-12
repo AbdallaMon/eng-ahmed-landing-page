@@ -36,7 +36,11 @@ export default function SuccessView() {
         url: `client/payment-status?sessionId=${sessionId}&clientLeadId=${clientLeadId}&lng=${lng}&`,
         setLoading,
       });
-      if (request?.status === 200 && request.paymentStatus === "PAID") {
+      // Old server returned `paymentStatus` at the top level; the migrated
+      // server nests it as `data.paymentStatus`. Handle old || new.
+      const paymentStatus =
+        request?.paymentStatus || request?.data?.paymentStatus;
+      if (request?.status === 200 && paymentStatus === "PAID") {
         setStatus("PAID");
       } else {
         setStatus("ERROR");
