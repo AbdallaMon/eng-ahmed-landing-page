@@ -12,10 +12,12 @@ export function useRegister3D() {
   return useContext(Register3DContext);
 }
 
-// Map the lead-selection flow stage to a sceneKey. SP-1 overlays call this with
-// (step, location, item) from useLeadFlow and pass the result to setSceneKey.
+// Map the lead-selection flow stage to a sceneKey. The richest signal wins so a
+// chosen item's scene is shown immediately (even during the item→form beat),
+// then location, then the design intro. Called with (step, location, item) from
+// useLeadFlow; the result is passed to setSceneKey.
 export function leadStageToSceneKey(step, location, item) {
-  if (step === "item" && location) return location; // INSIDE_UAE | OUTSIDE_UAE
-  if (step === "form" && item) return item; // APARTMENT | CONSTRUCTION_VILLA | PART_OF_HOME
+  if (item) return item; // APARTMENT | CONSTRUCTION_VILLA | PART_OF_HOME
+  if (location && step === "item") return location; // INSIDE_UAE | OUTSIDE_UAE
   return "intro"; // designIntro | email | location(unselected)
 }

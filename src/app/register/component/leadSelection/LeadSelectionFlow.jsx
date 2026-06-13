@@ -9,6 +9,7 @@ import {
   useRegister3D,
   leadStageToSceneKey,
 } from "@/app/register/three/Register3DContext";
+import LeadSelection3D from "@/app/register/three/LeadSelection3D";
 import {
   progressIndexFor,
   useLeadFlow,
@@ -202,7 +203,24 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
             pt: isFormStep ? 0 : { xs: 0.5, md: 1 },
           }}
         >
-          {step === "designIntro" ? (
+          {use3D && step !== "designIntro" ? (
+            // 3D path: the selection steps are decks of real 3D GSAP cards that
+            // fly in, then open onto the matching WebGL scene on select. The form
+            // step keeps its DOM form (over the chosen item's scene).
+            isFormStep ? (
+              <Box key="form">{renderForm()}</Box>
+            ) : (
+              <LeadSelection3D
+                step={step}
+                location={location}
+                leadItem={leadItem}
+                onEmailSubmit={handleEmailSubmit}
+                onLocationSelect={handleLocationClick}
+                onItemSelect={handleLeadItemClick}
+                onPreviewScene={setSceneKey}
+              />
+            )
+          ) : step === "designIntro" ? (
             // The DESIGN card renders bare so its self-driven entrance + the
             // shared layoutId morph aren't disturbed by a wrapping transform.
             // This is the FIRST thing shown; it then grows into the backdrop.
