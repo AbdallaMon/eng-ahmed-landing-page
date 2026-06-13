@@ -101,25 +101,46 @@ export function proxy(request) {
     console.log(requestHost, "requestHost");
     console.log(bookingHost, "bookingHost");
     if (onBookingHost) {
-      // (1) On the booking host: render the /register tree without the prefix.
-      if (!isRegisterPath) {
-        const rewriteUrl = url.clone();
+      // ── Canonical public URL on the booking domain ───────────────────────────
+      // If the user reaches booking.example.com/register or /register/*,
+      // redirect publicly to the clean URL without the /register prefix.
+      if (isRegisterPath) {
+        const rest = url.pathname.slice("/register".length) || "/";
 
-        rewriteUrl.pathname =
-          url.pathname === "/" ? "/register" : `/register${url.pathname}`;
-
-        // LiteSpeed terminates SSL externally, while the internal Next.js
-        // server listens over plain HTTP on localhost.
-        if (
-          rewriteUrl.hostname === "localhost" ||
-          rewriteUrl.hostname === "127.0.0.1" ||
-          rewriteUrl.hostname === "::1"
-        ) {
-          rewriteUrl.protocol = "http:";
-        }
-        console.log(rewriteUrl, "rewriteUrl");
-        return NextResponse.rewrite(rewriteUrl);
+        return NextResponse.redirect(`${bookingOrigin}${rest}${url.search}`);
       }
+
+      // ── Internal rendering ───────────────────────────────────────────────────
+      // Keep the clean public URL in the browser, but internally render
+      // the matching route from the /register tree.
+      const rewriteUrl = url.clone();
+
+      rewriteUrl.pathname =
+        url.pathname === "/" ? "/register" : `/register${url.pathname}`;
+
+      // LiteSpeed terminates SSL externally.
+      // The internal Next.js process listens over plain HTTP.
+      if (
+        rewriteUrl.hostname === "localhost" ||
+        rewriteUrl.hostname === "127.0.0.1" ||
+        rewriteUrl.hostname === "::1"
+      ) {
+        rewriteUrl.protocol = "http:";
+      }
+
+      console.log({
+        action: "internal-booking-rewrite",
+        from: url.href,
+        to: rewriteUrl.href,
+      });
+
+      return NextResponse.rewrite(rewriteUrl);
+    } else if (isRegisterPath) {
+      // On the main domain, move /register/* publicly to the booking domain
+      // and remove the prefix from the visible URL.
+      const rest = url.pathname.slice("/register".length) || "/";
+
+      return NextResponse.redirect(`${bookingOrigin}${rest}${url.search}`);
     } else if (isRegisterPath) {
       // (2) On another host: send /register/* to the booking host, prefix stripped.
       const rest = url.pathname.slice("/register".length) || "/";
