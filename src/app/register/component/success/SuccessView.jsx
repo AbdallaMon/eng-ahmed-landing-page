@@ -101,7 +101,7 @@ export default function SuccessView() {
           <Button
             variant="contained"
             component="a"
-            href="/"
+            href={process.env.NEXT_PUBLIC_SITE_URL}
             startIcon={<FaHome />}
           >
             {t("success.backHome", lng)}
