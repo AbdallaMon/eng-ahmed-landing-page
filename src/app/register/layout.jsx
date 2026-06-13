@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import RegisterProviders from "@/app/register/providers/RegisterProviders";
+import Register3DProvider from "@/app/register/three/Register3DProvider";
 import { t } from "@/app/register/data/dictionary";
 
 // In production this section is served from the booking domain, so its
@@ -57,5 +58,9 @@ export async function generateMetadata() {
 
 export default async function RegisterLayout({ children }) {
   const lng = await resolveLng();
-  return <RegisterProviders lng={lng}>{children}</RegisterProviders>;
+  return (
+    <RegisterProviders lng={lng}>
+      <Register3DProvider>{children}</Register3DProvider>
+    </RegisterProviders>
+  );
 }
