@@ -1,11 +1,12 @@
 import { Suspense } from "react";
-import { LeadSelectionFlow } from "@/app/register/component/leadSelection/LeadSelectionFlow";
+import V1Flow from "@/app/register/variants/v1/V1Flow";
 
 /**
- * /register — the lead-selection flow entry.
+ * /register — V1 "Living Cards" lead-selection flow (GSAP + CSS-3D, no WebGL).
  *
  * Reads lng / leadId / step from the (awaited) searchParams. The flow itself
- * resumes from these on the client via deep-linking; SEO lives in layout.jsx.
+ * resumes from these on the client via deep-linking (handled inside
+ * `useLeadFlow`, which reads the live URL); SEO lives in layout.jsx.
  */
 export default async function RegisterPage({ searchParams }) {
   const params = await searchParams;
@@ -13,7 +14,7 @@ export default async function RegisterPage({ searchParams }) {
 
   return (
     <Suspense>
-      <LeadSelectionFlow leadId={leadId} />
+      <V1Flow leadId={leadId} />
     </Suspense>
   );
 }
