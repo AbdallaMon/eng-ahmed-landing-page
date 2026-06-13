@@ -102,16 +102,22 @@ export function proxy(request) {
       // (1) On the booking host: render the /register tree without the prefix.
       if (!isRegisterPath) {
         const rewriteUrl = url.clone();
+
         rewriteUrl.pathname =
           url.pathname === "/" ? "/register" : `/register${url.pathname}`;
-        console.log(rewriteUrl, "rewriteUrl");
-        // return NextResponse.rewrite(rewriteUrl);
-        return NextResponse.next();
+
+        // LiteSpeed terminates SSL externally, while the internal Next.js
+        // server listens over plain HTTP on localhost.
+        if (
+          rewriteUrl.hostname === "localhost" ||
+          rewriteUrl.hostname === "127.0.0.1" ||
+          rewriteUrl.hostname === "::1"
+        ) {
+          rewriteUrl.protocol = "http:";
+        }
+
+        return NextResponse.rewrite(rewriteUrl);
       }
-    } else if (isRegisterPath) {
-      // (2) On another host: send /register/* to the booking host, prefix stripped.
-      const rest = url.pathname.slice("/register".length) || "/";
-      return NextResponse.redirect(`${bookingOrigin}${rest}${url.search}`);
     }
   }
 
