@@ -97,7 +97,9 @@ export function proxy(request) {
   if (BOOKING_DOMAIN) {
     const isRegisterPath =
       url.pathname === "/register" || url.pathname.startsWith("/register/");
-    console.log(isRegisterPath, "isRegisterPath");
+    console.log(onBookingHost, "onBookingHost");
+    console.log(requestHost, "requestHost");
+    console.log(bookingHost, "bookingHost");
     if (onBookingHost) {
       // (1) On the booking host: render the /register tree without the prefix.
       if (!isRegisterPath) {
