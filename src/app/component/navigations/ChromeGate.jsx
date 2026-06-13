@@ -11,15 +11,29 @@ import { usePathname } from "next/navigation";
  * To bring the chrome back for a path, remove it from BARE_PATHS below (or use
  * a more specific subset, e.g. only the payment pages).
  */
-const BARE_PATHS = [
-  "/register", // the whole booking/register section (lead flow, booking, payment)
-];
+const BARE_PATHS = ["/register", "/success", "checkout"];
 
 export default function ChromeGate({ navbar, footer, children }) {
   const pathname = usePathname();
-  const isBare = BARE_PATHS.some(
-    (path) => pathname === path || pathname?.startsWith(`${path}/`),
-  );
+  const bookingDomain = process.env.NEXT_PUBLIC_BOOKING_DOMAIN;
+
+  const bookingHostname = bookingDomain
+    ? new URL(
+        bookingDomain.includes("://")
+          ? bookingDomain
+          : `https://${bookingDomain}`,
+      ).hostname
+    : "";
+
+  const isBookingDomain =
+    typeof window !== "undefined" &&
+    window.location.hostname === bookingHostname;
+
+  const isBare =
+    isBookingDomain ||
+    BARE_PATHS.some(
+      (path) => pathname === path || pathname?.startsWith(`${path}/`),
+    );
 
   return (
     <>
