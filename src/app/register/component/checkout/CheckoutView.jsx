@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import colors from "@/app/register/theme/colors";
 import { t } from "@/app/register/data/dictionary";
+import { useRegister3D } from "@/app/register/three/Register3DContext";
 import { consultLevelsData } from "@/app/register/component/consultLevels/data";
 import PayButton from "@/app/register/component/PayButton";
 
@@ -24,6 +25,16 @@ export default function CheckoutView({ lng = "ar", clientLead, test }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const data = consultLevelsData;
+
+  // Drive the persistent 3D backdrop to the quiet ambient "form" scene while the
+  // checkout surface sits on top of it. capability.use3D === false on the 2D
+  // fallback path, where the surface keeps its original opaque look.
+  const { capability, setSceneKey } = useRegister3D();
+  const use3D = capability.use3D;
+
+  useEffect(() => {
+    setSceneKey("form");
+  }, [setSceneKey]);
 
   useEffect(() => {
     if (!clientLead?.id) {
@@ -39,10 +50,23 @@ export default function CheckoutView({ lng = "ar", clientLead, test }) {
         display: "flex",
         flexDirection: "column",
         height: "calc(100vh - 150px)",
-        bgcolor: colors.bgSecondary,
         borderRadius: 3,
         overflow: "hidden",
-        boxShadow: "0px 5px 20px rgba(0, 0, 0, 0.15)",
+        // On the 3D path the surface goes glassmorphic — a semi-opaque brand
+        // tint + blur — so the checkout content stays legible over the live
+        // scene. On the 2D fallback it keeps its original solid look.
+        ...(use3D
+          ? {
+              bgcolor: "rgba(250, 249, 247, 0.82)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              border: `1px solid ${colors.primary}33`,
+              boxShadow: "0px 18px 50px rgba(0, 0, 0, 0.28)",
+            }
+          : {
+              bgcolor: colors.bgSecondary,
+              boxShadow: "0px 5px 20px rgba(0, 0, 0, 0.15)",
+            }),
       }}
     >
       {/* Header */}
@@ -102,7 +126,9 @@ export default function CheckoutView({ lng = "ar", clientLead, test }) {
           sx={{
             p: { xs: 2, sm: 3 },
             borderTop: `1px solid ${colors.primary}33`,
-            backgroundColor: "white",
+            // Match the surface treatment: a translucent tint on the 3D path so
+            // the footer blends into the glass; solid white on the 2D fallback.
+            backgroundColor: use3D ? "rgba(255, 255, 255, 0.55)" : "white",
             boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.08)",
             position: "relative",
             zIndex: 10,

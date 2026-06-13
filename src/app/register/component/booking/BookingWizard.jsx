@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { Box, Container, useTheme } from "@mui/material";
 import { useSearchParams } from "next/navigation";
+import { useRegister3D } from "@/app/register/three/Register3DContext";
 import { VideoIntro } from "./VideoIntro";
 import { StepsController } from "./steps/StepsController";
 
@@ -17,6 +19,15 @@ export function BookingWizard() {
   const theme = useTheme();
   const searchParams = useSearchParams();
 
+  // Drive the persistent 3D backdrop to the calm ambient "wizard" scene while
+  // the booking wizard is mounted. On the 2D fallback this is a no-op.
+  const { capability, setSceneKey } = useRegister3D();
+  const use3D = capability.use3D;
+
+  useEffect(() => {
+    setSceneKey("wizard");
+  }, [setSceneKey]);
+
   const hasDeepLink =
     searchParams.get("step") !== null || searchParams.get("leadId") !== null;
   const showForm = searchParams.get("booking") === "true" || hasDeepLink;
@@ -27,7 +38,10 @@ export function BookingWizard() {
         height: showForm ? "auto" : "100dvh",
         width: "100%",
         overflow: "hidden",
-        bgcolor: theme.palette.background.default,
+        // On the WebGL path the fixed 3D canvas IS the backdrop, so this layer
+        // stays transparent to let it show through. The 2D fallback keeps the
+        // original opaque brand background.
+        bgcolor: use3D ? "transparent" : theme.palette.background.default,
         minHeight: "100dvh",
       }}
     >

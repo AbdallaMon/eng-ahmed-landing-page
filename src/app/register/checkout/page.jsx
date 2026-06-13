@@ -1,6 +1,5 @@
 import { Button, Container, Paper } from "@mui/material";
 import { MdArrowBack } from "react-icons/md";
-import colors from "@/app/register/theme/colors";
 import CheckoutView from "@/app/register/component/checkout/CheckoutView";
 
 // Transactional payment page — keep it out of search indexes.
@@ -12,9 +11,12 @@ export default async function CheckoutPage({ searchParams }) {
 
   return (
     <Paper
-      elevation={2}
+      elevation={0}
       sx={{
-        backgroundColor: colors.bgPrimary,
+        // Transparent so the persistent 3D canvas (or the 2D fallback gradient
+        // backdrop) shows through behind the checkout surface.
+        backgroundColor: "transparent",
+        boxShadow: "none",
         width: "100%",
         height: "100vh",
         overflowY: "hidden",
