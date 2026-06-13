@@ -1,9 +1,14 @@
 "use client";
 
+import { useEffect } from "react";
 import { LayoutGroup, motion } from "framer-motion";
 import { Box, Container, Paper, useTheme } from "@mui/material";
 
 import colors from "@/app/register/theme/colors";
+import {
+  useRegister3D,
+  leadStageToSceneKey,
+} from "@/app/register/three/Register3DContext";
 import {
   progressIndexFor,
   useLeadFlow,
@@ -71,6 +76,18 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
     handleReset,
   } = useLeadFlow();
 
+  // On the WebGL path the persistent 3D canvas IS the backdrop, so the flat
+  // photo StageBackdrop / colour ItemExpandPanel are suppressed and the active
+  // 3D scene is driven from the flow stage. The 2D fallback keeps the original
+  // photo-morph experience untouched.
+  const { capability, setSceneKey } = useRegister3D();
+  const use3D = capability.use3D;
+
+  useEffect(() => {
+    if (!use3D) return;
+    setSceneKey(leadStageToSceneKey(step, location, leadItem));
+  }, [use3D, step, location, leadItem, setSceneKey]);
+
   const isFormStep = step === "form";
   const onDark = DARK_BACKDROP_STEPS.has(step);
   const isReveal = REVEAL_STEPS.has(step);
@@ -135,16 +152,20 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
 
       {/* Full-screen photo backdrop the active card expands into. Its shared
           `layoutId` follows the active stage so each new step morphs from the
-          card the user just selected (design intro card, then location card). */}
-      <StageBackdrop
-        image={activeImage}
-        layoutId={backdropLayoutId}
-        expandDelay={step === "item" ? 0.3 : 0}
-      />
+          card the user just selected (design intro card, then location card).
+          Suppressed on the 3D path — the WebGL canvas is the backdrop there. */}
+      {!use3D && (
+        <StageBackdrop
+          image={activeImage}
+          layoutId={backdropLayoutId}
+          expandDelay={step === "item" ? 0.3 : 0}
+        />
+      )}
 
       {/* Colour-expand panel for the LAST step: the chosen item row grows (in
-          its own gold) to fill the screen, then settles light under the form. */}
-      <ItemExpandPanel layoutId={formExpandLayoutId} />
+          its own gold) to fill the screen, then settles light under the form.
+          Suppressed on the 3D path. */}
+      {!use3D && <ItemExpandPanel layoutId={formExpandLayoutId} />}
 
       <Container
         maxWidth="md"
@@ -185,7 +206,9 @@ export function LeadSelectionFlow({ mode = "register", leadId }) {
             // The DESIGN card renders bare so its self-driven entrance + the
             // shared layoutId morph aren't disturbed by a wrapping transform.
             // This is the FIRST thing shown; it then grows into the backdrop.
-            renderContent()
+            // On the 3D path the IntroScene is the hero, so the DOM intro card
+            // is suppressed (it would duplicate/clash with the live scene).
+            use3D ? null : renderContent()
           ) : isReveal ? (
             // location / item render BARE — each component self-animates (the
             // persistent word MORPHS without fading, while its header + option
