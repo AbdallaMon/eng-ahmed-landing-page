@@ -59,12 +59,16 @@ export function proxy(request) {
     // ("https://eng-booking.example.com/..."). Normalize to host + origin.
     try {
       const u = new URL(
-        BOOKING_DOMAIN.includes("://") ? BOOKING_DOMAIN : `https://${BOOKING_DOMAIN}`,
+        BOOKING_DOMAIN.includes("://")
+          ? BOOKING_DOMAIN
+          : `https://${BOOKING_DOMAIN}`,
       );
       bookingHost = u.hostname;
       bookingOrigin = u.origin;
     } catch {
-      bookingHost = BOOKING_DOMAIN.replace(/^https?:\/\//, "").split("/")[0].split(":")[0];
+      bookingHost = BOOKING_DOMAIN.replace(/^https?:\/\//, "")
+        .split("/")[0]
+        .split(":")[0];
       bookingOrigin = `https://${bookingHost}`;
     }
   }
@@ -100,7 +104,9 @@ export function proxy(request) {
         const rewriteUrl = url.clone();
         rewriteUrl.pathname =
           url.pathname === "/" ? "/register" : `/register${url.pathname}`;
-        return NextResponse.rewrite(rewriteUrl);
+        console.log(rewriteUrl, "rewriteUrl");
+        // return NextResponse.rewrite(rewriteUrl);
+        return NextResponse.next();
       }
     } else if (isRegisterPath) {
       // (2) On another host: send /register/* to the booking host, prefix stripped.
