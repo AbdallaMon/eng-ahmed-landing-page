@@ -10,16 +10,28 @@ export const SCENES = {
   placeholder: lazy(() =>
     import("@/app/register/three/scenes/PlaceholderScene"),
   ),
-  // intro: lazy(() => import("@/app/register/three/scenes/IntroScene")),
-  // INSIDE_UAE: lazy(() => import("@/app/register/three/scenes/InsideUaeScene")),
-  // OUTSIDE_UAE: lazy(() => import("@/app/register/three/scenes/OutsideUaeScene")),
-  // APARTMENT: lazy(() => import("@/app/register/three/scenes/ApartmentScene")),
-  // CONSTRUCTION_VILLA: lazy(() => import("@/app/register/three/scenes/ConstructionVillaScene")),
-  // PART_OF_HOME: lazy(() => import("@/app/register/three/scenes/PartOfHomeScene")),
-  // form: lazy(() => import("@/app/register/three/scenes/AmbientFormScene")),
-  // wizard: lazy(() => import("@/app/register/three/scenes/WizardAmbientScene")),
-  // success: lazy(() => import("@/app/register/three/scenes/SuccessScene")),
-  // cancel: lazy(() => import("@/app/register/three/scenes/CancelScene")),
+  intro: lazy(() => import("@/app/register/three/scenes/IntroScene")),
+  INSIDE_UAE: lazy(() =>
+    import("@/app/register/three/scenes/InsideUaeScene"),
+  ),
+  OUTSIDE_UAE: lazy(() =>
+    import("@/app/register/three/scenes/OutsideUaeScene"),
+  ),
+  APARTMENT: lazy(() =>
+    import("@/app/register/three/scenes/ApartmentScene"),
+  ),
+  CONSTRUCTION_VILLA: lazy(() =>
+    import("@/app/register/three/scenes/ConstructionVillaScene"),
+  ),
+  PART_OF_HOME: lazy(() =>
+    import("@/app/register/three/scenes/PartOfHomeScene"),
+  ),
+  form: lazy(() => import("@/app/register/three/scenes/AmbientFormScene")),
+  wizard: lazy(() =>
+    import("@/app/register/three/scenes/WizardAmbientScene"),
+  ),
+  success: lazy(() => import("@/app/register/three/scenes/SuccessScene")),
+  cancel: lazy(() => import("@/app/register/three/scenes/CancelScene")),
 };
 
 // Unknown keys fall back to the placeholder so a missing scene never crashes the
