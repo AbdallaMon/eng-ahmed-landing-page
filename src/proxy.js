@@ -118,6 +118,10 @@ export function proxy(request) {
 
         return NextResponse.rewrite(rewriteUrl);
       }
+    } else if (isRegisterPath) {
+      // (2) On another host: send /register/* to the booking host, prefix stripped.
+      const rest = url.pathname.slice("/register".length) || "/";
+      return NextResponse.redirect(`${bookingOrigin}${rest}${url.search}`);
     }
   }
 
