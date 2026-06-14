@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Box, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { MdErrorOutline, MdRefresh, MdArrowBack } from "react-icons/md";
 import gsap from "gsap";
 import colors from "@/app/register/theme/colors";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
@@ -42,6 +43,9 @@ export default function CheckoutView({
   const rootRef = useRef(null);
   // Guard so the auto-pay fires exactly once even under StrictMode double-mount.
   const firedRef = useRef(false);
+  // When the pay call comes back without a checkout URL (e.g. Stripe error), we stop
+  // the endless "redirecting…" screen and show a recoverable error instead.
+  const [failed, setFailed] = useState(false);
 
   // No lead → bounce to cancel (kept identical to the previous behavior).
   useEffect(() => {
@@ -50,16 +54,30 @@ export default function CheckoutView({
     }
   }, [clientLeadId]);
 
-  // Auto-fire the Stripe redirect once, through the shared pay helper.
+  // Auto-fire the Stripe redirect once, through the shared pay helper. On success the
+  // browser navigates to Stripe (this screen is replaced); on failure `pay` resolves to
+  // no URL — surface the error instead of spinning forever.
+  const runPay = async () => {
+    setFailed(false);
+    const url = await pay({ clientLeadId, clientId, lng: activeLng, test });
+    if (!url) setFailed(true);
+  };
+
   useEffect(() => {
     if (!clientLeadId || firedRef.current) return;
     firedRef.current = true;
-    pay({ clientLeadId, clientId, lng: activeLng, test });
+    runPay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientLeadId, clientId, activeLng, test, pay]);
+
+  const retry = () => {
+    runPay();
+  };
 
   // Brand transition animation: a soft pulsing gold motif + ring sweep behind
   // the "redirecting" copy. Collapses to a static fade under reduced-motion.
   useEffect(() => {
+    if (failed) return undefined;
     const root = rootRef.current;
     if (!root) return undefined;
 
@@ -107,9 +125,98 @@ export default function CheckoutView({
     }, root);
 
     return () => ctx.revert();
-  }, []);
+  }, [failed]);
 
   if (!clientLeadId) return null;
+
+  // Pay failed (no checkout URL) — stop the endless redirect screen and let the user
+  // recover: retry, or go back to the form. We deliberately DON'T auto-redirect to a
+  // separate page; the error is shown right here.
+  if (failed) {
+    return (
+      <Box
+        dir={activeLng === "en" ? "ltr" : "rtl"}
+        sx={{
+          position: "fixed",
+          inset: 0,
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          px: 3,
+          background: `radial-gradient(120% 120% at 50% 30%, ${colors.bgSecondary} 0%, ${colors.bgPrimary} 55%, ${colors.bgTertiary} 100%)`,
+        }}
+      >
+        <Box
+          sx={{
+            width: { xs: 96, md: 112 },
+            height: { xs: 96, md: 112 },
+            borderRadius: "50%",
+            mb: 3.5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: { xs: 46, md: 54 },
+            color: colors.warning || colors.primary,
+            backgroundColor: `${colors.warning || colors.primary}22`,
+            border: `2px solid ${colors.warning || colors.primary}`,
+          }}
+        >
+          <MdErrorOutline />
+        </Box>
+        <Typography
+          variant="h5"
+          component="p"
+          fontWeight={700}
+          sx={{ color: colors.heading, mb: 1 }}
+        >
+          {translate("checkout.errorTitle")}
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{ color: colors.secondaryText, maxWidth: 440, mb: 4 }}
+        >
+          {translate("checkout.errorMessage")}
+        </Typography>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+          <Button
+            variant="contained"
+            onClick={retry}
+            startIcon={<MdRefresh />}
+            sx={{
+              bgcolor: colors.primary,
+              color: "#fff",
+              borderRadius: 2,
+              px: 3,
+              "&:hover": { bgcolor: colors.primaryDark },
+            }}
+          >
+            {translate("checkout.retry")}
+          </Button>
+          <Button
+            variant="outlined"
+            component="a"
+            href="/register"
+            startIcon={<MdArrowBack />}
+            sx={{
+              color: colors.primaryDark,
+              borderColor: colors.primary,
+              borderRadius: 2,
+              px: 3,
+              "&:hover": {
+                borderColor: colors.primaryDark,
+                backgroundColor: `${colors.primary}14`,
+              },
+            }}
+          >
+            {translate("checkout.backToForm")}
+          </Button>
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Box
