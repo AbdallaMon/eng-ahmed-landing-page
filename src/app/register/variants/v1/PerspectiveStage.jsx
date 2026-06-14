@@ -357,7 +357,9 @@ function shapeStyle(s) {
     height: s.size,
     borderRadius: "50%",
     filter: `blur(${s.blur}px)`,
-    opacity: s.opacity,
+    // Kept very faint so the room PHOTO reads clean — the gold bokeh is a hint of
+    // warmth, never a haze/blur sitting over the image.
+    opacity: s.opacity * 0.3,
     background: s.fill,
     willChange: "transform",
   };
