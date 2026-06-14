@@ -86,20 +86,19 @@ export function coverMorph(fromEl, { image, duration = 0.85, radius = 24, onComp
   });
   document.body.appendChild(overlay);
 
-  // Readability wash, matching PerspectiveStage's resting `photoScrimStyle`
-  // (dim≈0.46). Inline style (never an emotion class, which can inject a frame
-  // late and flash). It fades IN as the photo grows so the full-screen image
-  // lands at the SAME darkness the backdrop rests at — no brightness jump on
-  // hand-off. (The card itself starts un-scrimmed, so the lift reads naturally.)
+  // LIGHT readability wash — the SAME simple bottom-only gradient the card
+  // itself uses (transparent top → faint dark bottom), so the photo stays
+  // clearly visible as it grows. Inline style (never an emotion class, which can
+  // inject a frame late and flash). Constant: it already matches the card it
+  // lifts off, so there is no brightness pop.
   const scrim = document.createElement("div");
   Object.assign(scrim.style, {
     position: "absolute",
     inset: "0",
     borderRadius: "inherit",
     pointerEvents: "none",
-    opacity: "0",
     background:
-      "linear-gradient(180deg, rgba(40,32,24,0.23) 0%, rgba(40,32,24,0.46) 55%, rgba(40,32,24,0.38) 100%)",
+      "linear-gradient(180deg, rgba(0,0,0,0) 38%, rgba(20,15,10,0.72) 100%)",
   });
   overlay.appendChild(scrim);
 
@@ -134,13 +133,6 @@ export function coverMorph(fromEl, { image, duration = 0.85, radius = 24, onComp
     duration: duration * 0.74,
     ease: "power3.inOut",
   });
-  // Fade the wash in across the grow so the landed full-screen frame matches the
-  // backdrop's resting darkness (kills the "image gets darker after it lands").
-  tl.to(
-    scrim,
-    { opacity: 1, duration: duration * 0.74, ease: "power2.out" },
-    duration * 0.26,
-  );
 
   // Safety: if GSAP is ever interrupted, never strand the overlay on screen.
   gsap.delayedCall(duration + 1.2, () => {
@@ -213,16 +205,16 @@ export function reverseCoverMorph(
     willChange: "top, left, width, height, border-radius",
     boxShadow: "0 40px 120px rgba(0,0,0,0.45)",
   });
-  // Starts at the backdrop's resting darkness, fades out toward the card.
+  // LIGHT, simple bottom-only gradient — the same one the card uses — so the
+  // room photo stays clearly visible as it shrinks back into its card.
   const scrim = document.createElement("div");
   Object.assign(scrim.style, {
     position: "absolute",
     inset: "0",
     borderRadius: "inherit",
     pointerEvents: "none",
-    opacity: "1",
     background:
-      "linear-gradient(180deg, rgba(40,32,24,0.23) 0%, rgba(40,32,24,0.46) 55%, rgba(40,32,24,0.38) 100%)",
+      "linear-gradient(180deg, rgba(0,0,0,0) 38%, rgba(20,15,10,0.72) 100%)",
   });
   overlay.appendChild(scrim);
   document.body.appendChild(overlay);
@@ -249,11 +241,6 @@ export function reverseCoverMorph(
       ease: "power3.inOut",
     },
     0,
-  );
-  tl.to(
-    scrim,
-    { opacity: 0, duration: duration * 0.7, ease: "power2.in" },
-    duration * 0.2,
   );
 
   gsap.delayedCall(duration + 1.2, () => {
