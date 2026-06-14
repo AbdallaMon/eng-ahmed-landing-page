@@ -1,6 +1,7 @@
 "use client";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Box } from "@mui/material";
+import gsap from "gsap";
 
 import {
   useLeadFlow,
@@ -10,6 +11,7 @@ import {
 import { useLeadForm } from "@/app/register/core/useLeadForm";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { RegisterHeader } from "@/app/register/component/layout/RegisterHeader";
+import { dur, prefersReducedMotion } from "@/app/register/variants/v1/v1Motion";
 import colors from "@/app/register/theme/colors";
 
 import {
@@ -18,7 +20,7 @@ import {
   LeadType,
   DesignLeadPrice,
 } from "@/app/register/data/constants";
-import { imageForItem } from "@/app/register/core/assets";
+import { assets, imageForItem, imageForLocation } from "@/app/register/core/assets";
 
 import PerspectiveStage from "@/app/register/variants/v1/PerspectiveStage";
 import DesignIntroStage from "@/app/register/variants/v1/DesignIntroStage";
@@ -48,13 +50,14 @@ export default function V1Flow({ leadId } = {}) {
 
   const {
     step,
+    direction,
     hydrated,
     isAnimating,
+    backExiting,
     leadCategory,
     leadEmail,
     location,
     leadItem,
-    activeImage,
     canGoBack,
     canReset,
     handleEmailSubmit,
@@ -63,6 +66,30 @@ export default function V1Flow({ leadId } = {}) {
     handleBack,
     handleReset,
   } = useLeadFlow();
+
+  // The stage-content wrapper. During the BACK exit beat it recedes (the content
+  // "leaves" just after the image starts shrinking); on a step swap it resets so
+  // the next stage's own depth-reveal can build it back in (image → title → cards).
+  const stageContentRef = useRef(null);
+  useEffect(() => {
+    const el = stageContentRef.current;
+    if (!el || prefersReducedMotion()) return;
+    if (backExiting) {
+      gsap.to(el, {
+        opacity: 0,
+        y: -14,
+        scale: 0.96,
+        duration: dur(0.4),
+        ease: "power2.in",
+      });
+    }
+  }, [backExiting]);
+  useEffect(() => {
+    const el = stageContentRef.current;
+    if (!el) return;
+    gsap.killTweensOf(el);
+    gsap.set(el, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
+  }, [step]);
 
   // Lifted so the paying overlay reads `isPaying`; also passed to FormStage so
   // there's a single form instance. The values are stable by the time the form
@@ -98,13 +125,31 @@ export default function V1Flow({ leadId } = {}) {
   );
 
   const isForm = step === "form";
-  // The form stage sits on the light gradient (no photo), so dim the scrim down
-  // there; the photo stages stay richly dimmed for white-text legibility.
-  const dim = isForm ? 0.12 : 0.46;
+  // Backdrop photo per stage (all curated + optimized via core/assets — WIDE
+  // landscape stills rendered full-bleed/cover by PerspectiveStage):
+  //  • designIntro/email/location → the hero room (the "enter the design"
+  //    push-in lives here),
+  //  • item → the chosen LOCATION photo,
+  //  • form → the chosen ITEM photo, kept as the BACKGROUND (PerspectiveStage
+  //    `variant="form"` only deepens its edges for legibility — NO white panel,
+  //    NO frosted wash) so the card that flew to fill the screen settles into the
+  //    same room the form then sits over. Just the glass inputs sit on top.
+  // Once an ITEM is chosen the room IS that item's photo immediately — even
+  // during the brief item→form beat (before `step` flips to "form"). This makes
+  // the `coverMorph` overlay (which grew the item card's photo) hand off to the
+  // SAME backdrop image, so removing the overlay never reveals the previous
+  // (location) room for a frame. leadItem is cleared on BACK, so the location
+  // room correctly returns for the item step.
+  const backdropImage = leadItem
+    ? imageForItem(leadItem)
+    : step === "item"
+      ? imageForLocation(location)
+      : assets.hero;
 
   const renderStage = () => {
     if (step === "designIntro") return <DesignIntroStage />;
-    if (step === "email") return <EmailStage onSubmit={handleEmailSubmit} />;
+    if (step === "email")
+      return <EmailStage onSubmit={handleEmailSubmit} direction={direction} />;
     if (step === "location") {
       return (
         <OptionCardsStage
@@ -115,6 +160,7 @@ export default function V1Flow({ leadId } = {}) {
           disabled={isAnimating}
           revealKey="location"
           columns={{ xs: 1, md: 2 }}
+          direction={direction}
         />
       );
     }
@@ -128,6 +174,7 @@ export default function V1Flow({ leadId } = {}) {
           disabled={isAnimating}
           revealKey="item"
           columns={{ xs: 1, md: 3 }}
+          direction={direction}
         />
       );
     }
@@ -144,7 +191,12 @@ export default function V1Flow({ leadId } = {}) {
         disabled={isAnimating}
       />
 
-      <PerspectiveStage image={activeImage} dim={dim}>
+      <PerspectiveStage
+        image={backdropImage}
+        variant={isForm ? "form" : "photo"}
+        direction={direction}
+        exiting={backExiting}
+      >
         <Box
           sx={{
             flex: 1,
@@ -155,23 +207,27 @@ export default function V1Flow({ leadId } = {}) {
             px: { xs: 1.5, md: 2 },
           }}
         >
-          {/* Minimal depth-aware progress dots. */}
+          {/* Minimal depth-aware progress dots. Light-on-photo for EVERY stage
+              now — the form keeps the (darkened) photo as its background too. */}
           <ProgressDots
             activeIndex={progressIndexFor(step)}
-            onDark={!isForm}
+            onDark
             labels={PROGRESS_STEPS.map((s) => stepLabel(translate, s))}
           />
 
           {/* Stage content. Hidden until hydration resolves the deep-link target
               so there is no flash of the wrong step; pointer events are cut while
-              a transition animates so no click fires over a running animation. */}
+              a transition animates so no click fires over a running animation.
+              `stageContentRef` is GSAP-receded during the BACK exit beat. */}
           <Box
+            ref={stageContentRef}
             sx={{
               flex: 1,
               display: "flex",
               flexDirection: "column",
               visibility: hydrated ? "visible" : "hidden",
               pointerEvents: isAnimating ? "none" : "auto",
+              willChange: "transform, opacity",
             }}
           >
             {renderStage()}
