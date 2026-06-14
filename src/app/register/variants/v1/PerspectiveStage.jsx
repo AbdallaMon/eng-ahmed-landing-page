@@ -320,12 +320,15 @@ const PHOTO_LAYER_STYLE = {
   willChange: "transform, opacity",
 };
 
-/** Base readability wash for PHOTO stages — a warm dark gradient. */
+/** Base readability wash for PHOTO stages. Deliberately LIGHT and transparent
+ *  through the middle so the room photo READS clearly (the owner wants the image
+ *  to show, not be buried under a wash). Only a faint top + a soft bottom floor
+ *  remain — just enough for the white titles/dots and card labels that float. */
 function photoScrimStyle(dim) {
   return {
     position: "absolute",
     inset: "-4%",
-    background: `linear-gradient(180deg, rgba(40,32,24,${dim * 0.5}) 0%, rgba(40,32,24,${dim}) 55%, rgba(40,32,24,${dim * 0.82}) 100%)`,
+    background: `linear-gradient(180deg, rgba(20,15,10,${dim * 0.34}) 0%, rgba(20,15,10,0) 22%, rgba(20,15,10,0) 64%, rgba(20,15,10,${dim * 0.9}) 100%)`,
     pointerEvents: "none",
     willChange: "transform",
   };
@@ -337,8 +340,8 @@ const FORM_SCRIM_STYLE = {
   position: "absolute",
   inset: "-4%",
   background: [
-    "radial-gradient(120% 90% at 50% 42%, rgba(20,15,10,0.10) 0%, rgba(20,15,10,0.40) 100%)",
-    "linear-gradient(180deg, rgba(24,18,13,0.16) 0%, rgba(20,15,10,0.34) 100%)",
+    "radial-gradient(120% 90% at 50% 45%, rgba(20,15,10,0) 0%, rgba(20,15,10,0.2) 100%)",
+    "linear-gradient(180deg, rgba(24,18,13,0.04) 0%, rgba(20,15,10,0.22) 100%)",
   ].join(", "),
   pointerEvents: "none",
   willChange: "transform, opacity",
