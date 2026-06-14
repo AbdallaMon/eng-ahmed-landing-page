@@ -16,14 +16,29 @@ async function resolveLng() {
 
 export async function generateMetadata() {
   const lng = await resolveLng();
-  const siteName = t("identity.name", lng);
-  const title = `${siteName} — ${t("button.bookConsultation", lng)}`;
-  const description = t("identity.description", lng);
+  const siteName = t("identity.name", lng); // دريم ستوديو / Dream Studio
+
+  // ميتا غنية تذكر المهندس + الخدمة + الإمارات (متوافقة مع البراند والويكيداتا)
+  const title =
+    lng === "ar"
+      ? "احجز استشارة تصميم داخلي مع المهندس أحمد المبيض | دريم ستوديو"
+      : "Book an Interior Design Consultation with Eng. Ahmad Almobayed | Dream Studio";
+
+  const description =
+    lng === "ar"
+      ? "احجز استشارتك في التصميم الداخلي والديكور والتنفيذ مع المهندس أحمد المبيض ودريم ستوديو في الإمارات. اختر فئتك وموقعك وابدأ مشروعك في خطوات بسيطة."
+      : "Book your interior design, decor and execution consultation with Eng. Ahmad Almobayed and Dream Studio in the UAE. Choose your category and location and start your project in a few simple steps.";
+
+  const keywords =
+    lng === "ar"
+      ? "حجز استشارة تصميم داخلي, تصميم داخلي, ديكور, تصميم فلل, تصميم شقق, المهندس أحمد المبيض, دريم ستوديو, تصميم داخلي الإمارات"
+      : "book interior design consultation, interior design, decor, villa design, apartment design, Eng. Ahmad Almobayed, Dream Studio, interior design UAE";
 
   return {
     metadataBase: new URL(BASE_URL),
     title,
     description,
+    keywords,
     alternates: {
       canonical: "/register",
       languages: {
@@ -44,7 +59,7 @@ export async function generateMetadata() {
       type: "website",
       siteName,
       locale: lng === "ar" ? "ar_AR" : "en_US",
-      images: [{ url: "/main-logo.jpg", alt: siteName }],
+      images: [{ url: "/main-logo.jpg", alt: title }],
     },
     twitter: {
       card: "summary_large_image",
