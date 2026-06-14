@@ -29,6 +29,17 @@ export default function SuccessView() {
   const lng = searchParams.get("lng") || "ar";
   const direction = lng === "en" ? "ltr" : "rtl";
 
+  // The "back home" CTA must reach the MAIN site. The booking flow runs on its own
+  // sub-domain where "/" is the booking home (not the main site), so we point this
+  // at NEXT_PUBLIC_MAIN_DOMAIN. Accept a full URL or a bare host; fall back to "/"
+  // when unset (single-domain dev).
+  const mainDomain = process.env.NEXT_PUBLIC_MAIN_DOMAIN;
+  const homeHref = mainDomain
+    ? mainDomain.includes("://")
+      ? mainDomain
+      : `https://${mainDomain}`
+    : "/";
+
   const rootRef = useRef(null);
 
   // ── Payment-status verification (PRESERVED, unchanged contract) ────────────
@@ -349,7 +360,7 @@ export default function SuccessView() {
           <Button
             variant="contained"
             component="a"
-            href="/"
+            href={homeHref}
             size="large"
             startIcon={<FaHome />}
             sx={{
