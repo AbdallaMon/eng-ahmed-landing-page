@@ -4,6 +4,8 @@ import {
   enFullName,
   arName,
   enName,
+  enSeoFullName,
+  personAlternateNames,
   siteEmail,
   socialMediaIconsLinks,
   arJobTitle,
@@ -106,9 +108,15 @@ export function getPersonJsonLd(baseUrl, lng = "ar") {
     "@type": "Person",
     "@id": `${baseUrl}/#person`, // ID ثابت نستخدمه في بقيّة الSchemas
     name: lng === "ar" ? arFullName : enFullName,
-    alternateName: lng === "ar" ? [enFullName, enName] : [arFullName, arName],
+    // كل صيغ الاسم المعروفة (تشمل التهجئة القانونية وألقاب الويكيداتا) لربط الكيان
+    alternateName: [...new Set(personAlternateNames)],
     description,
     jobTitle: lng === "ar" ? arJobTitle : enJobTitle,
+    // hasOccupation أدق من jobTitle ويطابق مهن الويكيداتا (P106)
+    hasOccupation: (lng === "ar" ? arJobTitle : enJobTitle).map((title) => ({
+      "@type": "Occupation",
+      name: title,
+    })),
     gender: "Male",
     birthDate: personBirthDate,
     birthPlace: {
@@ -288,12 +296,50 @@ export function getProjectArticleJsonLd({
       ? `${projectData.year}-01-01`
       : undefined;
 
+  // ---- 2.b) القسم + الكلمات المفتاحية (لإثراء السيو) ----
+  const isCommercial = /تجاري|commercial/i.test(projectData.category || "");
+  const sectionLabel =
+    lng === "ar"
+      ? isCommercial
+        ? "تصميم داخلي تجاري"
+        : "تصميم داخلي سكني"
+      : isCommercial
+        ? "Commercial Interior Design"
+        : "Residential Interior Design";
+
+  const keywordList =
+    lng === "ar"
+      ? [
+          projectData.name,
+          sectionLabel,
+          "تصميم داخلي",
+          "ديكور",
+          "تصميم وتنفيذ",
+          projectData.location,
+          projectData.category,
+          arFullName,
+          "دريم ستوديو",
+        ]
+      : [
+          projectData.name,
+          sectionLabel,
+          "interior design",
+          "decor",
+          "design and execution",
+          projectData.location,
+          projectData.category,
+          enSeoFullName,
+          "Dream Studio",
+        ];
+
   // ---- 3) Build the Article JSON-LD ----
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: projectData.name,
     description: projectData.description,
+    articleSection: sectionLabel,
+    keywords: keywordList.filter(Boolean).join(", "),
 
     // 👈 هنا بقى جوجل يشوف كل الصور مش واحدة بس
     image: galleryImages,
@@ -305,10 +351,17 @@ export function getProjectArticleJsonLd({
       name: getLocalizedName(lng),
       url: baseUrl,
     },
+    creator: {
+      "@type": "Person",
+      "@id": `${baseUrl}/#person`,
+      name: getLocalizedName(lng),
+    },
+    // المشروع "عن" نفس الشخص (يربط المقال بكيان المهندس)
+    about: [{ "@id": `${baseUrl}/#person` }],
     publisher: {
       "@type": "Organization",
       "@id": `${baseUrl}/#organization`,
-      name: getLocalizedName(lng),
+      // الاسم يُورَّث من تعريف #organization الأساسي (تفادي تعارض الاسم بين اللغات)
       logo: {
         "@type": "ImageObject",
         url: `${baseUrl}/hero.png`,
@@ -321,9 +374,19 @@ export function getProjectArticleJsonLd({
     inLanguage: lng === "ar" ? "ar" : "en",
   };
 
+  // مكان تنفيذ المشروع (مدينة/دولة) — إشارة جغرافية مفيدة
+  if (projectData.location) {
+    articleJsonLd.contentLocation = {
+      "@type": "Place",
+      name: projectData.location,
+    };
+  }
+
   if (datePublished) {
     articleJsonLd.datePublished = datePublished;
     articleJsonLd.dateModified = datePublished;
+  } else {
+    articleJsonLd.dateModified = profileLastModified;
   }
 
   return articleJsonLd;
