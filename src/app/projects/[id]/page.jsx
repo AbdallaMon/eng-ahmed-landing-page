@@ -20,9 +20,12 @@ import { notFound } from "next/navigation";
 import JsonLd from "../../seo/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const cookieStore = await cookies();
-  const lng = cookieStore.get("i18next")?.value || "ar";
+  const awaitedSearchParams = await searchParams;
+  // نفضّل لغة الرابط (?lng=) لتطابق الميتا مع محتوى الصفحة المعروض، ثم الكوكي
+  const lng =
+    awaitedSearchParams?.lng || cookieStore.get("i18next")?.value || "ar";
   const { t } = await getTranslation(lng);
   const projects = t("projects", { returnObjects: true });
   const awaitedParams = await params;
@@ -36,6 +39,7 @@ export async function generateMetadata({ params }) {
     return {
       title: baseTitle,
       description: baseTitle,
+      robots: { index: false, follow: false },
       openGraph: {
         title: baseTitle,
         description: baseTitle,
@@ -61,48 +65,63 @@ export async function generateMetadata({ params }) {
     ? rawImagePath
     : `${baseUrl}${rawImagePath.replace("./", "/")}`;
 
+  // نوع المشروع (سكني/تجاري) لبناء عنوان ووصف وكلمات مفتاحية دقيقة
+  const isCommercial = /تجاري|commercial/i.test(projectData.category || "");
+  const sectionLabel =
+    lng === "ar"
+      ? isCommercial
+        ? "تصميم داخلي تجاري"
+        : "تصميم داخلي سكني"
+      : isCommercial
+        ? "Commercial Interior Design"
+        : "Residential Interior Design";
+
   const keywordsList =
     lng === "ar"
       ? [
-          "مشروع تصميم داخلي",
-          "مشاريع",
+          projectData.name,
+          sectionLabel,
           "تصميم داخلي",
           "ديكور",
+          "تصميم وتنفيذ",
+          "تصميم فلل",
+          "تصميم شقق",
+          "تصميم مجالس",
           "هندسة معمارية",
-          "المهندس احمد",
-          "مشاريع احمد المبيض",
-          "المهندس احمد المبيض",
-          projectData.name,
           projectData.location,
           projectData.category,
+          "المهندس أحمد المبيض",
+          "دريم ستوديو",
           String(projectData.year),
         ]
       : [
-          "interior design project",
-          "projects",
+          projectData.name,
+          sectionLabel,
           "interior design",
           "decor",
+          "design and execution",
+          "villa design",
+          "apartment design",
+          "majlis design",
           "architecture",
-          "eng ahmed",
-          "ahmed almobayed",
-          "eng ahmed almobayed",
-          projectData.name,
           projectData.location,
           projectData.category,
+          "Eng. Ahmad Almobayed",
+          "Dream Studio",
           String(projectData.year),
         ];
 
-  const keywords = keywordsList.join(", ");
+  const keywords = keywordsList.filter(Boolean).join(", ");
 
   const title =
     lng === "ar"
-      ? `${projectData.name} – تصميم داخلي في ${projectData.location} – المهندس أحمد المبيض`
-      : `${projectData.name} – Interior Design in ${projectData.location} – Eng. Ahmed Almobayd`;
+      ? `${projectData.name} – ${sectionLabel} في ${projectData.location} | المهندس أحمد المبيض`
+      : `${projectData.name} – ${sectionLabel} in ${projectData.location} | Eng. Ahmad Almobayed`;
 
   const description =
     lng === "ar"
-      ? `${projectData.description} – مشروع تصميم داخلي في ${projectData.location} من تنفيذ المهندس أحمد المبيض.`
-      : `${projectData.description} – Interior design project in ${projectData.location} by Eng. Ahmed Almobayd.`;
+      ? `${projectData.description} — مشروع ${sectionLabel} في ${projectData.location}، بتصميم وتنفيذ المهندس أحمد المبيض ودريم ستوديو. تصميم داخلي وديكور احترافي.`
+      : `${projectData.description} — A ${sectionLabel.toLowerCase()} project in ${projectData.location}, designed and executed by Eng. Ahmad Almobayed and Dream Studio. Professional interior design and decor.`;
 
   return {
     title,
@@ -114,8 +133,8 @@ export async function generateMetadata({ params }) {
       description,
       url: `${baseUrl}/projects/${projectId}?lng=${lng}`,
       type: "article",
-      locale: lng === "ar" ? "ar" : "en",
-      siteName: lng === "ar" ? "المهندس أحمد المبيض" : "Eng Ahmed Almobayd",
+      locale: lng === "ar" ? "ar_AR" : "en_US",
+      siteName: lng === "ar" ? "المهندس أحمد المبيض" : "Eng. Ahmad Almobayed",
       images: [
         {
           url: normalizedImagePath,
@@ -135,6 +154,10 @@ export async function generateMetadata({ params }) {
 
     alternates: {
       canonical: `${baseUrl}/projects/${projectId}`,
+      languages: {
+        ar: `${baseUrl}/projects/${projectId}?lng=ar`,
+        en: `${baseUrl}/projects/${projectId}?lng=en`,
+      },
     },
 
     icons: {
@@ -148,7 +171,7 @@ export async function generateMetadata({ params }) {
 export default async function page({ params, searchParams }) {
   const awaitedSearchParams = await searchParams;
   const awaitedParams = await params;
-  const lng = awaitedSearchParams.lng;
+  const lng = awaitedSearchParams.lng || "ar";
   const { t } = await getTranslation(lng);
   const projects = t("projects", { returnObjects: true });
   const { t: otherLngT } = await getTranslation(lng === "ar" ? "en" : "ar");
@@ -182,7 +205,7 @@ export default async function page({ params, searchParams }) {
     </Typography>,
   ];
   const rawImagePath =
-    projectData.cover || projectData.images?.[0] || "/hero.png";
+    projectData.cover || projectData.images?.[0]?.src || "/hero.png";
 
   const normalizedImagePath = rawImagePath.startsWith("http")
     ? rawImagePath
@@ -243,7 +266,16 @@ export default async function page({ params, searchParams }) {
             <Typography
               component="h1"
               variant="h4"
-              sx={{ mb: 3, fontWeight: "bold" }}
+              sx={{ mb: 1, fontWeight: "bold" }}
+            >
+              {lng === "ar"
+                ? `${projectData.name} – تصميم داخلي في ${projectData.location}`
+                : `${projectData.name} – Interior Design in ${projectData.location}`}
+            </Typography>
+            <Typography
+              component="p"
+              variant="subtitle1"
+              sx={{ mb: 3, color: "text.secondary" }}
             >
               {lng === "ar" ? "تفاصيل المشروع" : "Project Details"}
             </Typography>
