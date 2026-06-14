@@ -104,9 +104,11 @@ function resolveDeepLinkStep({ item, location, step }) {
  *  the image) before it expands and the email step enters. */
 function introHoldMs() {
   if (prefersReducedMotion()) return 0;
-  // Kick off EARLY: the card snaps in (~0.5s) and "تصميم" reads for a brief
-  // beat, then it expands into the backdrop — no long dead wait up front.
-  return (800 * MOTION_SCALE) / getUrlSpeed();
+  // Timed to the (faster) DesignIntroStage choreography: "تصميم" reads → "داخلي"
+  // joins → it leaves → "تصميم" LIFTS off toward the top to become the journey
+  // breadcrumb's first token. We advance to email right as that lift starts so
+  // the breadcrumb's category token catches the flying word.
+  return (1650 * MOTION_SCALE) / getUrlSpeed();
 }
 
 /**

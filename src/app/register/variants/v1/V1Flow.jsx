@@ -22,7 +22,9 @@ import {
 } from "@/app/register/data/constants";
 import { assets, imageForItem, imageForLocation } from "@/app/register/core/assets";
 
+import { liftSlot } from "@/app/register/core/cards3d/titleMorph";
 import PerspectiveStage from "@/app/register/variants/v1/PerspectiveStage";
+import JourneyBreadcrumb from "@/app/register/variants/v1/JourneyBreadcrumb";
 import DesignIntroStage from "@/app/register/variants/v1/DesignIntroStage";
 import EmailStage from "@/app/register/variants/v1/EmailStage";
 import OptionCardsStage from "@/app/register/variants/v1/OptionCardsStage";
@@ -46,7 +48,8 @@ import PayingOverlay from "@/app/register/variants/v1/PayingOverlay";
  * here.
  */
 export default function V1Flow({ leadId } = {}) {
-  const { translate } = useLanguage();
+  const { translate, lng } = useLanguage();
+  const isRtl = lng === "ar";
 
   const {
     step,
@@ -92,6 +95,17 @@ export default function V1Flow({ leadId } = {}) {
     gsap.killTweensOf(el);
     gsap.set(el, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
   }, [step]);
+
+  // BACK: the moment the exit beat starts, lift the accumulated word for the step
+  // we're leaving back OFF the breadcrumb (it goes centre + grows). The returning
+  // card deck then flies it down onto its card and shrinks the room photo in
+  // behind it — the exact reverse of the forward journey. item→location lifts the
+  // location word; form→item lifts the item word; location→email has no card word.
+  useEffect(() => {
+    if (!backExiting || prefersReducedMotion()) return;
+    const key = step === "item" ? "loc" : step === "form" ? "item" : null;
+    if (key) liftSlot(key, { color: colors.primary });
+  }, [backExiting, step]);
 
   // Lifted so the paying overlay reads `isPaying`; also passed to FormStage so
   // there's a single form instance. The values are stable by the time the form
@@ -147,6 +161,35 @@ export default function V1Flow({ leadId } = {}) {
     : step === "item"
       ? imageForLocation(location)
       : assets.hero;
+
+  // The accumulating JOURNEY breadcrumb at the top: category (always, once the
+  // intro has handed off) → location → item. Each token is the word that flew up
+  // off its card / the intro, so it is never shown twice. Line 1 = the path
+  // (تصميم + location); line 2 = the chosen item (the focus).
+  const journeyTokens = [];
+  if (step !== "designIntro") {
+    journeyTokens.push({
+      key: "cat",
+      text: translate("category.design"),
+      line: 1,
+      primary: true,
+    });
+  }
+  if (location) {
+    const locDef = designLeadTypes.find((l) => l.value === location);
+    journeyTokens.push({
+      key: "loc",
+      text: translate(locDef?.title || ""),
+      line: 1,
+    });
+  }
+  if (leadItem) {
+    journeyTokens.push({
+      key: "item",
+      text: translate(LeadType[leadItem]),
+      line: 2,
+    });
+  }
 
   const renderStage = () => {
     if (step === "designIntro") return <DesignIntroStage />;
@@ -211,6 +254,15 @@ export default function V1Flow({ leadId } = {}) {
             px: { xs: 1.5, md: 2 },
           }}
         >
+          {/* The accumulating JOURNEY title — persistent across every step, the
+              single place the chosen words live (they fly up here off the cards
+              and stay). */}
+          {journeyTokens.length > 0 && (
+            <Box sx={{ mb: { xs: 1.5, md: 2 } }}>
+              <JourneyBreadcrumb tokens={journeyTokens} isRtl={isRtl} />
+            </Box>
+          )}
+
           {/* Minimal depth-aware progress dots. Light-on-photo for EVERY stage
               now — the form keeps the (darkened) photo as its background too. */}
           <ProgressDots

@@ -67,9 +67,17 @@ export default function PerspectiveStage({
     const a = photoARef.current;
     const b = photoBRef.current;
 
-    [a, b].forEach((el) => {
-      if (el) gsap.set(el, { opacity: 0, scale: PHOTO_OVERSCAN, x: 0, y: 0 });
-    });
+    // Establish the layers' resting depth + initial HIDDEN opacity — but ONLY on
+    // the genuine first mount. React re-invokes effects (StrictMode in dev) and a
+    // hydration-mismatch can regenerate this tree; if this block re-ran it would
+    // re-zero a layer the ENTER effect has ALREADY brought up (it tracks progress
+    // via `prevImage`), leaving the room photo stuck invisible. Once ENTER has run
+    // (`prevImage` set) it OWNS opacity/scale, so we must not touch them here.
+    if (prevImage.current === null) {
+      [a, b].forEach((el) => {
+        if (el) gsap.set(el, { opacity: 0, scale: PHOTO_OVERSCAN, x: 0, y: 0 });
+      });
+    }
     shapes.forEach((el, i) => gsap.set(el, { z: SHAPES[i].z }));
 
     if (prefersReducedMotion()) return undefined;
@@ -175,12 +183,22 @@ export default function PerspectiveStage({
     }
 
     if (isFirst) {
-      // First paint — a gentle push-IN so you feel you're entering the image.
-      gsap.fromTo(
-        a,
-        { opacity: 0, scale: PHOTO_OVERSCAN * 0.92 },
-        { opacity: image ? 1 : 0, scale: PHOTO_OVERSCAN, duration: dur(1.6), ease: "expo.out" },
-      );
+      // First paint — establish the resting frame IMMEDIATELY (photo fully
+      // opaque), then a gentle SCALE-only push-IN so you feel you're entering the
+      // image. We deliberately NEVER animate opacity UP from 0 here: a long
+      // opacity `fromTo` can survive an effect re-run (React StrictMode in dev) or
+      // a hydration tree-regeneration and leave the room photo STRANDED invisible
+      // — that was the "image disappears / blank wash after the card grows" bug.
+      // A scale-only push-in cannot hide the image (any frozen scale is still
+      // >1 = full-bleed), so the room is guaranteed visible.
+      gsap.set(a, { opacity: image ? 1 : 0, scale: PHOTO_OVERSCAN, x: 0, y: 0 });
+      if (image) {
+        gsap.from(a, {
+          scale: PHOTO_OVERSCAN * 0.92,
+          duration: dur(1.6),
+          ease: "expo.out",
+        });
+      }
       kenBurns(a);
     } else if (back) {
       // BACK: the reverse-morph overlay (OptionCardsStage) owns the visible

@@ -1,77 +1,92 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import gsap from "gsap";
-import colors from "@/app/register/theme/colors";
-import { assets } from "@/app/register/core/assets";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
-import AnimatedText from "@/app/register/core/cards3d/AnimatedText";
+import { liftTitle } from "@/app/register/core/cards3d/titleMorph";
+import colors from "@/app/register/theme/colors";
 import { dur, prefersReducedMotion } from "@/app/register/variants/v1/v1Motion";
 
 /**
- * The DESIGN intro beat: the brand word "تصميم / Design" assembles in 3D next to
- * a small framed hero tile that builds toward the viewer, holds for a readable
- * beat, then the whole group RECEDES into depth — handing the stage to the email
- * step (which `useLeadFlow` auto-advances to). The full-screen design photo is
- * already the backdrop (provided by `PerspectiveStage`), so this stage only
- * renders the assembling foreground.
+ * The DESIGN intro beat, over the full-screen hero photo (provided by
+ * `PerspectiveStage`). A staged, readable word choreography the owner asked for:
  *
- * Purely decorative + self-timed; it never blocks the flow. Under reduced motion
- * everything simply appears (no recede).
+ *   1. "تصميم / Design" assembles and HOLDS long enough to read (it no longer
+ *      flashes away).
+ *   2. "داخلي / Interior" JOINS it → the full term "تصميم داخلي / Interior Design".
+ *   3. The qualifier "داخلي / Interior" LEAVES again (slides + dissolves).
+ *   4. "تصميم / Design" RISES toward the top of the frame and settles there,
+ *      handing the stage to the email step (which `useLeadFlow` auto-advances to
+ *      after `introHoldMs`, timed to this rise) — the email form then enters
+ *      gently underneath.
+ *
+ * The two words are rendered in LOGICAL order per language (RTL: main then
+ * qualifier → "تصميم داخلي"; LTR: qualifier then main → "Interior Design"), so a
+ * row flex with the document direction reads correctly both ways.
+ *
+ * Self-timed + purely decorative; it never blocks the flow. Reduced motion just
+ * shows the word.
  */
 export default function DesignIntroStage() {
-  const { translate } = useLanguage();
+  const { translate, lng } = useLanguage();
+  const isRtl = lng === "ar";
   const groupRef = useRef(null);
-  const tileRef = useRef(null);
-  const badgeRef = useRef(null);
+  const mainRef = useRef(null);
+  const qualRef = useRef(null);
 
   useEffect(() => {
     const group = groupRef.current;
-    const tile = tileRef.current;
-    const badge = badgeRef.current;
-    if (!group) return undefined;
+    const main = mainRef.current;
+    const qual = qualRef.current;
+    if (!group || !main || !qual) return undefined;
 
     if (prefersReducedMotion()) {
-      gsap.set([group, tile, badge], { opacity: 1, clearProps: "transform" });
+      gsap.set([main, qual], { opacity: 1, clearProps: "transform,filter" });
+      gsap.set(group, { opacity: 1, y: 0, scale: 1 });
       return undefined;
     }
 
+    // The qualifier slides in from the side toward the main word (RTL → it sits
+    // to the LEFT of "تصميم", so it arrives from the left).
+    const qualFrom = isRtl ? -38 : 38;
+
     const tl = gsap.timeline();
-    if (tile) {
-      // Tile builds toward the viewer.
-      tl.fromTo(
-        tile,
-        { opacity: 0, z: -220, rotateY: -28, y: 30 },
-        {
-          opacity: 1,
-          z: 60,
-          rotateY: 0,
-          y: 0,
-          duration: dur(0.7),
-          ease: "expo.out",
-        },
-      );
-    }
-    if (badge) {
-      tl.fromTo(
-        badge,
-        { opacity: 0, y: 14 },
-        { opacity: 1, y: 0, duration: dur(0.45), ease: "power3.out" },
-        "-=0.3",
-      );
-    }
-    // Hold, then the whole group recedes into depth as email takes over.
-    tl.to(group, {
-      z: -260,
-      opacity: 0,
-      scale: 0.92,
-      duration: dur(0.6),
-      ease: "power2.in",
-      delay: dur(0.55),
-    });
+    // 1) "تصميم" fades + lifts in GENTLY (soft rise + scale settle — no hard 3D
+    //    flip, which read as harsh).
+    tl.fromTo(
+      main,
+      { opacity: 0, y: 28, scale: 0.92 },
+      { opacity: 1, y: 0, scale: 1, duration: dur(0.5), ease: "power3.out" },
+      0,
+    );
+    // 2) "داخلي" slides in softly → "تصميم داخلي".
+    tl.fromTo(
+      qual,
+      { opacity: 0, x: qualFrom },
+      { opacity: 1, x: 0, duration: dur(0.4), ease: "power2.out" },
+      dur(0.65),
+    );
+    // 3) Brief hold, then the qualifier LEAVES.
+    tl.to(
+      qual,
+      { opacity: 0, x: qualFrom * 0.6, duration: dur(0.3), ease: "power2.in" },
+      dur(1.3),
+    );
+    // 4) Hand "تصميم" off to the persistent JOURNEY breadcrumb: lift a gold clone
+    //    (it goes centre-stage + grows, then the breadcrumb's category token flies
+    //    it up into place). Hide the original group so only the clone reads — one
+    //    continuous move into the breadcrumb, no second copy of the word.
+    tl.call(
+      () => {
+        liftTitle(main, { color: colors.primary });
+        gsap.set(group, { opacity: 0 });
+      },
+      null,
+      dur(1.55),
+    );
 
     return () => tl.kill();
-  }, []);
+  }, [isRtl]);
 
   return (
     <Box
@@ -87,70 +102,61 @@ export default function DesignIntroStage() {
       <Box
         ref={groupRef}
         sx={{
-          transformStyle: "preserve-3d",
           willChange: "transform, opacity",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: { xs: 2.5, md: 3 },
-          textAlign: "center",
+          transformStyle: "preserve-3d",
         }}
       >
-        {/* Small framed hero tile that builds toward the viewer. */}
         <Box
-          ref={tileRef}
-          aria-hidden
+          dir={isRtl ? "rtl" : "ltr"}
           sx={{
-            width: { xs: 150, md: 200 },
-            height: { xs: 150, md: 200 },
-            borderRadius: "26px",
-            backgroundImage: `url('${assets.hero}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            transformStyle: "preserve-3d",
-            willChange: "transform, opacity",
-            boxShadow: "0 30px 70px rgba(40,32,24,0.45)",
-            border: "3px solid rgba(255,255,255,0.5)",
-          }}
-        />
-
-        {/* The brand word assembles per-word in 3D. */}
-        <AnimatedText
-          as="h1"
-          text={translate("category.design")}
-          stagger={0.08}
-          duration={0.8}
-          delay={0.15}
-          sx={{
-            m: 0,
-            color: "#fff",
-            fontWeight: 800,
-            lineHeight: 1.05,
-            fontSize: { xs: "3rem", sm: "4rem", md: "5rem" },
-            letterSpacing: "-0.02em",
-            textShadow: "0 6px 30px rgba(0,0,0,0.5)",
-          }}
-        />
-
-        <Typography
-          ref={badgeRef}
-          sx={{
-            opacity: 0,
-            px: 2.25,
-            py: 0.75,
-            borderRadius: 999,
-            fontWeight: 700,
-            fontSize: "0.85rem",
-            letterSpacing: "0.04em",
-            color: colors.heading,
-            background: "rgba(255,255,255,0.88)",
-            backdropFilter: "blur(6px)",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "baseline",
+            justifyContent: "center",
+            gap: { xs: 1.4, md: 2 },
           }}
         >
-          {translate("register.designBadge")}
-        </Typography>
+          {isRtl ? (
+            <>
+              <Word innerRef={mainRef} text={translate("category.design")} primary />
+              <Word innerRef={qualRef} text={translate("register.designQualifier")} />
+            </>
+          ) : (
+            <>
+              <Word innerRef={qualRef} text={translate("register.designQualifier")} />
+              <Word innerRef={mainRef} text={translate("category.design")} primary />
+            </>
+          )}
+        </Box>
       </Box>
+    </Box>
+  );
+}
+
+/** One word of the intro phrase. `primary` is the dominant "تصميم/Design"; the
+ *  qualifier is rendered a touch smaller so the term reads with hierarchy. */
+function Word({ innerRef, text, primary = false }) {
+  return (
+    <Box
+      ref={innerRef}
+      component="span"
+      sx={{
+        display: "inline-block",
+        opacity: 0,
+        whiteSpace: "pre",
+        transformStyle: "preserve-3d",
+        willChange: "transform, opacity",
+        color: "#fff",
+        fontWeight: 800,
+        lineHeight: 1.02,
+        letterSpacing: "-0.02em",
+        textShadow: "0 8px 40px rgba(0,0,0,0.55)",
+        fontSize: primary
+          ? { xs: "3.4rem", sm: "4.5rem", md: "6rem" }
+          : { xs: "2.4rem", sm: "3.1rem", md: "4.2rem" },
+      }}
+    >
+      {text}
     </Box>
   );
 }

@@ -10,6 +10,8 @@ import {
   coverMorph,
   reverseCoverMorph,
 } from "@/app/register/core/cards3d/coverMorph";
+import { liftTitle, landTitle } from "@/app/register/core/cards3d/titleMorph";
+import colors from "@/app/register/theme/colors";
 import { useDepthReveal } from "@/app/register/variants/v1/useDepthReveal";
 import {
   dur,
@@ -51,6 +53,7 @@ export default function OptionCardsStage({
 }) {
   const { lng } = useLanguage();
   const cardNodes = useRef({}); // value -> inner DOM node (from Card3D.cardRef)
+  const titleNodes = useRef({}); // value -> title DOM node (for the title morph)
   const headerRef = useRef(null); // title + subtitle (recede on pick)
   const firing = useRef(false);
   const back = direction < 0;
@@ -111,52 +114,63 @@ export default function OptionCardsStage({
     // Hold every card hidden; the shrinking photo IS the chosen card arriving.
     gsap.set(wrappers, { opacity: 0 });
 
-    reverseCoverMorph(chosenWrapper, {
-      image: chosenOpt.image,
-      onComplete: () => {
-        // The chosen card lands exactly where the photo shrank to.
-        gsap.set(chosenWrapper, {
-          z: 0,
-          y: 0,
-          rotateX: 0,
-          scale: 1,
-          clearProps: "transform",
-        });
+    // The chosen card lands exactly where the photo shrank to, then the OTHER
+    // cards return in depth — the tail of the reverse.
+    const revealCards = () => {
+      gsap.set(chosenWrapper, {
+        z: 0,
+        y: 0,
+        rotateX: 0,
+        scale: 1,
+        clearProps: "transform",
+      });
+      gsap.fromTo(
+        chosenWrapper,
+        { opacity: 0 },
+        { opacity: 1, duration: dur(0.3), ease: "power2.out" },
+      );
+      if (others.length) {
         gsap.fromTo(
-          chosenWrapper,
-          { opacity: 0 },
-          { opacity: 1, duration: dur(0.3), ease: "power2.out" },
+          others,
+          {
+            opacity: 0,
+            z: -220,
+            y: 40,
+            rotateX: -18,
+            scale: 0.94,
+            filter: "blur(6px)",
+          },
+          {
+            opacity: 1,
+            z: 0,
+            y: 0,
+            rotateX: 0,
+            scale: 1,
+            filter: "blur(0px)",
+            duration: dur(0.7),
+            delay: dur(0.2),
+            ease: "back.out(1.05)",
+            stagger: stagger(0.1),
+            transformOrigin: "50% 100%",
+            clearProps: "transform,filter",
+          },
         );
-        // Then the OTHER cards return in depth, after the chosen one settles.
-        if (others.length) {
-          gsap.fromTo(
-            others,
-            {
-              opacity: 0,
-              z: -220,
-              y: 40,
-              rotateX: -18,
-              scale: 0.94,
-              filter: "blur(6px)",
-            },
-            {
-              opacity: 1,
-              z: 0,
-              y: 0,
-              rotateX: 0,
-              scale: 1,
-              filter: "blur(0px)",
-              duration: dur(0.7),
-              delay: dur(0.2),
-              ease: "back.out(1.05)",
-              stagger: stagger(0.1),
-              transformOrigin: "50% 100%",
-              clearProps: "transform,filter",
-            },
-          );
-        }
-      },
-    });
+      }
+    };
+
+    // Then the room photo SHRINKS back into the chosen card slot.
+    const shrinkPhoto = () =>
+      reverseCoverMorph(chosenWrapper, {
+        image: chosenOpt.image,
+        onComplete: revealCards,
+      });
+
+    // The owner's reverse order: the accumulated WORD flies back down from the
+    // breadcrumb (held centre by `liftSlot`) onto its card FIRST, and only THEN
+    // does the photo shrink in behind it. (Deep-link / no clone → shrink directly.)
+    const titleEl = titleNodes.current[returning];
+    if (titleEl) landTitle(titleEl, { onLanded: shrinkPhoto });
+    else shrinkPhoto();
     return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [backReturn, returning, revealKey]);
@@ -187,21 +201,40 @@ export default function OptionCardsStage({
       });
     }
 
+    // The JOURNEY move: lift the chosen NAME off the card — it recolours to gold
+    // and rises toward the top while the photo grows; the persistent breadcrumb
+    // (`JourneyBreadcrumb`) then flies it into its accumulated slot. Hide the
+    // card's own title so only the floating clone reads. Same for BOTH the
+    // location and item decks (each contributes one breadcrumb token).
+    const titleEl = titleNodes.current[value];
+    const willMorphTitle = titleEl && !prefersReducedMotion();
+    if (willMorphTitle) {
+      liftTitle(titleEl, { color: colors.primary });
+      gsap.set(titleEl, { opacity: 0 });
+    }
+
     // Siblings drop back in depth, then the chosen card's PHOTO morphs edge-to-
     // edge to full-screen COVER (the framing re-crops AS it grows — no late
     // "snap to cover"), landing on the EXACT frame the backdrop rests at. The
     // flow advances behind that overlay (the backdrop adopts the same image
     // instantly) so the card "becomes" the next room with zero flash.
-    scatterSiblings(others);
-    coverMorph(chosen, {
-      image: opt.image,
-      onComplete: () => {
-        firing.current = false;
-        onSelect(value);
-      },
-    });
-    // Hide the chosen card so it never peeks from behind the growing overlay.
-    if (!prefersReducedMotion()) gsap.set(chosen, { autoAlpha: 0 });
+    const runGrow = () => {
+      scatterSiblings(others);
+      coverMorph(chosen, {
+        image: opt.image,
+        onComplete: () => {
+          firing.current = false;
+          onSelect(value);
+        },
+      });
+      // Hide the chosen card so it never peeks from behind the growing overlay.
+      if (!prefersReducedMotion()) gsap.set(chosen, { autoAlpha: 0 });
+    };
+
+    // Give the name a short beat to recolour + start rising BEFORE the photo grows
+    // (the owner's order: colour → up → grow → fly to form), then grow.
+    if (willMorphTitle) gsap.delayedCall(dur(0.4), runGrow);
+    else runGrow();
   };
 
   return (
@@ -300,6 +333,23 @@ export default function OptionCardsStage({
                   borderRadius: "inherit",
                 }}
               />
+              {/* A very light resting overlay (soft corner vignette) so the card
+                  reads with a touch more depth/premium BEFORE it grows. Inline
+                  `style`, NOT `sx`: an emotion class can inject a frame late, so a
+                  card that's about to morph to full-screen would pop; inline style
+                  is correct on the first frame. Kept faint — the room photo stays
+                  clearly visible through the centre. */}
+              <Box
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: "inherit",
+                  pointerEvents: "none",
+                  background:
+                    "radial-gradient(115% 115% at 50% 35%, rgba(20,15,10,0) 52%, rgba(20,15,10,0.30) 100%)",
+                }}
+              />
               {/* Bottom gradient for legibility. */}
               <Box
                 aria-hidden
@@ -324,6 +374,9 @@ export default function OptionCardsStage({
                 }}
               >
                 <Typography
+                  ref={(el) => {
+                    titleNodes.current[opt.value] = el;
+                  }}
                   sx={{
                     color: "#fff",
                     fontWeight: 800,

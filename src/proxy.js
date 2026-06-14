@@ -59,12 +59,16 @@ export function proxy(request) {
     // ("https://eng-booking.example.com/..."). Normalize to host + origin.
     try {
       const u = new URL(
-        BOOKING_DOMAIN.includes("://") ? BOOKING_DOMAIN : `https://${BOOKING_DOMAIN}`,
+        BOOKING_DOMAIN.includes("://")
+          ? BOOKING_DOMAIN
+          : `https://${BOOKING_DOMAIN}`,
       );
       bookingHost = u.hostname;
       bookingOrigin = u.origin;
     } catch {
-      bookingHost = BOOKING_DOMAIN.replace(/^https?:\/\//, "").split("/")[0].split(":")[0];
+      bookingHost = BOOKING_DOMAIN.replace(/^https?:\/\//, "")
+        .split("/")[0]
+        .split(":")[0];
       bookingOrigin = `https://${bookingHost}`;
     }
   }
@@ -98,8 +102,19 @@ export function proxy(request) {
       // (1) On the booking host: render the /register tree without the prefix.
       if (!isRegisterPath) {
         const rewriteUrl = url.clone();
+
         rewriteUrl.pathname =
           url.pathname === "/" ? "/register" : `/register${url.pathname}`;
+
+        // LiteSpeed terminates SSL externally, while the internal Next.js
+        // server listens over plain HTTP on localhost.
+        if (
+          rewriteUrl.hostname === "localhost" ||
+          rewriteUrl.hostname === "127.0.0.1" ||
+          rewriteUrl.hostname === "::1"
+        ) {
+          rewriteUrl.protocol = "http:";
+        }
         return NextResponse.rewrite(rewriteUrl);
       }
     } else if (isRegisterPath) {

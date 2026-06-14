@@ -88,7 +88,7 @@ export const designLeadTypes = [
   {
     title: "location.outsideUAE",
     value: "OUTSIDE_UAE",
-    image: "/outside-uae.jpg",
+    image: "/outside-uae.webp",
     alt: "Dream Studio - Dream Design & Luxurious Home Solutions.",
   },
 ];

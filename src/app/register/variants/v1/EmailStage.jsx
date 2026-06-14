@@ -18,13 +18,18 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  *
  * @param {{ onSubmit: (email: string) => (void|Promise<void>) }} props
  */
-export default function EmailStage({ onSubmit }) {
+export default function EmailStage({ onSubmit, direction = 1 }) {
   const { translate, lng } = useLanguage();
   const { setAlertError } = useAlertContext();
   const isRtl = lng === "ar";
+  const back = direction < 0;
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
-  const { ref } = useDepthReveal({ baseDelay: 0.15, step: 0.1 }, []);
+  // On BACK the email group arrives AFTER the image has eased back (staged reverse).
+  const { ref } = useDepthReveal(
+    { baseDelay: back ? 0.4 : 0.15, step: 0.1 },
+    [direction],
+  );
 
   const submit = async () => {
     if (busy) return;
@@ -53,26 +58,45 @@ export default function EmailStage({ onSubmit }) {
         px: 2,
       }}
     >
-      <Box
-        ref={ref}
-        component="form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          submit();
-        }}
-        sx={{
-          width: "100%",
-          maxWidth: 520,
-          transformStyle: "preserve-3d",
-          textAlign: "center",
-        }}
-      >
+      <Box sx={{ position: "relative", width: "100%", maxWidth: 560 }}>
+        {/* A slight frosted backing behind the email group so the white copy +
+            field stay readable over ANY backdrop photo — soft blur + a faint
+            warm-dark tint, NOT a hard white box. */}
+        <Box
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: "-20px -16px",
+            borderRadius: "26px",
+            background:
+              "linear-gradient(180deg, rgba(20,15,11,0.32) 0%, rgba(20,15,11,0.46) 100%)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow: "0 24px 70px rgba(0,0,0,0.35)",
+          }}
+        />
+        <Box
+          ref={ref}
+          component="form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit();
+          }}
+          sx={{
+            position: "relative",
+            zIndex: 1,
+            width: "100%",
+            transformStyle: "preserve-3d",
+            textAlign: "center",
+          }}
+        >
         <AnimatedText
           data-depth
           as="h2"
           text={translate("register.enterEmail")}
           stagger={0.06}
-          delay={0.25}
+          delay={back ? 0.35 : 0.25}
           sx={{
             m: 0,
             mb: 1,
@@ -97,17 +121,9 @@ export default function EmailStage({ onSubmit }) {
           {translate("register.emailDescription")}
         </Typography>
 
-        <Box
-          data-depth
-          sx={{
-            opacity: 0,
-            borderRadius: 3,
-            p: 0.5,
-            background: "rgba(255,255,255,0.92)",
-            backdropFilter: "blur(10px)",
-            boxShadow: "0 24px 60px rgba(40,32,24,0.4)",
-          }}
-        >
+        {/* A single GLASS input over the photo — no white box. Translucent dark
+            fill + light text + a gold focus ring, matching the form stage. */}
+        <Box data-depth sx={{ opacity: 0 }}>
           <TextField
             fullWidth
             type="email"
@@ -121,14 +137,40 @@ export default function EmailStage({ onSubmit }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <MdEmail size={20} />
+                  <MdEmail size={20} color="rgba(255,255,255,0.8)" />
                 </InputAdornment>
               ),
-              sx: {
-                borderRadius: 2.5,
-                bgcolor: "transparent",
-                "& fieldset": { border: "none" },
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                color: "#fff",
+                borderRadius: 3,
+                backgroundColor: "rgba(20,15,11,0.42)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
+                transition: "background-color .25s ease, box-shadow .25s ease",
+                "& input::placeholder": {
+                  color: "rgba(255,255,255,0.62)",
+                  opacity: 1,
+                },
               },
+              "& .MuiOutlinedInput-root:hover": {
+                backgroundColor: "rgba(20,15,11,0.52)",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused": {
+                backgroundColor: "rgba(20,15,11,0.6)",
+                boxShadow: "0 0 0 1px #d3ac71, 0 12px 34px rgba(0,0,0,0.45)",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(255,255,255,0.28)",
+              },
+              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(211,172,113,0.55)",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "#d3ac71",
+                },
             }}
           />
         </Box>
@@ -177,6 +219,7 @@ export default function EmailStage({ onSubmit }) {
         >
           {translate("register.emailPrivacy")}
         </Typography>
+        </Box>
       </Box>
     </Box>
   );

@@ -11,22 +11,29 @@
 // helpers — when better imagery is dropped into `/public`.
 
 export const assets = {
-  // Hero / DESIGN intro backdrop (the category photo).
-  hero: "/design.jfif",
-  design: "/design.jfif",
+  // Hero / DESIGN intro backdrop — a WIDE/landscape premium living space
+  // (starry ceiling, indoor garden) for full-bleed full-screen use + the
+  // "enter the design" push-in. Curated from the owner's project-5 render and
+  // optimized to WebP (1920w, q72) under /public/register/assets/v1wide.
+  hero: "/register/assets/v1wide/hero.webp",
+  design: "/register/assets/v1wide/hero.webp",
 
   // Location option imagery (INSIDE_UAE | OUTSIDE_UAE).
   locations: {
     INSIDE_UAE: "/inside-uae.webp",
-    OUTSIDE_UAE: "/outside-uae.jpg",
+    OUTSIDE_UAE: "/outside-uae.webp",
   },
 
-  // Design sub-type (item) imagery. Initial picks from the project-3 gallery —
-  // refine later with dedicated apartment / villa / room stills.
+  // Design sub-type (item) imagery — clean, distinct, WIDE/landscape on-brand
+  // interiors curated from the owner's real renders and compressed to WebP
+  // (<=1920w, q72) under /public/register/assets/v1wide:
+  //   APARTMENT — high-rise apartment living/dining with a city-skyline view,
+  //   CONSTRUCTION_VILLA — a grand marble + gold majlis (villa/palace scale),
+  //   PART_OF_HOME — a single elegant living room ("part of a home").
   items: {
-    APARTMENT: "/projects/project-3/1.jpg",
-    CONSTRUCTION_VILLA: "/projects/project-3/5.jpg",
-    PART_OF_HOME: "/projects/project-3/10.jpg",
+    APARTMENT: "/register/assets/v1wide/apartment.webp",
+    CONSTRUCTION_VILLA: "/register/assets/v1wide/villa.webp",
+    PART_OF_HOME: "/register/assets/v1wide/partOfHome.webp",
   },
 
   // GLB models for the WebGL variants (V2 gallery / V3 hero).

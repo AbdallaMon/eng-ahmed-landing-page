@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Box, Typography } from "@mui/material";
 import gsap from "gsap";
 import colors from "@/app/register/theme/colors";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
@@ -10,8 +9,12 @@ import { dur, prefersReducedMotion } from "@/app/register/variants/v1/v1Motion";
  * Full-screen "preparing your secure payment…" 3D transition. Mounted by the
  * orchestrator the moment `form.isPaying` flips true; the frozen `useLeadForm`
  * fires the Stripe redirect itself right after, so this overlay simply covers
- * the swap with a premium brand beat (a gold panel sweeps up in Z while three
- * orbiting glyphs spin). No boxed paper. Honours reduced motion (static panel).
+ * the swap with a premium brand beat (a gold panel sweeps up in Z while an
+ * orbiting ring spins). No boxed paper. Honours reduced motion (static panel).
+ *
+ * Every layer here uses inline `style` (NOT MUI `sx`): an emotion class can be
+ * injected a frame late, so a full-screen overlay built with `sx` can paint
+ * wrong for one frame and flash. Inline style is correct on the first frame.
  */
 export default function PayingOverlay() {
   const { translate } = useLanguage();
@@ -60,90 +63,81 @@ export default function PayingOverlay() {
   }, []);
 
   return (
-    <Box
-      ref={rootRef}
-      role="status"
-      aria-live="polite"
-      sx={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 5000,
-        opacity: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        perspective: "1100px",
-        background: `radial-gradient(120% 120% at 50% 30%, ${colors.primaryAlt} 0%, ${colors.bgPrimary} 55%, ${colors.bgTertiary} 100%)`,
-      }}
-    >
-      <Box
-        ref={panelRef}
-        sx={{
-          transformStyle: "preserve-3d",
-          willChange: "transform, opacity",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 3,
-          px: 4,
-          textAlign: "center",
-        }}
-      >
+    <div ref={rootRef} role="status" aria-live="polite" style={ROOT_STYLE}>
+      <div ref={panelRef} style={PANEL_STYLE}>
         {/* Orbiting glyph ring. */}
-        <Box
-          sx={{
-            position: "relative",
-            width: 88,
-            height: 88,
-            display: "grid",
-            placeItems: "center",
-          }}
-        >
-          <Box
-            ref={ringRef}
-            aria-hidden
-            sx={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "50%",
-              border: `3px solid ${colors.primaryAlt}`,
-              borderTopColor: colors.primary,
-              borderRightColor: colors.primaryDark,
-            }}
-          />
-          <Box
-            aria-hidden
-            sx={{
-              width: 46,
-              height: 46,
-              borderRadius: "16px",
-              background: colors.primaryGradient,
-              boxShadow: "0 12px 28px rgba(190,151,92,0.5)",
-            }}
-          />
-        </Box>
+        <div style={RING_WRAP_STYLE}>
+          <div ref={ringRef} aria-hidden style={RING_STYLE} />
+          <div aria-hidden style={RING_CORE_STYLE} />
+        </div>
 
-        <Typography
-          sx={{
-            color: colors.heading,
-            fontWeight: 800,
-            fontSize: { xs: "1.35rem", md: "1.7rem" },
-            maxWidth: 460,
-            lineHeight: 1.25,
-          }}
-        >
-          {translate("checkout.redirecting")}
-        </Typography>
-        <Typography
-          sx={{
-            color: colors.secondaryText,
-            fontSize: "0.95rem",
-            fontWeight: 600,
-          }}
-        >
-          {translate("register.loading")}
-        </Typography>
-      </Box>
-    </Box>
+        <p style={TITLE_STYLE}>{translate("checkout.redirecting")}</p>
+        <p style={SUB_STYLE}>{translate("register.loading")}</p>
+      </div>
+    </div>
   );
 }
+
+const ROOT_STYLE = {
+  position: "fixed",
+  inset: 0,
+  zIndex: 5000,
+  opacity: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  perspective: "1100px",
+  background: `radial-gradient(120% 120% at 50% 30%, ${colors.primaryAlt} 0%, ${colors.bgPrimary} 55%, ${colors.bgTertiary} 100%)`,
+};
+
+const PANEL_STYLE = {
+  transformStyle: "preserve-3d",
+  willChange: "transform, opacity",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "24px",
+  padding: "0 32px",
+  textAlign: "center",
+};
+
+const RING_WRAP_STYLE = {
+  position: "relative",
+  width: 88,
+  height: 88,
+  display: "grid",
+  placeItems: "center",
+};
+
+const RING_STYLE = {
+  position: "absolute",
+  inset: 0,
+  borderRadius: "50%",
+  border: `3px solid ${colors.primaryAlt}`,
+  borderTopColor: colors.primary,
+  borderRightColor: colors.primaryDark,
+};
+
+const RING_CORE_STYLE = {
+  width: 46,
+  height: 46,
+  borderRadius: "16px",
+  background: colors.primaryGradient,
+  boxShadow: "0 12px 28px rgba(190,151,92,0.5)",
+};
+
+const TITLE_STYLE = {
+  margin: 0,
+  color: colors.heading,
+  fontWeight: 800,
+  fontSize: "clamp(1.35rem, 1rem + 1.6vw, 1.7rem)",
+  maxWidth: 460,
+  lineHeight: 1.25,
+};
+
+const SUB_STYLE = {
+  margin: 0,
+  color: colors.secondaryText,
+  fontSize: "0.95rem",
+  fontWeight: 600,
+};
