@@ -9,7 +9,16 @@ export async function generateMetadata({ params }) {
   const lng = cookieStore.get("i18next")?.value || "ar";
   const { t } = await getTranslation(lng);
   const metaData = t("meta", { returnObjects: true });
-  return metaData.projectsPage;
+  return {
+    ...metaData.projectsPage,
+    alternates: {
+      canonical: `${baseUrl}/projects`,
+      languages: {
+        ar: `${baseUrl}/projects?lng=ar`,
+        en: `${baseUrl}/projects?lng=en`,
+      },
+    },
+  };
 }
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 export default async function page({ searchParams }) {
@@ -61,8 +70,8 @@ export default async function page({ searchParams }) {
             }}
           >
             {lng === "ar"
-              ? "استكشف مجموعة من المشاريع السكنية والتجارية..."
-              : "Explore a selection of residential and commercial interior design projects..."}
+              ? "استكشف مجموعة من مشاريع التصميم الداخلي السكنية والتجارية في الإمارات والخليج — فلل وشقق ومجالس ومكاتب وعيادات — بتصميم وتنفيذ المهندس أحمد المبيض ودريم ستوديو."
+              : "Explore a selection of residential and commercial interior design projects across the UAE and the Gulf — villas, apartments, majlis, offices and clinics — designed and executed by Eng. Ahmed Almobayd and Dream Studio."}
           </Typography>
         </Box>
         <Box>

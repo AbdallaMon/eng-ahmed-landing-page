@@ -6,6 +6,26 @@ export const arProfessionSuffix = "مهندس";
 export const enProfessionSuffix = "Eng";
 export const arFullName = `${arProfessionSuffix} أحمد المبيض`;
 export const enFullName = `${enProfessionSuffix} Ahmed Almobayd`;
+
+// ====== الاسم الإنجليزي القانوني (Canonical) المطابق للدومين والويكيداتا ======
+// يُستخدم في الميتا (titles/descriptions) وفي بيانات schema (alternateName) فقط —
+// ولا يغيّر الاسم الظاهر في واجهة الموقع (enFullName) الذي يبقى "Eng Ahmed Almobayd".
+export const enSeoName = "Ahmad Almobayed";
+export const enSeoFullName = "Eng. Ahmad Almobayed";
+
+// كل صيغ الاسم المعروفة (لغتين + ألقاب الويكيداتا) لمساعدة محركات البحث على ربط الكيان
+export const personAlternateNames = [
+  enSeoFullName, // Eng. Ahmad Almobayed (القانوني)
+  enSeoName, // Ahmad Almobayed
+  enFullName, // Eng Ahmed Almobayd (الظاهر في الموقع)
+  enName, // Ahmed almobayd
+  "Engineer Ahmed El-Mobayed",
+  "Engineer Ahmed",
+  arFullName, // مهندس أحمد المبيض
+  arName, // أحمد المبيض
+  "المهندس أحمد المبيض",
+  "المهندس احمد",
+];
 export const pageLanguages = [
   {
     label: "العربية",
@@ -65,27 +85,28 @@ export const whatsAppNumber = "+971585564778";
 
 // ====== بيانات الـ SEO الخاصة بالشخص (للـ JSON-LD فقط — لا تؤثر على شكل الموقع) ======
 
-// المسمى الوظيفي المستخدم في schema (مهندس معماري) — منفصل عن الـ UI
-export const arJobTitle = "مهندس معماري";
-export const enJobTitle = "Architect";
+// المسمى الوظيفي المستخدم في schema — مطابق لمهن الويكيداتا P106
+// (مهندس معماري + متخصص تصميم داخلي + مهندس) — منفصل عن الـ UI
+export const arJobTitle = ["مهندس معماري", "متخصص تصميم داخلي", "مهندس"];
+export const enJobTitle = ["Architect", "Interior Design Specialist", "Engineer"];
 
 // تاريخ الميلاد (4 يناير 1998) — صيغة ISO 8601
 export const personBirthDate = "1998-01-04";
 
-// محل الميلاد (حماة، سوريا)
-export const arBirthPlace = "حماة، سوريا";
-export const enBirthPlace = "Hama, Syria";
+// محل الميلاد (دبي، الإمارات) — مطابق للويكيداتا P19 (دبي)
+export const arBirthPlace = "دبي، الإمارات العربية المتحدة";
+export const enBirthPlace = "Dubai, United Arab Emirates";
 
-// الجنسية (سوري)
-export const arNationality = "سوري";
-export const enNationality = "Syrian";
+// الجنسية (إماراتي) — مطابق للويكيداتا P27 (دولة المواطنة: الإمارات)
+export const arNationality = "إماراتي";
+export const enNationality = "Emirati";
 
-// مكان الإقامة الحالي (دبي، الإمارات)
+// مكان الإقامة الحالي (أبوظبي، الإمارات) — مطابق للويكيداتا P551 (أبوظبي)
 export const livingCountryCode = "AE";
 export const arLivingCountry = "الإمارات العربية المتحدة";
 export const enLivingCountry = "United Arab Emirates";
-export const arLivingCity = "دبي";
-export const enLivingCity = "Dubai";
+export const arLivingCity = "أبوظبي";
+export const enLivingCity = "Abu Dhabi";
 
 // التعليم (alumniOf)
 export const personEducation = [
