@@ -117,12 +117,12 @@ export const arMetaData = {
 
   /* ---------- PROJECTS PAGE ---------- */
   projectsPage: {
-    title: `مشاريع تصميم داخلي وتنفيذ – المهندس أحمد المبيض`,
-    description: `استكشف أحدث مشاريع التصميم الداخلي والتنفيذ التي قدمها المهندس أحمد المبيض، مع حلول مبتكرة وجودة عالية.`,
-    keywords: `مشاريع تصميم داخلي, مشاريع ديكور, تنفيذ ديكور, مشاريع أحمد المبيض, تصميم داخلي سكني, تصميم مكاتب`,
+    title: `مشاريع تصميم داخلي وديكور في الإمارات – المهندس أحمد المبيض`,
+    description: `استعرض مشاريع التصميم الداخلي والديكور والتنفيذ في الإمارات والخليج: فلل، شقق، مجالس، مكاتب وعيادات، بتصميم وتنفيذ المهندس أحمد المبيض ودريم ستوديو.`,
+    keywords: `مشاريع تصميم داخلي, تصميم فلل, تصميم شقق, تصميم مجالس, ديكور داخلي, تصميم مكاتب, تصميم تجاري, تصميم سكني, مشاريع أحمد المبيض, تصميم داخلي الإمارات, دريم ستوديو`,
     openGraph: {
-      title: `مشاريع تصميم داخلي – المهندس أحمد المبيض`,
-      description: `نماذج من أعمال التصميم الداخلي والتنفيذ للمهندس أحمد المبيض.`,
+      title: `مشاريع تصميم داخلي وديكور في الإمارات – المهندس أحمد المبيض`,
+      description: `نماذج من أعمال التصميم الداخلي والديكور والتنفيذ: فلل وشقق ومجالس ومكاتب وعيادات بتوقيع المهندس أحمد المبيض ودريم ستوديو.`,
       url: `${baseUrl}/projects`,
       type: "website",
       images: [
@@ -130,14 +130,14 @@ export const arMetaData = {
           url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "مشاريع تصميم داخلي – المهندس أحمد المبيض",
+          alt: "مشاريع تصميم داخلي وديكور في الإمارات – المهندس أحمد المبيض",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "مشاريع تصميم داخلي",
-      description: `تعرف على أبرز مشاريع التصميم الداخلي والتنفيذ.`,
+      title: "مشاريع تصميم داخلي وديكور – المهندس أحمد المبيض",
+      description: `تعرف على مشاريع الفلل والشقق والمجالس والمكاتب بتصميم وتنفيذ المهندس أحمد المبيض.`,
       images: [`${baseUrl}/hero.png`],
     },
     icons: {
@@ -322,12 +322,12 @@ export const enMetaData = {
 
   /* ---------- PROJECTS PAGE ---------- */
   projectsPage: {
-    title: `Interior Design & Execution Projects – Eng. Ahmed Almobayd`,
-    description: `Explore interior design and execution projects delivered by Eng. Ahmed Almobayd with creativity and attention to detail.`,
-    keywords: `interior design projects, decor execution, Ahmed Almobayd, home design, office design, project examples`,
+    title: `Interior Design & Decor Projects in the UAE – Eng. Ahmad Almobayed`,
+    description: `Browse interior design, decor and execution projects across the UAE and the Gulf: villas, apartments, majlis, offices and clinics — by Eng. Ahmad Almobayed and Dream Studio.`,
+    keywords: `interior design projects, villa design, apartment design, majlis design, office design, commercial interior design, residential interior design, interior design UAE, Ahmad Almobayed, Dream Studio, decor`,
     openGraph: {
-      title: `Interior Design Projects – Eng. Ahmed`,
-      description: `A collection of interior design and decor execution projects.`,
+      title: `Interior Design & Decor Projects in the UAE – Eng. Ahmad Almobayed`,
+      description: `A collection of interior design, decor and execution projects: villas, apartments, majlis, offices and clinics by Eng. Ahmad Almobayed and Dream Studio.`,
       url: `${baseUrl}/projects`,
       type: "website",
       images: [
@@ -335,15 +335,15 @@ export const enMetaData = {
           url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "Interior Design Projects – Eng. Ahmed",
+          alt: "Interior Design & Decor Projects – Eng. Ahmad Almobayed",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Interior Design Projects",
+      title: "Interior Design & Decor Projects – Eng. Ahmad Almobayed",
       description:
-        "Explore creative interior design and decor execution projects.",
+        "Explore villa, apartment, majlis and office interior design projects by Eng. Ahmad Almobayed.",
       images: [`${baseUrl}/hero.png`],
     },
     icons: {
