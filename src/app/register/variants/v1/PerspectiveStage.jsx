@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import gsap from "gsap";
 import colors from "@/app/register/theme/colors";
+import { PHOTO_OVERSCAN, PHOTO_KENBURNS } from "@/app/register/core/cards3d/photoGeometry";
 import {
   dur,
   isCoarsePointer,
@@ -12,46 +13,62 @@ import {
 /**
  * The "living 3D background" for V1 — pure CSS-3D + GSAP, ZERO WebGL.
  *
- * A full-screen perspective scene with parallax DEPTH layers:
- *   1. a warm brand gradient (deepest, plain CSS),
- *   2. soft blurred floating gold/beige shapes at varied Z that drift forever,
- *   3. the active stage PHOTO pushed back in Z (Ken-Burns + cross-fade on change),
- *   4. a readability scrim,
- *   5. the stage CONTENT (children) at the front (z≈0).
+ * IMPORTANT — every full-screen layer here uses an inline `style` (NOT MUI `sx`).
+ * `sx` compiles to an emotion class that can inject a frame LATE, so the photo
+ * would paint at the wrong `background-size` and then SNAP to `cover` (a visible
+ * "flash / the image resizes after the animation"). Inline `style` is applied on
+ * the very first frame, so `cover` (and the rest) are correct from the start.
  *
- * GSAP owns the transform matrix of every animated layer (z/scale set once via
- * `gsap.set`, then only x/y/rotation are nudged) so depth is never clobbered.
- * On a fine pointer the photo + scrim parallax toward the cursor (by depth); the
- * shapes keep their own forever-drift (so the two never fight the same `x`). On
- * touch there is no pointer parallax — the drift alone keeps it alive. Reduced
- * motion freezes the drift and cross-fades instantly.
+ * THE PHOTO IS ALWAYS `cover` FROM FRAME 1. The layer is `position:absolute;
+ * inset:0; background-size:cover; background-position:center` and only GSAP's
+ * `scale`/`opacity`/`x`/`y` ever change — the `cover` framing itself never
+ * animates, so there is no "fit → cover" snap. Resting scale = `PHOTO_OVERSCAN`,
+ * shared with `coverMorph` so a card growing to fill lands on the IDENTICAL
+ * frame the backdrop rests at (no hand-off flash).
+ *
+ * Transition model (GSAP-owned, React only swaps the `image`/`exiting` props):
+ *  • FIRST load → a gentle push-in (scale up to rest) so you "enter the image".
+ *  • FORWARD (a card was picked) → `coverMorph` does the visible motion; here we
+ *    adopt the SAME image INSTANTLY at rest behind that overlay → zero flash.
+ *  • BACK → a staged reverse: the current photo SHRINKS away first (`exiting`),
+ *    then the previous photo eases back in (out-then-in cross-fade on two layers).
  *
  * @param {{
- *   image?: string|null,   // backdrop photo (pushed back in Z); null = none
- *   children?: React.ReactNode,
- *   dim?: number,          // scrim strength 0..1 (default 0.42)
+ *   image?: string|null, children?: React.ReactNode, dim?: number,
+ *   variant?: "photo"|"form", direction?: number,   // -1 = navigating BACK
+ *   exiting?: boolean,                               // true during the BACK exit beat
  * }} props
  */
-export default function PerspectiveStage({ image, children, dim = 0.42 }) {
+export default function PerspectiveStage({
+  image,
+  children,
+  dim = 0.46,
+  variant = "photo",
+  direction = 1,
+  exiting = false,
+}) {
   const sceneRef = useRef(null);
   const shapesRef = useRef([]);
   const photoARef = useRef(null); // current photo
-  const photoBRef = useRef(null); // outgoing photo (cross-fade)
-  const prevImage = useRef(null);
+  const photoBRef = useRef(null); // outgoing photo (back cross-fade only)
+  const prevImage = useRef(null); // last image the ENTER effect processed
+  const exitImage = useRef(image); // last image the EXIT effect saw
+  const firstExitRun = useRef(true);
+  const isForm = variant === "form";
 
   const setShape = (i) => (el) => {
     shapesRef.current[i] = el;
   };
 
-  // ── Establish GSAP-owned depth on every layer, then idle-drift the shapes ───
+  // ── Mount: GSAP establishes the resting depth + initial (hidden) opacity on the
+  // photo layers, then idle-drifts the shapes. opacity/transform stay GSAP-owned. ─
   useEffect(() => {
     const shapes = shapesRef.current.filter(Boolean);
     const a = photoARef.current;
     const b = photoBRef.current;
 
-    // Base depth/scale set through GSAP so subsequent x/y/rotation tweens keep z.
     [a, b].forEach((el) => {
-      if (el) gsap.set(el, { z: -300, scale: 1.06 });
+      if (el) gsap.set(el, { opacity: 0, scale: PHOTO_OVERSCAN, x: 0, y: 0 });
     });
     shapes.forEach((el, i) => gsap.set(el, { z: SHAPES[i].z }));
 
@@ -59,164 +76,194 @@ export default function PerspectiveStage({ image, children, dim = 0.42 }) {
 
     const tweens = shapes.map((el, i) => {
       const sign = i % 2 === 0 ? 1 : -1;
-      // Drift X/Y + a slow scale breath so each blob feels alive (no whole-field
-      // rotation — that reads as nausea).
       return gsap.to(el, {
-        x: sign * (26 + i * 6),
-        y: -sign * (20 + i * 5),
-        scale: 1.12,
-        duration: 7 + i * 1.4,
+        x: sign * (22 + i * 7),
+        y: -sign * (18 + i * 6),
+        scale: 1.1,
+        duration: 9 + i * 1.6,
         ease: "sine.inOut",
         yoyo: true,
         repeat: -1,
+        delay: i * 0.6,
       });
     });
     return () => tweens.forEach((t) => t.kill());
   }, []);
 
-  // ── Pointer parallax (fine pointer only): photo + scrim shift by their depth ─
+  // ── Immersion: fine pointer → parallax + lean toward cursor; TOUCH → drift ──
   useEffect(() => {
     const scene = sceneRef.current;
-    if (!scene || prefersReducedMotion() || isCoarsePointer()) return undefined;
+    if (!scene || prefersReducedMotion()) return undefined;
 
-    const layers = scene.querySelectorAll("[data-parallax]");
-    const setters = Array.from(layers).map((el) => ({
+    const coarse = isCoarsePointer();
+    const layers = Array.from(scene.querySelectorAll("[data-parallax]"));
+
+    if (coarse) {
+      const loops = layers.map((el, i) => {
+        const depth = parseFloat(el.getAttribute("data-parallax")) || 0.2;
+        const sign = i % 2 === 0 ? 1 : -1;
+        return gsap.to(el, {
+          x: sign * 34 * depth,
+          y: -sign * 26 * depth,
+          duration: 12 + i * 2,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: i * 0.8,
+        });
+      });
+      return () => loops.forEach((t) => t.kill());
+    }
+
+    const setters = layers.map((el) => ({
       depth: parseFloat(el.getAttribute("data-parallax")) || 0.2,
-      x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3.out" }),
-      y: gsap.quickTo(el, "y", { duration: 0.9, ease: "power3.out" }),
-      rx: gsap.quickTo(el, "rotationY", { duration: 1.1, ease: "power3.out" }),
-      ry: gsap.quickTo(el, "rotationX", { duration: 1.1, ease: "power3.out" }),
+      x: gsap.quickTo(el, "x", { duration: 1.1, ease: "power4.out" }),
+      y: gsap.quickTo(el, "y", { duration: 1.1, ease: "power4.out" }),
+      rx: gsap.quickTo(el, "rotationY", { duration: 1.3, ease: "power4.out" }),
+      ry: gsap.quickTo(el, "rotationX", { duration: 1.3, ease: "power4.out" }),
     }));
 
-    const onMove = (e) => {
-      const px = e.clientX / window.innerWidth - 0.5; // -0.5..0.5
-      const py = e.clientY / window.innerHeight - 0.5;
+    let frame = 0;
+    let targetX = 0;
+    let targetY = 0;
+    const apply = () => {
       setters.forEach((s) => {
-        s.x(-px * 60 * s.depth);
-        s.y(-py * 60 * s.depth);
-        s.rx(px * 5 * s.depth);
-        s.ry(-py * 5 * s.depth);
+        // Capped travel: stays inside the OVERSCAN headroom so an edge never peeks.
+        s.x(-targetX * 70 * s.depth);
+        s.y(-targetY * 70 * s.depth);
+        s.rx(targetX * 5 * s.depth);
+        s.ry(-targetY * 5 * s.depth);
       });
     };
+    const onMove = (e) => {
+      targetX = e.clientX / window.innerWidth - 0.5;
+      targetY = e.clientY / window.innerHeight - 0.5;
+      if (!frame) {
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          apply();
+        });
+      }
+    };
     window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
-  // ── Cross-fade the backdrop photo whenever `image` changes ──────────────────
+  // ── ENTER: bring the new backdrop photo in whenever `image` changes ──────────
   useEffect(() => {
     const a = photoARef.current;
     if (!a) return;
-    if (prevImage.current === image) return;
-    const reduce = prefersReducedMotion();
     const b = photoBRef.current;
+    const reduce = prefersReducedMotion();
+    const imageChanged = prevImage.current !== image;
+    if (!imageChanged) return;
 
-    // Old image stays on B for the dissolve; new image paints on A.
-    if (b && prevImage.current) {
-      b.style.backgroundImage = `url('${prevImage.current}')`;
-      gsap.set(b, { opacity: 1 });
-    }
+    const isFirst = prevImage.current === null;
+    const back = direction < 0;
+
+    gsap.killTweensOf(a, "scale,opacity,x,y");
     a.style.backgroundImage = image ? `url('${image}')` : "none";
 
     if (reduce) {
-      gsap.set(a, { opacity: image ? 1 : 0 });
+      gsap.set(a, { opacity: image ? 1 : 0, scale: PHOTO_OVERSCAN, x: 0, y: 0 });
       if (b) gsap.set(b, { opacity: 0 });
-    } else {
+      prevImage.current = image;
+      return;
+    }
+
+    if (isFirst) {
+      // First paint — a gentle push-IN so you feel you're entering the image.
       gsap.fromTo(
         a,
-        { opacity: 0, scale: 1.12, z: -360 },
-        {
-          opacity: image ? 1 : 0,
-          scale: 1.06,
-          z: -300,
-          duration: dur(0.9),
-          ease: "expo.out",
-        },
+        { opacity: 0, scale: PHOTO_OVERSCAN * 0.92 },
+        { opacity: image ? 1 : 0, scale: PHOTO_OVERSCAN, duration: dur(1.6), ease: "expo.out" },
       );
-      if (b) gsap.to(b, { opacity: 0, duration: dur(0.7), ease: "power2.out" });
-      if (image) {
-        // Slow Ken-Burns push while the stage lingers.
-        gsap.to(a, {
-          scale: 1.16,
-          duration: dur(16),
-          ease: "sine.inOut",
-          delay: dur(0.9),
-        });
-      }
+      kenBurns(a);
+    } else if (back) {
+      // BACK: the reverse-morph overlay (OptionCardsStage) owns the visible
+      // motion — the outgoing room shrinks back into its card. Here we just adopt
+      // the new backdrop INSTANTLY at rest BEHIND that overlay, so as the overlay
+      // shrinks it reveals a solid, correctly-framed room (nothing to cross-fade
+      // against, no jump). Identical handling to the forward branch.
+      if (b) gsap.set(b, { opacity: 0 });
+      gsap.set(a, { opacity: image ? 1 : 0, scale: PHOTO_OVERSCAN, x: 0, y: 0 });
+      kenBurns(a);
+    } else {
+      // FORWARD: a `coverMorph` overlay just played the visible card → screen
+      // motion and ends on the IDENTICAL frame. Adopt the image INSTANTLY at rest
+      // behind it — the overlay is then removed revealing this exact image. No flash.
+      if (b) gsap.set(b, { opacity: 0 });
+      gsap.set(a, { opacity: image ? 1 : 0, scale: PHOTO_OVERSCAN, x: 0, y: 0 });
+      kenBurns(a);
     }
     prevImage.current = image;
-  }, [image]);
+  }, [image, direction]);
+
+  // ── EXIT: the staged BACK reverse "the image shrinks away first" ─────────────
+  // When `exiting` flips true the current photo recedes + shrinks (the leading
+  // beat). The ENTER effect above then brings the previous photo back. For a
+  // same-image back (no `image` change) the ENTER effect is skipped, so here we
+  // also RESTORE the photo to rest once the exit clears.
+  useEffect(() => {
+    const a = photoARef.current;
+    if (!a) return undefined;
+    if (firstExitRun.current) {
+      firstExitRun.current = false;
+      exitImage.current = image;
+      return undefined;
+    }
+    const imageChanged = exitImage.current !== image;
+    exitImage.current = image;
+    if (prefersReducedMotion()) return undefined;
+
+    // exiting: NO-OP — the reverse-morph overlay (OptionCardsStage) owns the
+    // visible "room shrinks back into the card", so the backdrop must STAY at its
+    // resting frame (the overlay, same image + full-screen, lifts off it
+    // seamlessly before shrinking). Only the same-image back (e.g. location →
+    // email, where no reverse-morph runs and the ENTER effect is skipped) settles
+    // the photo back to rest here.
+    if (!exiting && !imageChanged) {
+      gsap.killTweensOf(a, "scale,opacity");
+      gsap.to(a, {
+        scale: PHOTO_OVERSCAN,
+        opacity: 1,
+        duration: dur(0.55),
+        ease: "power2.out",
+      });
+      kenBurns(a);
+    }
+    return undefined;
+  }, [exiting, image]);
 
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        inset: 0,
-        overflow: "hidden",
-        perspective: "1300px",
-        perspectiveOrigin: "50% 45%",
-        // Deepest base wash so edges never read flat even before a photo loads.
-        background: `radial-gradient(120% 120% at 50% 18%, ${colors.primaryAlt} 0%, ${colors.bgPrimary} 48%, ${colors.bgTertiary} 100%)`,
-      }}
-    >
-      <Box
-        ref={sceneRef}
-        sx={{
-          position: "absolute",
-          inset: 0,
-          transformStyle: "preserve-3d",
-          willChange: "transform",
-        }}
-      >
-        {/* Backdrop photo — two stacked layers for the dissolve (depth via GSAP). */}
-        <Box
-          ref={photoBRef}
-          data-parallax="0.45"
-          aria-hidden
-          sx={photoLayerSx}
-        />
-        <Box
-          ref={photoARef}
-          data-parallax="0.45"
-          aria-hidden
-          sx={photoLayerSx}
-        />
+    <Box style={CONTAINER_STYLE}>
+      <Box ref={sceneRef} style={SCENE_STYLE}>
+        {/* Backdrop photo — two stacked layers (A current, B outgoing for the back
+            cross-fade). `cover` lives in inline style so the full-bleed fill is
+            correct on the FIRST frame (no resize flash). opacity/transform = GSAP. */}
+        <Box ref={photoBRef} data-parallax="0.4" aria-hidden style={PHOTO_LAYER_STYLE} />
+        <Box ref={photoARef} data-parallax="0.4" aria-hidden style={PHOTO_LAYER_STYLE} />
 
         {/* Floating soft shapes at varied depths (the "alive" gold/beige bokeh). */}
         {SHAPES.map((s, i) => (
-          <Box
-            key={i}
-            ref={setShape(i)}
-            aria-hidden
-            sx={{
-              position: "absolute",
-              top: s.top,
-              left: s.left,
-              width: s.size,
-              height: s.size,
-              borderRadius: "50%",
-              filter: `blur(${s.blur}px)`,
-              opacity: s.opacity,
-              background: s.fill,
-              willChange: "transform",
-            }}
-          />
+          <Box key={i} ref={setShape(i)} aria-hidden style={shapeStyle(s)} />
         ))}
 
-        {/* Readability scrim — in front of photo+shapes, behind content. */}
+        {/* Base readability wash (always present). */}
+        <Box data-parallax="0.16" aria-hidden style={photoScrimStyle(dim)} />
+        {/* Deeper wash for the form stage — opacity is a plain CSS transition
+            (React-driven), so it fades in without GSAP and never flashes. */}
         <Box
-          data-parallax="0.2"
+          data-parallax="0.16"
           aria-hidden
-          sx={{
-            position: "absolute",
-            inset: "-4%",
-            background: `linear-gradient(180deg, rgba(40,32,24,${dim * 0.55}) 0%, rgba(40,32,24,${dim}) 55%, rgba(40,32,24,${dim * 0.8}) 100%)`,
-            pointerEvents: "none",
-            willChange: "transform",
-          }}
+          style={{ ...FORM_SCRIM_STYLE, opacity: isForm ? 1 : 0 }}
         />
       </Box>
 
-      {/* Stage content at the front (z≈0). Scrolls with the page; scene is fixed. */}
+      {/* Stage content at the front (z≈0). */}
       <Box
         sx={{
           position: "relative",
@@ -232,18 +279,88 @@ export default function PerspectiveStage({ image, children, dim = 0.42 }) {
   );
 }
 
-const photoLayerSx = {
+/** Slow Ken-Burns drift on the resting photo (kills its own previous drift). */
+function kenBurns(el) {
+  if (!el || prefersReducedMotion()) return;
+  gsap.to(el, {
+    scale: PHOTO_OVERSCAN + PHOTO_KENBURNS,
+    duration: dur(24),
+    ease: "sine.inOut",
+    delay: dur(1.0),
+    yoyo: true,
+    repeat: -1,
+  });
+}
+
+const CONTAINER_STYLE = {
+  position: "fixed",
+  inset: 0,
+  overflow: "hidden",
+  perspective: "1300px",
+  perspectiveOrigin: "50% 45%",
+  background: `radial-gradient(120% 120% at 50% 18%, ${colors.primaryAlt} 0%, ${colors.bgPrimary} 48%, ${colors.bgTertiary} 100%)`,
+};
+
+const SCENE_STYLE = {
   position: "absolute",
-  inset: "-8%",
+  inset: 0,
+  transformStyle: "preserve-3d",
+  willChange: "transform",
+};
+
+// inset:0 + cover + center → the photo covers the viewport from the FIRST painted
+// frame. Only GSAP scale/opacity/x/y animate; the `cover` framing is constant.
+const PHOTO_LAYER_STYLE = {
+  position: "absolute",
+  inset: 0,
   backgroundSize: "cover",
   backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
   transformStyle: "preserve-3d",
-  opacity: 0,
   willChange: "transform, opacity",
 };
 
-// Soft floating shapes. `z` is the depth (px) GSAP sets on mount. Gold/beige
-// only — strictly on-brand.
+/** Base readability wash for PHOTO stages — a warm dark gradient. */
+function photoScrimStyle(dim) {
+  return {
+    position: "absolute",
+    inset: "-4%",
+    background: `linear-gradient(180deg, rgba(40,32,24,${dim * 0.5}) 0%, rgba(40,32,24,${dim}) 55%, rgba(40,32,24,${dim * 0.82}) 100%)`,
+    pointerEvents: "none",
+    willChange: "transform",
+  };
+}
+
+/** Deeper wash faded IN on the form stage (same photo, just darker edges + a
+ *  centre-darkening radial so the glass inputs read). React/CSS-transition. */
+const FORM_SCRIM_STYLE = {
+  position: "absolute",
+  inset: "-4%",
+  background: [
+    "radial-gradient(120% 90% at 50% 42%, rgba(20,15,10,0.10) 0%, rgba(20,15,10,0.40) 100%)",
+    "linear-gradient(180deg, rgba(24,18,13,0.16) 0%, rgba(20,15,10,0.34) 100%)",
+  ].join(", "),
+  pointerEvents: "none",
+  willChange: "transform, opacity",
+  transition: "opacity 0.8s ease",
+};
+
+function shapeStyle(s) {
+  return {
+    position: "absolute",
+    top: s.top,
+    left: s.left,
+    width: s.size,
+    height: s.size,
+    borderRadius: "50%",
+    filter: `blur(${s.blur}px)`,
+    opacity: s.opacity,
+    background: s.fill,
+    willChange: "transform",
+  };
+}
+
+// Soft floating shapes. `z` is the depth (px) GSAP sets on mount. Gold/beige only.
 const SHAPES = [
   {
     top: "12%",

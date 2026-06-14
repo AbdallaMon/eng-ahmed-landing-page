@@ -32,36 +32,63 @@ export function useDepthReveal(opts = {}, deps = []) {
     rotateX = 24,
     step = 0.085,
     duration = 0.7,
+    enabled = true,
   } = opts;
   const ref = useRef(null);
 
   useEffect(() => {
     const root = ref.current;
     if (!root) return undefined;
+    // When disabled the caller owns the reveal (e.g. OptionCardsStage's BACK
+    // reverse-morph reveals the returning card first, then the rest) — leave the
+    // items at their hidden rest (opacity:0 from their own style) and do nothing.
+    if (!enabled) return undefined;
     const items = root.querySelectorAll(":scope [data-depth]");
     if (!items.length) return undefined;
 
     if (prefersReducedMotion()) {
-      gsap.set(items, { opacity: 1, z: 0, y: 0, rotateX: 0 });
+      gsap.set(items, {
+        opacity: 1,
+        z: 0,
+        y: 0,
+        rotateX: 0,
+        scale: 1,
+        filter: "blur(0px)",
+      });
       return undefined;
     }
 
+    // A premium depth settle: items lift from back-in-Z while slightly under-
+    // scaled and softly blurred, then glide forward and snap into focus. The
+    // soft blur→sharp + a hair of overshoot ("back.out") reads as a real object
+    // arriving rather than a flat fade. transformOrigin at the bottom keeps the
+    // rotateX hinging like a card laid down. Per-item stagger keeps it staged,
+    // not a single block move.
     const tween = gsap.fromTo(
       items,
-      { opacity: 0, z: -z, y, rotateX: -rotateX },
+      {
+        opacity: 0,
+        z: -z,
+        y,
+        rotateX: -rotateX,
+        scale: 0.94,
+        filter: "blur(6px)",
+      },
       {
         opacity: 1,
         z: 0,
         y: 0,
         rotateX: 0,
+        scale: 1,
+        filter: "blur(0px)",
         duration: dur(duration),
         delay: dur(baseDelay),
-        ease: "expo.out",
+        ease: "back.out(1.05)",
         stagger: stagger(step),
         transformOrigin: "50% 100%",
-        // Clear inline transforms once settled so hover/idle effects on the
-        // children aren't fighting a leftover translate.
-        clearProps: "transform",
+        // Clear inline transforms + filter once settled so hover/idle effects on
+        // the children aren't fighting a leftover transform/blur.
+        clearProps: "transform,filter",
       },
     );
     return () => tween.kill();

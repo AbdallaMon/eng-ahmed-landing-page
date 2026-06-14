@@ -153,4 +153,117 @@ export function coverMorph(fromEl, { image, duration = 0.85, radius = 24, onComp
   return tl;
 }
 
+/**
+ * The INVERSE of `coverMorph`, for the BACK navigation: the full-screen room
+ * photo SHRINKS back into the card slot it came from, then `onComplete` reveals
+ * the real card there. A fixed overlay starts at the backdrop's exact resting
+ * frame (centred `OVERSCAN × viewport`, `cover`) — seamless with what is already
+ * on screen — and animates its top/left/width/height DOWN to `toEl`'s rect, so
+ * `cover` re-crops to the card's framing AS it shrinks (no late snap). The wash
+ * fades OUT toward the (brighter) card. Honours reduced motion + SSR.
+ *
+ * @param {HTMLElement} toEl   the destination card slot (its rect is the end box)
+ * @param {{
+ *   image: string,            // the room photo (identical to the card's image)
+ *   duration?: number,        // seconds at normal speed, default 0.85
+ *   radius?: number,          // ending corner radius (px), default 24
+ *   onComplete?: () => void,  // fired when the overlay has shrunk to the card
+ * }} opts
+ * @returns {gsap.core.Timeline|null}
+ */
+export function reverseCoverMorph(
+  toEl,
+  { image, duration = 0.85, radius = 24, onComplete } = {},
+) {
+  if (typeof document === "undefined" || !toEl || !image) {
+    onComplete?.();
+    return null;
+  }
+  if (prefersReducedMotion()) {
+    onComplete?.();
+    return null;
+  }
+  const rect = toEl.getBoundingClientRect();
+  if (!rect.width || !rect.height) {
+    onComplete?.();
+    return null;
+  }
+
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const ow = vw * PHOTO_OVERSCAN;
+  const oh = vh * PHOTO_OVERSCAN;
+  const oLeft = (vw - ow) / 2;
+  const oTop = (vh - oh) / 2;
+
+  const overlay = document.createElement("div");
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: `${oTop}px`,
+    left: `${oLeft}px`,
+    width: `${ow}px`,
+    height: `${oh}px`,
+    backgroundImage: `url('${image}')`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    borderRadius: "0px",
+    zIndex: "45",
+    pointerEvents: "none",
+    willChange: "top, left, width, height, border-radius",
+    boxShadow: "0 40px 120px rgba(0,0,0,0.45)",
+  });
+  // Starts at the backdrop's resting darkness, fades out toward the card.
+  const scrim = document.createElement("div");
+  Object.assign(scrim.style, {
+    position: "absolute",
+    inset: "0",
+    borderRadius: "inherit",
+    pointerEvents: "none",
+    opacity: "1",
+    background:
+      "linear-gradient(180deg, rgba(40,32,24,0.23) 0%, rgba(40,32,24,0.46) 55%, rgba(40,32,24,0.38) 100%)",
+  });
+  overlay.appendChild(scrim);
+  document.body.appendChild(overlay);
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    onComplete?.();
+    // Give the revealed card one beat to paint, then drop the overlay.
+    gsap.delayedCall(0.06, () => overlay.remove());
+  };
+
+  const tl = gsap.timeline({ onComplete: finish });
+  tl.to(
+    overlay,
+    {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      borderRadius: radius,
+      duration,
+      ease: "power3.inOut",
+    },
+    0,
+  );
+  tl.to(
+    scrim,
+    { opacity: 0, duration: duration * 0.7, ease: "power2.in" },
+    duration * 0.2,
+  );
+
+  gsap.delayedCall(duration + 1.2, () => {
+    if (overlay.isConnected) {
+      finish();
+      overlay.remove();
+    }
+  });
+
+  return tl;
+}
+
 export default coverMorph;

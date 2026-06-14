@@ -54,6 +54,8 @@ export default function V1Flow({ leadId } = {}) {
     hydrated,
     isAnimating,
     backExiting,
+    returningItem,
+    returningLocation,
     leadCategory,
     leadEmail,
     location,
@@ -161,6 +163,7 @@ export default function V1Flow({ leadId } = {}) {
           revealKey="location"
           columns={{ xs: 1, md: 2 }}
           direction={direction}
+          returning={returningLocation}
         />
       );
     }
@@ -175,6 +178,7 @@ export default function V1Flow({ leadId } = {}) {
           revealKey="item"
           columns={{ xs: 1, md: 3 }}
           direction={direction}
+          returning={returningItem}
         />
       );
     }

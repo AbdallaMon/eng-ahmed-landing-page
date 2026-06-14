@@ -34,6 +34,14 @@ export function progressIndexFor(step) {
   return idx < 0 ? 0 : idx;
 }
 
+/** The step a BACK from `step` lands on (drives the back exit-then-swap beat). */
+function prevStepOf(step) {
+  if (step === "form") return "item";
+  if (step === "item") return "location";
+  if (step === "location") return "email";
+  return "email";
+}
+
 /**
  * Read the deep-link intent from the current URL.
  *
@@ -128,6 +136,10 @@ export function useLeadFlow() {
   const [hydrated, setHydrated] = useState(false);
   // True while a step transition is animating — gates every user action.
   const [isAnimating, setIsAnimating] = useState(false);
+  // True during the BACK "exit" beat (current image shrinks away) BEFORE the step
+  // actually swaps — so the reverse reads as image-shrinks-first, then the
+  // previous stage builds back in (text → cards).
+  const [backExiting, setBackExiting] = useState(false);
   // The item currently being chosen — drives the "other cards fly away" beat
   // BEFORE the flow actually moves to the form.
   const [selectingItem, setSelectingItem] = useState("");
@@ -135,6 +147,10 @@ export function useLeadFlow() {
   // in ItemSelect: the word morphs back, the chosen box shrinks back into its
   // card, THEN the other cards return.
   const [returningItem, setReturningItem] = useState("");
+  // The location we're stepping BACK from (item → location). Same idea as
+  // returningItem, for V1's reverse-morph: the full-screen location room shrinks
+  // back into ITS card, then the other location card returns.
+  const [returningLocation, setReturningLocation] = useState("");
 
   const leadCategory = "DESIGN";
 
@@ -152,6 +168,10 @@ export function useLeadFlow() {
   const itemAdvanceRef = useRef(null);
   // Timer that drops the reverse flag once the back animation has settled.
   const returningTimerRef = useRef(null);
+  // Timer that drops the returning-location flag once its back morph has settled.
+  const returningLocationTimerRef = useRef(null);
+  // Timer that performs the actual step swap AFTER the back exit beat plays.
+  const backTimerRef = useRef(null);
 
   function setAnimating(value) {
     isAnimatingRef.current = value;
@@ -217,6 +237,9 @@ export function useLeadFlow() {
       if (animTimerRef.current) clearTimeout(animTimerRef.current);
       if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
       if (returningTimerRef.current) clearTimeout(returningTimerRef.current);
+      if (returningLocationTimerRef.current)
+        clearTimeout(returningLocationTimerRef.current);
+      if (backTimerRef.current) clearTimeout(backTimerRef.current);
     };
   }, []);
 
@@ -296,26 +319,24 @@ export function useLeadFlow() {
     );
   }
 
-  /** Step back one stage. From the first interactive stages it walks back toward
-   *  email, and only leaves the flow from the email step. */
-  function handleBack() {
-    if (isAnimatingRef.current) return;
-    deepLinkRef.current = null;
-
-    if (step === "form") {
-      // Reverse choreography: remember the chosen item (returningItem) so
-      // ItemSelect can play its entrance BACKWARDS — the word morphs back to its
-      // card, the chosen box shrinks back into that card, THEN the other cards
-      // return. leadItem is cleared so the card is no longer marked "selected".
+  /**
+   * Perform the actual state swap for a BACK from `fromStep`. Called AFTER the
+   * exit beat has played (the current image has shrunk away) so the new backdrop
+   * + previous-stage content build in cleanly. Keeps direction = -1 so the view
+   * layer plays its reverse staging (image settles → title → cards/fields).
+   */
+  function performBackSwap(fromStep) {
+    setDirection(-1);
+    if (fromStep === "form") {
+      // Remember the chosen item (returningItem) for the reverse entrance, then
+      // clear it so the card is no longer marked "selected".
       setReturningItem(leadItem);
       setLeadItem("");
       setSelectingItem("");
       if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
       patchUrlParam("item", null);
       patchUrlParam("step", "item");
-      goBack("item");
-      // Drop the reverse flag once it has settled so the next forward selection
-      // animates normally.
+      setStep("item");
       if (returningTimerRef.current) clearTimeout(returningTimerRef.current);
       returningTimerRef.current = setTimeout(
         () => setReturningItem(""),
@@ -323,27 +344,68 @@ export function useLeadFlow() {
       );
       return;
     }
-
-    if (step === "item") {
+    if (fromStep === "item") {
+      // Remember which location we're returning FROM so the location deck can
+      // shrink the full-screen room back into that exact card (reverse-morph),
+      // then clear it after the morph has settled.
+      setReturningLocation(location);
       setLocation("");
       patchUrlParam("location", null);
       patchUrlParam("step", "location");
-      goBack("location");
+      setStep("location");
+      if (returningLocationTimerRef.current)
+        clearTimeout(returningLocationTimerRef.current);
+      returningLocationTimerRef.current = setTimeout(
+        () => setReturningLocation(""),
+        prefersReducedMotion() ? 0 : (1300 * MOTION_SCALE) / getUrlSpeed(),
+      );
       return;
     }
-
-    if (step === "location") {
-      // Nothing chosen here yet — step back to the email capture, don't leave.
+    if (fromStep === "location") {
       patchUrlParam("location", null);
       patchUrlParam("step", null);
-      goBack("email");
-      return;
+      setStep("email");
     }
+  }
+
+  /** Step back one stage as a STAGED reverse: the current image shrinks away
+   *  first (the exit beat), THEN the previous stage builds back in (image →
+   *  title → cards). From email it leaves the flow. */
+  function handleBack() {
+    if (isAnimatingRef.current) return;
+    deepLinkRef.current = null;
 
     if (step === "email" || step === "designIntro") {
       // At the email capture, going back leaves the flow.
       window.location.href = "/";
+      return;
     }
+
+    const fromStep = step;
+    const reduce = prefersReducedMotion();
+    const speed = getUrlSpeed();
+    // Exit beat: long enough to read "the image shrinks away" before the swap.
+    const exitMs = reduce ? 0 : (480 * MOTION_SCALE) / speed;
+    const enterMs = reduce
+      ? 0
+      : ((LOCK_MS[prevStepOf(fromStep)] ?? 900) * MOTION_SCALE) / speed;
+
+    // NOTE: direction flips to -1 only at the SWAP (in performBackSwap), not here
+    // — so the still-mounted OUTGOING stage doesn't re-trigger its reveal mid-exit.
+    setBackExiting(true);
+    setAnimating(true);
+
+    if (backTimerRef.current) clearTimeout(backTimerRef.current);
+    if (animTimerRef.current) clearTimeout(animTimerRef.current);
+
+    backTimerRef.current = setTimeout(() => {
+      setBackExiting(false);
+      performBackSwap(fromStep);
+    }, exitMs);
+    animTimerRef.current = setTimeout(
+      () => setAnimating(false),
+      exitMs + enterMs,
+    );
   }
 
   function handleReset() {
@@ -410,8 +472,10 @@ export function useLeadFlow() {
     hydrated,
     reduceMotion,
     isAnimating,
+    backExiting,
     selectingItem,
     returningItem,
+    returningLocation,
     leadCategory,
     leadEmail,
     location,
