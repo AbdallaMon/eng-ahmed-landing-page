@@ -145,24 +145,24 @@ export default function EmailStage({ onSubmit, direction = 1 }) {
               "& .MuiOutlinedInput-root": {
                 color: "#fff",
                 borderRadius: 3,
-                backgroundColor: "rgba(20,15,11,0.42)",
-                backdropFilter: "blur(10px)",
-                WebkitBackdropFilter: "blur(10px)",
+                backgroundColor: "rgba(16,12,8,0.62)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
                 transition: "background-color .25s ease, box-shadow .25s ease",
                 "& input::placeholder": {
-                  color: "rgba(255,255,255,0.62)",
+                  color: "rgba(255,255,255,0.72)",
                   opacity: 1,
                 },
               },
               "& .MuiOutlinedInput-root:hover": {
-                backgroundColor: "rgba(20,15,11,0.52)",
+                backgroundColor: "rgba(16,12,8,0.7)",
               },
               "& .MuiOutlinedInput-root.Mui-focused": {
-                backgroundColor: "rgba(20,15,11,0.6)",
+                backgroundColor: "rgba(16,12,8,0.78)",
                 boxShadow: "0 0 0 1px #d3ac71, 0 12px 34px rgba(0,0,0,0.45)",
               },
               "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(255,255,255,0.28)",
+                borderColor: "rgba(255,255,255,0.42)",
               },
               "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
                 borderColor: "rgba(211,172,113,0.55)",

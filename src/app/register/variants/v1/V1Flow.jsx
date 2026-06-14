@@ -94,6 +94,10 @@ export default function V1Flow({ leadId } = {}) {
     if (!el) return;
     gsap.killTweensOf(el);
     gsap.set(el, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
+    // Each new stage starts at the top — a previous stage may have been scrolled
+    // (e.g. the item cards on a short phone), and the scroll container persists
+    // across step swaps, so reset it so the new stage isn't mid-scrolled.
+    el.scrollTop = 0;
   }, [step]);
 
   // BACK: the moment the exit beat starts, lift the accumulated word for the step
@@ -205,6 +209,7 @@ export default function V1Flow({ leadId } = {}) {
           disabled={isAnimating}
           revealKey="location"
           columns={{ xs: 1, md: 2 }}
+          cardHeight={{ xs: 185, sm: 240, md: 300 }}
           direction={direction}
           returning={returningLocation}
         />
@@ -214,12 +219,12 @@ export default function V1Flow({ leadId } = {}) {
       return (
         <OptionCardsStage
           title={translate("register.chooseItemTitle")}
-          subtitle={translate("register.chooseItemSubtitle")}
           options={itemOptions}
           onSelect={handleLeadItemClick}
           disabled={isAnimating}
           revealKey="item"
           columns={{ xs: 1, md: 3 }}
+          cardHeight={{ xs: 160, sm: 220, md: 300 }}
           direction={direction}
           returning={returningItem}
         />
@@ -247,18 +252,21 @@ export default function V1Flow({ leadId } = {}) {
         <Box
           sx={{
             flex: 1,
+            minHeight: 0, // bound the inner scroll area instead of growing
             display: "flex",
             flexDirection: "column",
             pt: { xs: 8.5, md: 9 },
-            pb: { xs: 4, md: 6 },
+            pb: { xs: 1.5, md: 2 },
             px: { xs: 1.5, md: 2 },
           }}
         >
-          {/* The accumulating JOURNEY title — persistent across every step, the
-              single place the chosen words live (they fly up here off the cards
-              and stay). */}
+          {/* PINNED top chrome — the accumulating JOURNEY breadcrumb + the progress
+              dots stay fixed at the top (they never scroll); only the active stage
+              below scrolls. `flexShrink: 0` keeps them at full height. The breadcrumb
+              is the single place the chosen words live (they fly up here off the
+              cards and stay). */}
           {journeyTokens.length > 0 && (
-            <Box sx={{ mb: { xs: 1.5, md: 2 } }}>
+            <Box sx={{ mb: { xs: 1.5, md: 2 }, flexShrink: 0 }}>
               <JourneyBreadcrumb tokens={journeyTokens} isRtl={isRtl} />
             </Box>
           )}
@@ -271,16 +279,32 @@ export default function V1Flow({ leadId } = {}) {
             labels={PROGRESS_STEPS.map((s) => stepLabel(translate, s))}
           />
 
-          {/* Stage content. Hidden until hydration resolves the deep-link target
-              so there is no flash of the wrong step; pointer events are cut while
-              a transition animates so no click fires over a running animation.
-              `stageContentRef` is GSAP-receded during the BACK exit beat. */}
+          {/* Stage content — the ONLY scroll owner. Tall stages (the 3 item cards
+              on mobile, a long form) scroll HERE while the breadcrumb + dots above
+              stay pinned. `minHeight: 0` lets this flex child shrink so its own
+              `overflowY` actually scrolls instead of pushing the column taller.
+              Hidden until hydration resolves the deep-link target so there is no
+              flash of the wrong step; pointer events are cut while a transition
+              animates so no click fires over a running animation. `stageContentRef`
+              is GSAP-receded during the BACK exit beat + reset to scrollTop 0 on
+              each step swap. */}
           <Box
             ref={stageContentRef}
             sx={{
               flex: 1,
+              minHeight: 0,
               display: "flex",
               flexDirection: "column",
+              overflowY: "auto",
+              overflowX: "hidden",
+              WebkitOverflowScrolling: "touch",
+              overscrollBehavior: "contain",
+              // Breathing room at the bottom of the scroll so the last card / the
+              // final field + CTA never sit flush against the viewport edge.
+              pb: { xs: 6, md: 8 },
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // IE/legacy Edge
+              "&::-webkit-scrollbar": { display: "none" }, // WebKit/Blink
               visibility: hydrated ? "visible" : "hidden",
               pointerEvents: isAnimating ? "none" : "auto",
               willChange: "transform, opacity",
@@ -322,6 +346,7 @@ function ProgressDots({ activeIndex, onDark, labels }) {
         gap: 1,
         justifyContent: "center",
         alignItems: "center",
+        flexShrink: 0,
         mb: { xs: 2, md: 2.5 },
       }}
     >

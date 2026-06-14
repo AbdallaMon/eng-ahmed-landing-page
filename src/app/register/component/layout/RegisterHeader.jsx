@@ -1,8 +1,8 @@
 "use client";
 import {
   Box,
-  Button,
   Container,
+  IconButton,
   MenuItem,
   Select,
   Toolbar,
@@ -10,6 +10,7 @@ import {
 import { MdRestartAlt } from "react-icons/md";
 import { IoArrowBack } from "react-icons/io5";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
+import colors from "@/app/register/theme/colors";
 
 /**
  * Fixed top header for the lead-selection pages: a leading Back control plus a
@@ -67,7 +68,6 @@ export function RegisterHeader({
           bgcolor: "background.paper",
           borderRadius: "16px",
           boxShadow: "0 2px 12px rgba(0, 0, 0, 0.12)",
-          margin: "0 12px",
           backgroundImage: "url('/logo-bg-full.jpg')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -78,52 +78,53 @@ export function RegisterHeader({
         }}
       >
         {/* Leading: Back — anchored in the header chrome, shown once past
-            email capture. */}
+            email capture. Icon-only (a square glass pill) to keep the header
+            clean; the label lives in aria-label/title for a11y + hover. */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {onBack && canGoBack && (
-            <Button
+            <IconButton
               onClick={() => onBack()}
               disabled={disabled}
-              variant="text"
-              size="small"
-              startIcon={
-                <Box
-                  component="span"
-                  sx={{
-                    display: "inline-flex",
-                    transform: isRtl ? "scaleX(-1)" : "none",
-                  }}
-                >
-                  <IoArrowBack size={18} />
-                </Box>
-              }
+              aria-label={translate("register.back")}
+              title={translate("register.back")}
               sx={{
                 ...pillSx,
-                px: 1.5,
-                ...(isRtl && { "& .MuiButton-startIcon": { ml: 0.5, mr: -0.5 } }),
+                color: colors.heading, // dark glyph (icon-only → must meet 3:1 on the pale pill)
+                width: PILL_HEIGHT,
+                minWidth: PILL_HEIGHT,
+                p: 0,
               }}
             >
-              {translate("register.back")}
-            </Button>
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-flex",
+                  transform: isRtl ? "scaleX(-1)" : "none",
+                }}
+              >
+                <IoArrowBack size={18} />
+              </Box>
+            </IconButton>
           )}
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {onReset && canReset && (
-            <Button
+            <IconButton
               onClick={() => onReset()}
               disabled={disabled}
-              variant="text"
-              size="small"
-              startIcon={<MdRestartAlt size={18} />}
+              aria-label={translate("button.startOver")}
+              title={translate("button.startOver")}
               sx={{
                 ...pillSx,
-                px: 1.5,
-                ...(isRtl && { "& .MuiButton-startIcon": { ml: 0.5, mr: -0.5 } }),
+                color: colors.heading, // dark glyph (icon-only → must meet 3:1 on the pale pill)
+                width: PILL_HEIGHT,
+                minWidth: PILL_HEIGHT,
+                p: 0,
               }}
             >
-              {translate("button.startOver")}
-            </Button>
+              <MdRestartAlt size={18} />
+            </IconButton>
           )}
 
           <Select

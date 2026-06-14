@@ -104,11 +104,12 @@ function resolveDeepLinkStep({ item, location, step }) {
  *  the image) before it expands and the email step enters. */
 function introHoldMs() {
   if (prefersReducedMotion()) return 0;
-  // Timed to the (faster) DesignIntroStage choreography: "تصميم" reads → "داخلي"
-  // joins → it leaves → "تصميم" LIFTS off toward the top to become the journey
-  // breadcrumb's first token. We advance to email right as that lift starts so
-  // the breadcrumb's category token catches the flying word.
-  return (1650 * MOTION_SCALE) / getUrlSpeed();
+  // Timed to the (faster) DesignIntroStage choreography: "تصميم داخلي" reads →
+  // "داخلي" leaves → "تصميم" LIFTS off toward the top to become the journey
+  // breadcrumb's first token. We advance to email right as that lift starts (the
+  // intro's `liftTitle` fires at ~1.3s) so the breadcrumb's category token catches
+  // the flying word. Keep this just AFTER that lift if the intro beats are retuned.
+  return (1400 * MOTION_SCALE) / getUrlSpeed();
 }
 
 /**
@@ -126,8 +127,10 @@ function introHoldMs() {
  */
 // Roughly how long each step's entrance animation runs (ms, at normal speed).
 // While a transition is mid-flight the whole flow is locked so no second action
-// (a click or a back) can fire over a running animation.
-const LOCK_MS = { email: 800, location: 900, item: 1100, form: 1300 };
+// (a click or a back) can fire over a running animation. Trimmed alongside the
+// faster entrance reveals so the flow unlocks promptly (still ≥ the visible
+// entrance for each step).
+const LOCK_MS = { email: 700, location: 850, item: 1000, form: 1150 };
 
 export function useLeadFlow() {
   const [step, setStep] = useState("designIntro");
@@ -306,10 +309,11 @@ export function useLeadFlow() {
     // background grows.
     const speed = getUrlSpeed();
     // Hold long enough for: the colour change to be seen, then the other cards to
-    // slide away — before the flow moves to the form.
+    // slide away — before the flow moves to the form. (Trimmed for the snappier
+    // pacing; the chosen card's grow-to-fill plays in OptionCardsStage before this.)
     const cardsOutMs = prefersReducedMotion()
       ? 0
-      : (700 * MOTION_SCALE) / speed;
+      : (450 * MOTION_SCALE) / speed;
     setAnimating(true);
     if (animTimerRef.current) clearTimeout(animTimerRef.current);
     if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
@@ -386,8 +390,9 @@ export function useLeadFlow() {
     const fromStep = step;
     const reduce = prefersReducedMotion();
     const speed = getUrlSpeed();
-    // Exit beat: long enough to read "the image shrinks away" before the swap.
-    const exitMs = reduce ? 0 : (480 * MOTION_SCALE) / speed;
+    // Exit beat: long enough to read "the image shrinks away" before the swap
+    // (trimmed for the quicker back navigation).
+    const exitMs = reduce ? 0 : (360 * MOTION_SCALE) / speed;
     const enterMs = reduce
       ? 0
       : ((LOCK_MS[prevStepOf(fromStep)] ?? 900) * MOTION_SCALE) / speed;

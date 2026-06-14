@@ -31,8 +31,13 @@ export function getUrlSpeed() {
  * stretched by this, so the animation reads a touch slower and smoother. Tune the
  * overall pace from this ONE place. Higher → slower. (The orchestration timers in
  * `useLeadFlow` apply the same factor, so the choreography stays in sync.)
+ *
+ * 1.0 = run the choreography at its base tempo (no global slow-mo). The owner
+ * asked for a faster, lighter feel, so the previous 1.2 (a 20% drag on every
+ * duration AND delay) is removed; per-beat hold timers were also trimmed at their
+ * own call sites for the "noticeably quicker" pacing.
  */
-export const MOTION_SCALE = 1.2;
+export const MOTION_SCALE = 1.0;
 
 /**
  * Effective tempo used by every timing helper: the URL speed control divided by

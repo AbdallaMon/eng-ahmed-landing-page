@@ -56,25 +56,28 @@ export default function DesignIntroStage() {
     tl.fromTo(
       [main, qual],
       { opacity: 0, y: 24, scale: 0.94 },
-      { opacity: 1, y: 0, scale: 1, duration: dur(0.55), ease: "power3.out" },
+      { opacity: 1, y: 0, scale: 1, duration: dur(0.5), ease: "power3.out" },
       0,
     );
     // 2) Brief hold so it reads, then "داخلي" LEAVES.
     tl.to(
       qual,
-      { opacity: 0, x: qualFrom * 0.6, duration: dur(0.35), ease: "power2.in" },
-      dur(1.15),
+      { opacity: 0, x: qualFrom * 0.6, duration: dur(0.3), ease: "power2.in" },
+      dur(1.05),
     );
-    // 3+4) "تصميم" grows a touch (a SMALLER grow than the card lift) and flies up
-    //      into the journey breadcrumb's category token. Hide the original group
-    //      so only the clone reads — one continuous move, no second copy.
+    // 3+4) "تصميم" flies up into the journey breadcrumb's category token at the
+    //      SAME size it just read at — the owner wants no grow once "داخلي" leaves
+    //      (centerScale: 1 → the word keeps its size, only shrinking later as it
+    //      DOCKS into the smaller breadcrumb token via `landTitle`). Hide the
+    //      original group so only the clone reads — one continuous move, no second
+    //      copy. `useLeadFlow.introHoldMs` advances to email just after this fires.
     tl.call(
       () => {
-        liftTitle(main, { color: colors.primary, centerScale: 1.18 });
+        liftTitle(main, { color: colors.primary, centerScale: 1 });
         gsap.set(group, { opacity: 0 });
       },
       null,
-      dur(1.45),
+      dur(1.3),
     );
 
     return () => tl.kill();
@@ -110,13 +113,13 @@ export default function DesignIntroStage() {
         >
           {isRtl ? (
             <>
-              <Word innerRef={mainRef} text={translate("category.design")} primary />
+              <Word innerRef={mainRef} text={translate("category.design")} />
               <Word innerRef={qualRef} text={translate("register.designQualifier")} />
             </>
           ) : (
             <>
               <Word innerRef={qualRef} text={translate("register.designQualifier")} />
-              <Word innerRef={mainRef} text={translate("category.design")} primary />
+              <Word innerRef={mainRef} text={translate("category.design")} />
             </>
           )}
         </Box>
@@ -125,9 +128,9 @@ export default function DesignIntroStage() {
   );
 }
 
-/** One word of the intro phrase. `primary` is the dominant "تصميم/Design"; the
- *  qualifier is rendered a touch smaller so the term reads with hierarchy. */
-function Word({ innerRef, text, primary = false }) {
+/** One word of the intro phrase. Both words ("تصميم" and "داخلي") are rendered at
+ *  the SAME size — the owner wants "تصميم" to match "داخلي", no size hierarchy. */
+function Word({ innerRef, text }) {
   return (
     <Box
       ref={innerRef}
@@ -143,9 +146,7 @@ function Word({ innerRef, text, primary = false }) {
         lineHeight: 1.02,
         letterSpacing: "-0.02em",
         textShadow: "0 8px 40px rgba(0,0,0,0.55)",
-        fontSize: primary
-          ? { xs: "2.9rem", sm: "3.7rem", md: "4.6rem" }
-          : { xs: "2rem", sm: "2.5rem", md: "3.1rem" },
+        fontSize: { xs: "2.2rem", sm: "2.8rem", md: "3.4rem" },
       }}
     >
       {text}

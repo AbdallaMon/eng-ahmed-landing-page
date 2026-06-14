@@ -52,6 +52,7 @@ export default function OptionCardsStage({
   disabled = false,
   revealKey = "",
   columns = { xs: 1, md: 2 },
+  cardHeight = { xs: 160, sm: 220, md: 300 },
   direction = 1,
   returning = "",
 }) {
@@ -74,16 +75,30 @@ export default function OptionCardsStage({
   // (The image already shrank away in the flow's exit beat before this swap.)
   const { ref } = useDepthReveal(
     {
-      baseDelay: back ? 0.55 : 0.22,
-      z: 220,
-      y: 40,
-      rotateX: 18,
-      step: 0.11,
-      duration: 0.85,
+      baseDelay: back ? 0.4 : 0.14,
+      z: 200,
+      y: 36,
+      rotateX: 16,
+      step: 0.08,
+      duration: 0.6,
       enabled: !backReturn,
     },
     [revealKey, options.length, direction],
   );
+
+  // Reset the header (title + subtitle) on every stage entrance. The location→item
+  // step REUSES this same component instance (React keeps it — same type/position,
+  // only props change, NO remount), so the "recede on pick" tween that pushed the
+  // header back/up on the LOCATION pick would otherwise persist and the ITEM step's
+  // title would stay shifted-back and invisible (opacity 0 / translateZ(-120)). We
+  // clear it here so the new step's own AnimatedText reveal plays from a clean,
+  // visible state. Cheap + idempotent on a fresh mount.
+  useEffect(() => {
+    const h = headerRef.current;
+    if (!h) return;
+    gsap.killTweensOf(h);
+    gsap.set(h, { opacity: 1, y: 0, z: 0, clearProps: "transform" });
+  }, [revealKey, direction]);
 
   // BACK reverse-morph: the full-screen room photo shrinks back into the card we
   // came from, that card reveals where it lands, THEN the other cards return in
@@ -131,18 +146,17 @@ export default function OptionCardsStage({
       gsap.fromTo(
         chosenWrapper,
         { opacity: 0 },
-        { opacity: 1, duration: dur(0.3), ease: "power2.out" },
+        { opacity: 1, duration: dur(0.25), ease: "power2.out" },
       );
       if (others.length) {
         gsap.fromTo(
           others,
           {
             opacity: 0,
-            z: -220,
-            y: 40,
-            rotateX: -18,
+            z: -200,
+            y: 36,
+            rotateX: -16,
             scale: 0.94,
-            filter: "blur(6px)",
           },
           {
             opacity: 1,
@@ -150,13 +164,12 @@ export default function OptionCardsStage({
             y: 0,
             rotateX: 0,
             scale: 1,
-            filter: "blur(0px)",
-            duration: dur(0.7),
-            delay: dur(0.2),
+            duration: dur(0.55),
+            delay: dur(0.15),
             ease: "back.out(1.05)",
-            stagger: stagger(0.1),
+            stagger: stagger(0.08),
             transformOrigin: "50% 100%",
-            clearProps: "transform,filter",
+            clearProps: "transform",
           },
         );
       }
@@ -206,7 +219,7 @@ export default function OptionCardsStage({
         opacity: 0,
         y: -18,
         z: -120,
-        duration: dur(0.45),
+        duration: dur(0.38),
         ease: "power2.in",
       });
     }
@@ -219,7 +232,9 @@ export default function OptionCardsStage({
     const titleEl = titleNodes.current[value];
     const willMorphTitle = titleEl && !prefersReducedMotion();
     if (willMorphTitle) {
-      liftTitle(titleEl, { color: colors.primary });
+      // Slide the title to the centre at its OWN size (centerScale: 1) — the owner
+      // wants to SEE it travel, not have it balloon/pop into place at the centre.
+      liftTitle(titleEl, { color: colors.primary, centerScale: 1 });
       gsap.set(titleEl, { opacity: 0 });
     }
 
@@ -243,7 +258,7 @@ export default function OptionCardsStage({
 
     // Give the name a short beat to recolour + start rising BEFORE the photo grows
     // (the owner's order: colour → up → grow → fly to form), then grow.
-    if (willMorphTitle) gsap.delayedCall(dur(0.4), runGrow);
+    if (willMorphTitle) gsap.delayedCall(dur(0.28), runGrow);
     else runGrow();
   };
 
@@ -253,16 +268,20 @@ export default function OptionCardsStage({
         flex: 1,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        // Anchor to the TOP on mobile (so all stacked cards — incl. the 3rd item,
+        // PART_OF_HOME — are reachable from scrollTop 0 with no centering clip) and
+        // centre on desktop where the cards sit in one row and always fit.
+        justifyContent: { xs: "flex-start", md: "center" },
         px: { xs: 1, md: 2 },
-        py: { xs: 2, md: 3 },
+        py: { xs: 1.5, md: 3 },
       }}
     >
       <Box
         ref={headerRef}
         sx={{
           textAlign: "center",
-          mb: { xs: 3, md: 4 },
+          mb: { xs: 2, md: 4 },
+          flexShrink: 0,
           transformStyle: "preserve-3d",
           willChange: "transform, opacity",
         }}
@@ -317,7 +336,10 @@ export default function OptionCardsStage({
             sx={{
               opacity: 0,
               transformStyle: "preserve-3d",
-              height: { xs: 200, sm: 240, md: 300 },
+              // Per-step height (passed by V1Flow): the ITEM deck is shorter on
+              // mobile so all THREE stacked cards fit the viewport; the LOCATION
+              // deck (only two cards) stays a bit taller.
+              height: cardHeight,
             }}
           >
             <Card3D

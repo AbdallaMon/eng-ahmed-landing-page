@@ -281,14 +281,21 @@ export default function PerspectiveStage({
         />
       </Box>
 
-      {/* Stage content at the front (z≈0). */}
+      {/* Stage content at the front (z≈0). A FIXED full-height column over the
+          fixed photo/parallax scene — it does NOT scroll itself. The scroll lives
+          ONE level deeper, in the flow's stage-content box (V1Flow), so the top
+          chrome (the journey breadcrumb + progress dots) stays PINNED at the top
+          while only the active stage (cards / form) scrolls beneath it. `minHeight:0`
+          lets that inner scroll area bound itself; `overflow:hidden` clips any spill. */}
       <Box
         sx={{
           position: "relative",
           zIndex: 2,
-          minHeight: "100dvh",
+          height: "100dvh",
+          minHeight: 0,
           display: "flex",
           flexDirection: "column",
+          overflow: "hidden",
         }}
       >
         {children}
@@ -352,14 +359,18 @@ function photoScrimStyle(dim) {
   };
 }
 
-/** Deeper wash faded IN on the form stage (same photo, just darker edges + a
- *  centre-darkening radial so the glass inputs read). React/CSS-transition. */
+/** Deeper wash faded IN on the form stage. The owner asked for the FORM to read
+ *  clearly, so on this step the photo is pushed back noticeably (a darker centre
+ *  radial + a stronger top→bottom gradient) while the strengthened glass fields
+ *  sit in front. The photo stays recognisable — just recessive — so it's still
+ *  "the room you chose", not a flat black panel. React/CSS-transition (no GSAP,
+ *  no flash). */
 const FORM_SCRIM_STYLE = {
   position: "absolute",
   inset: "-4%",
   background: [
-    "radial-gradient(120% 90% at 50% 45%, rgba(20,15,10,0) 0%, rgba(20,15,10,0.2) 100%)",
-    "linear-gradient(180deg, rgba(24,18,13,0.04) 0%, rgba(20,15,10,0.22) 100%)",
+    "radial-gradient(120% 90% at 50% 45%, rgba(16,12,8,0.18) 0%, rgba(16,12,8,0.46) 100%)",
+    "linear-gradient(180deg, rgba(16,12,8,0.30) 0%, rgba(12,9,6,0.50) 100%)",
   ].join(", "),
   pointerEvents: "none",
   willChange: "transform, opacity",

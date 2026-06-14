@@ -1,7 +1,12 @@
 "use client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { dur, stagger, prefersReducedMotion } from "@/app/register/variants/v1/v1Motion";
+import {
+  dur,
+  stagger,
+  isCoarsePointer,
+  prefersReducedMotion,
+} from "@/app/register/variants/v1/v1Motion";
 
 /**
  * Reveal a group of children as DEPTH-STAGGERED 3D objects (not flat fades).
@@ -31,7 +36,7 @@ export function useDepthReveal(opts = {}, deps = []) {
     y = 26,
     rotateX = 24,
     step = 0.085,
-    duration = 0.7,
+    duration = 0.58,
     enabled = true,
   } = opts;
   const ref = useRef(null);
@@ -64,33 +69,40 @@ export function useDepthReveal(opts = {}, deps = []) {
     // arriving rather than a flat fade. transformOrigin at the bottom keeps the
     // rotateX hinging like a card laid down. Per-item stagger keeps it staged,
     // not a single block move.
-    const tween = gsap.fromTo(
-      items,
-      {
-        opacity: 0,
-        z: -z,
-        y,
-        rotateX: -rotateX,
-        scale: 0.94,
-        filter: "blur(6px)",
-      },
-      {
-        opacity: 1,
-        z: 0,
-        y: 0,
-        rotateX: 0,
-        scale: 1,
-        filter: "blur(0px)",
-        duration: dur(duration),
-        delay: dur(baseDelay),
-        ease: "back.out(1.05)",
-        stagger: stagger(step),
-        transformOrigin: "50% 100%",
-        // Clear inline transforms + filter once settled so hover/idle effects on
-        // the children aren't fighting a leftover transform/blur.
-        clearProps: "transform,filter",
-      },
-    );
+    //
+    // Animating `filter: blur()` per item is GPU-heavy and is the first thing to
+    // drop frames on phones — which read as "the animation is janky". On TOUCH /
+    // coarse-pointer devices we skip the blur entirely (transform + opacity only,
+    // which compositors handle smoothly); on fine pointers we keep a lighter blur.
+    const coarse = isCoarsePointer();
+    const fromVars = {
+      opacity: 0,
+      z: -z,
+      y,
+      rotateX: -rotateX,
+      scale: 0.94,
+    };
+    const toVars = {
+      opacity: 1,
+      z: 0,
+      y: 0,
+      rotateX: 0,
+      scale: 1,
+      duration: dur(duration),
+      delay: dur(baseDelay),
+      ease: "back.out(1.05)",
+      stagger: stagger(step),
+      transformOrigin: "50% 100%",
+      // Clear inline transforms once settled so hover/idle effects on the children
+      // aren't fighting a leftover transform.
+      clearProps: "transform",
+    };
+    if (!coarse) {
+      fromVars.filter = "blur(4px)";
+      toVars.filter = "blur(0px)";
+      toVars.clearProps = "transform,filter";
+    }
+    const tween = gsap.fromTo(items, fromVars, toVars);
     return () => tween.kill();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);

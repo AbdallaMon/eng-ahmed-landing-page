@@ -36,13 +36,13 @@ import { PHOTO_OVERSCAN } from "@/app/register/core/cards3d/photoGeometry";
  *                               the morph's starting box)
  * @param {{
  *   image: string,             // the photo url (identical to the destination backdrop)
- *   duration?: number,         // seconds at normal speed, default 0.85
+ *   duration?: number,         // seconds at normal speed, default 0.62
  *   radius?: number,           // starting corner radius (px), default 24 → 0
  *   onComplete?: () => void,   // fired when the overlay has filled the screen
  * }} opts
  * @returns {gsap.core.Timeline|null}
  */
-export function coverMorph(fromEl, { image, duration = 0.85, radius = 24, onComplete } = {}) {
+export function coverMorph(fromEl, { image, duration = 0.62, radius = 24, onComplete } = {}) {
   if (typeof document === "undefined" || !fromEl || !image) {
     onComplete?.();
     return null;
@@ -168,7 +168,7 @@ export function coverMorph(fromEl, { image, duration = 0.85, radius = 24, onComp
  * @param {HTMLElement} toEl   the destination card slot (its rect is the end box)
  * @param {{
  *   image: string,            // the room photo (identical to the card's image)
- *   duration?: number,        // seconds at normal speed, default 0.85
+ *   duration?: number,        // seconds at normal speed, default 0.62
  *   radius?: number,          // ending corner radius (px), default 24
  *   onComplete?: () => void,  // fired when the overlay has shrunk to the card
  * }} opts
@@ -176,7 +176,7 @@ export function coverMorph(fromEl, { image, duration = 0.85, radius = 24, onComp
  */
 export function reverseCoverMorph(
   toEl,
-  { image, duration = 0.85, radius = 24, onComplete } = {},
+  { image, duration = 0.62, radius = 24, onComplete } = {},
 ) {
   if (typeof document === "undefined" || !toEl || !image) {
     onComplete?.();

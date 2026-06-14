@@ -6,7 +6,6 @@ import { leadFormFieldOrder } from "@/app/register/core/fields/fieldOrder";
 import { FIELD_COMPONENTS } from "@/app/register/core/fields/fieldComponents";
 import GuaranteeCTA from "@/app/register/core/fields/GuaranteeCTA";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
-import { DesignLeadPrice } from "@/app/register/data/constants";
 import { useDepthReveal } from "@/app/register/variants/v1/useDepthReveal";
 
 /**
@@ -34,7 +33,7 @@ import { useDepthReveal } from "@/app/register/variants/v1/useDepthReveal";
  *   form: ReturnType<typeof useLeadForm>,  // lifted so the orchestrator can read isPaying
  * }} props
  */
-export default function FormStage({ item, form }) {
+export default function FormStage({ form }) {
   const { translate, lng } = useLanguage();
   const isRtl = lng === "ar";
 
@@ -46,11 +45,9 @@ export default function FormStage({ item, form }) {
   // Depth-stagger the chip + every field row + the CTA. A gentler back-in-Z lift
   // with a soft expo settle so rows arrive like cards being placed on a desk.
   const { ref } = useDepthReveal(
-    { baseDelay: 0.2, z: 90, y: 26, rotateX: 16, step: 0.08, duration: 0.7 },
+    { baseDelay: 0.14, z: 90, y: 26, rotateX: 16, step: 0.06, duration: 0.55 },
     [fieldIds.join(",")],
   );
-
-  const feeKey = item ? DesignLeadPrice[item] : null;
 
   return (
     <Box
@@ -62,23 +59,9 @@ export default function FormStage({ item, form }) {
         width: "100%",
         px: 2,
         pt: { xs: 1, md: 2 },
-        // Extra bottom padding so the last field/CTA isn't flush against the
-        // viewport edge and the form has more room to scroll past.
-        pb: { xs: 5, md: 7 },
-        // The form can be long (many fields) — let it scroll within the viewport
-        // instead of being clipped by the fixed scene. `minHeight: 0` is required
-        // so this flex child can shrink and actually scroll. Header + dots reserve
-        // the space above.
-        minHeight: 0,
-        overflowY: "auto",
-        overflowX: "hidden",
-        maxHeight: { xs: "calc(100dvh - 120px)", md: "calc(100dvh - 130px)" },
-        WebkitOverflowScrolling: "touch",
-        overscrollBehavior: "contain",
-        // Hide the scrollbar across engines while keeping scroll behaviour.
-        scrollbarWidth: "none", // Firefox
-        msOverflowStyle: "none", // IE/legacy Edge
-        "&::-webkit-scrollbar": { display: "none" }, // WebKit/Blink
+        // The scroll container (V1Flow's stage-content box) owns the bottom
+        // breathing room now, so just a small pad here to avoid doubling it.
+        pb: { xs: 2, md: 3 },
       }}
     >
       <Box
@@ -120,19 +103,6 @@ export default function FormStage({ item, form }) {
           >
             {translate("hero.oneStepAway")}
           </Typography>
-
-          {feeKey && (
-            <Typography
-              sx={{
-                color: "rgba(255,255,255,0.9)",
-                fontWeight: 600,
-                fontSize: { xs: "0.85rem", md: "0.92rem" },
-                textShadow: "0 2px 12px rgba(0,0,0,0.55)",
-              }}
-            >
-              {translate(feeKey)}
-            </Typography>
-          )}
 
           {/* The "team will contact you — a $39 fee applies" notice. It was part
               of the original register form and got dropped in the V1 migration;
@@ -196,29 +166,31 @@ const GLASS_FIELD_SX = {
   "& .MuiInputLabel-root.Mui-focused": { color: colors.primary },
   "& .MuiInputLabel-root.Mui-error": { color: colors.error },
 
-  // The input shell: translucent dark glass with blur + a faint gold edge.
+  // The input shell: a STRONGER dark glass (more opaque fill + heavier blur +
+  // a brighter hairline) so each field reads clearly over the photo without any
+  // backing card — the owner wants the fields themselves to carry the legibility.
   "& .MuiOutlinedInput-root, & .MuiInputBase-root": {
     color: "#fff",
-    backgroundColor: "rgba(20,15,11,0.42)",
-    backdropFilter: "blur(10px)",
-    WebkitBackdropFilter: "blur(10px)",
+    backgroundColor: "rgba(16,12,8,0.62)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
     borderRadius: 12,
     transition: "background-color .25s ease, box-shadow .25s ease",
     "& input::placeholder, & textarea::placeholder": {
-      color: "rgba(255,255,255,0.6)",
+      color: "rgba(255,255,255,0.72)",
       opacity: 1,
     },
   },
   "& .MuiOutlinedInput-root:hover, & .MuiInputBase-root:hover": {
-    backgroundColor: "rgba(20,15,11,0.52)",
+    backgroundColor: "rgba(16,12,8,0.7)",
   },
   "& .MuiOutlinedInput-root.Mui-focused, & .MuiInputBase-root.Mui-focused": {
-    backgroundColor: "rgba(20,15,11,0.6)",
-    boxShadow: `0 0 0 1px ${colors.primary}, 0 10px 30px rgba(0,0,0,0.4)`,
+    backgroundColor: "rgba(16,12,8,0.78)",
+    boxShadow: `0 0 0 1px ${colors.primary}, 0 10px 30px rgba(0,0,0,0.45)`,
   },
-  // Outlined border → soft gold hairline (gold on focus, error stays red).
+  // Outlined border → brighter hairline (gold on focus, error stays red).
   "& .MuiOutlinedInput-notchedOutline": {
-    borderColor: "rgba(255,255,255,0.28)",
+    borderColor: "rgba(255,255,255,0.42)",
   },
   "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
     borderColor: "rgba(211,172,113,0.55)",
