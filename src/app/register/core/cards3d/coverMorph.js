@@ -107,10 +107,21 @@ export function coverMorph(fromEl, { image, duration = 0.85, radius = 24, onComp
     if (done) return;
     done = true;
     onComplete?.();
-    // Give the flow one beat to advance + paint the real (identical) backdrop
-    // behind the overlay, THEN remove it — so the removal reveals an identical
-    // image, never a gap.
-    gsap.delayedCall(0.1, () => overlay.remove());
+    // The grown image STAYS on screen and DISSOLVES into the now-identical
+    // backdrop — never a hard remove that could leave a 1-frame gap (which reads
+    // as "the image disappeared / dropped under the backdrop"). Two RAFs let the
+    // flow advance + the backdrop paint the new image first, THEN the overlay
+    // cross-fades out and is finally dropped once it's fully invisible.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        gsap.to(overlay, {
+          opacity: 0,
+          duration: 0.4,
+          ease: "power1.inOut",
+          onComplete: () => overlay.remove(),
+        });
+      }),
+    );
   };
 
   const tl = gsap.timeline({ onComplete: finish });
@@ -224,8 +235,18 @@ export function reverseCoverMorph(
     if (done) return;
     done = true;
     onComplete?.();
-    // Give the revealed card one beat to paint, then drop the overlay.
-    gsap.delayedCall(0.06, () => overlay.remove());
+    // Cross-dissolve into the revealed card (which fades in at the same spot)
+    // instead of a hard remove — no gap where the room could vanish.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        gsap.to(overlay, {
+          opacity: 0,
+          duration: 0.35,
+          ease: "power1.inOut",
+          onComplete: () => overlay.remove(),
+        });
+      }),
+    );
   };
 
   const tl = gsap.timeline({ onComplete: finish });
