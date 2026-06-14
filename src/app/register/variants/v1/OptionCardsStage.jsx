@@ -10,7 +10,11 @@ import {
   coverMorph,
   reverseCoverMorph,
 } from "@/app/register/core/cards3d/coverMorph";
-import { liftTitle, landTitle } from "@/app/register/core/cards3d/titleMorph";
+import {
+  liftTitle,
+  landTitle,
+  dissolveFloating,
+} from "@/app/register/core/cards3d/titleMorph";
 import colors from "@/app/register/theme/colors";
 import { useDepthReveal } from "@/app/register/variants/v1/useDepthReveal";
 import {
@@ -158,18 +162,24 @@ export default function OptionCardsStage({
       }
     };
 
-    // Then the room photo SHRINKS back into the chosen card slot.
+    // Then the room photo SHRINKS back into the chosen card slot — and only once
+    // the card is revealed do we DISSOLVE the held word into the card's real
+    // title (so it hands off seamlessly and never visibly disappears).
     const shrinkPhoto = () =>
       reverseCoverMorph(chosenWrapper, {
         image: chosenOpt.image,
-        onComplete: revealCards,
+        onComplete: () => {
+          revealCards();
+          dissolveFloating(0.35);
+        },
       });
 
-    // The owner's reverse order: the accumulated WORD flies back down from the
-    // breadcrumb (held centre by `liftSlot`) onto its card FIRST, and only THEN
-    // does the photo shrink in behind it. (Deep-link / no clone → shrink directly.)
+    // The owner's reverse order: the accumulated WORD flies straight back down
+    // from the breadcrumb onto its EXACT card-title spot and STAYS there
+    // (`keepClone`); only THEN does the photo shrink in behind it. (Deep-link /
+    // no clone → shrink directly.)
     const titleEl = titleNodes.current[returning];
-    if (titleEl) landTitle(titleEl, { onLanded: shrinkPhoto });
+    if (titleEl) landTitle(titleEl, { keepClone: true, onLanded: shrinkPhoto });
     else shrinkPhoto();
     return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps

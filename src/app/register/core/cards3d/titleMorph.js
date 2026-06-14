@@ -37,7 +37,10 @@ function clear() {
  * @param {HTMLElement} fromEl   the card's title node (its rect = the start box)
  * @param {{ color?: string }} [opts]  colour to morph the word to as it lifts
  */
-export function liftTitle(fromEl, { color } = {}) {
+export function liftTitle(
+  fromEl,
+  { color, center = true, centerScale = 1.5 } = {},
+) {
   clear();
   if (typeof document === "undefined" || !fromEl) return;
   if (prefersReducedMotion()) return; // no clone → form chip shows normally
@@ -82,19 +85,23 @@ export function liftTitle(fromEl, { color } = {}) {
 
   // 1) recolour (brand gold) as it lifts.
   if (color) gsap.to(el, { color, duration: 0.3, ease: "power2.out" });
-  // 2) move to the CENTRE of the screen and GROW — it takes presence centre-stage
-  //    while the photo grows behind it. `landTitle` then moves it up + shrinks it
-  //    into the breadcrumb. (Centre via the box's own centre: position the box so
-  //    its middle sits at screen-centre, scale grows around that middle.)
-  const cx = window.innerWidth / 2 - rect.width / 2;
-  const cy = window.innerHeight * 0.42 - rect.height / 2;
-  gsap.to(el, {
-    top: cy,
-    left: cx,
-    scale: 1.5,
-    duration: 0.5,
-    ease: "power3.out",
-  });
+  // 2) FORWARD lift (`center`): move to the CENTRE of the screen and GROW — it
+  //    takes presence centre-stage while the photo grows behind it; `landTitle`
+  //    then moves it up + shrinks it into the breadcrumb. REVERSE lift
+  //    (`center:false`): the clone STAYS at its source (the breadcrumb token) and
+  //    waits — the back card-deck flies it DIRECTLY down to its card slot, no
+  //    centre detour, and keeps it there while the photo shrinks back in.
+  if (center) {
+    const cx = window.innerWidth / 2 - rect.width / 2;
+    const cy = window.innerHeight * 0.42 - rect.height / 2;
+    gsap.to(el, {
+      top: cy,
+      left: cx,
+      scale: centerScale,
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  }
 }
 
 /**
@@ -104,19 +111,23 @@ export function liftTitle(fromEl, { color } = {}) {
  * reduced motion), `onLanded` fires immediately so the chip just shows.
  *
  * @param {HTMLElement} toEl  the chip node the word lands into (its rect = end box)
- * @param {{ onLanded?: () => void }} [opts]
+ * @param {{ onLanded?: () => void, keepClone?: boolean }} [opts]
+ *   `keepClone` (BACK): do NOT fade the clone after it lands — it STAYS at the
+ *   card-title spot (visible) while the photo shrinks back in; the caller calls
+ *   `dissolveFloating` to hand it off to the real title once the card is revealed
+ *   (so the word never visibly disappears).
  */
-export function landTitle(toEl, { onLanded } = {}) {
+export function landTitle(toEl, { onLanded, keepClone } = {}) {
   if (!floating || !toEl) {
     onLanded?.();
-    clear();
+    if (!keepClone) clear();
     return;
   }
   const el = floating;
   const dest = toEl.getBoundingClientRect();
   if (!dest.width || !dest.height || prefersReducedMotion()) {
     onLanded?.();
-    clear();
+    if (!keepClone) clear();
     return;
   }
   const destCs = getComputedStyle(toEl);
@@ -133,13 +144,27 @@ export function landTitle(toEl, { onLanded } = {}) {
     ease: "power3.inOut",
     onComplete: () => {
       onLanded?.(); // reveal the real chip text underneath
-      gsap.to(el, {
-        opacity: 0,
-        duration: 0.25,
-        ease: "power1.out",
-        onComplete: clear,
-      });
+      if (!keepClone) {
+        gsap.to(el, {
+          opacity: 0,
+          duration: 0.25,
+          ease: "power1.out",
+          onComplete: clear,
+        });
+      }
     },
+  });
+}
+
+/** Cross-dissolve the held clone out (once the real title is revealed under it),
+ *  so a kept word hands off seamlessly instead of vanishing. */
+export function dissolveFloating(duration = 0.3) {
+  if (!floating) return;
+  gsap.to(floating, {
+    opacity: 0,
+    duration,
+    ease: "power1.out",
+    onComplete: clear,
   });
 }
 
@@ -168,6 +193,8 @@ export function registerSlot(key, el) {
 export function liftSlot(key, opts) {
   const el = slots.get(key);
   if (!el) return;
-  liftTitle(el, opts);
+  // `center:false` → the clone STAYS at the breadcrumb and waits; the back card
+  // deck flies it straight down to its card (no centre detour).
+  liftTitle(el, { ...opts, center: false });
   if (!prefersReducedMotion()) gsap.set(el, { opacity: 0 });
 }

@@ -51,38 +51,30 @@ export default function DesignIntroStage() {
     const qualFrom = isRtl ? -38 : 38;
 
     const tl = gsap.timeline();
-    // 1) "تصميم" fades + lifts in GENTLY (soft rise + scale settle — no hard 3D
-    //    flip, which read as harsh).
+    // 1) "تصميم داخلي" appears COMPLETE — both words together, a gentle fade + soft
+    //    rise (no staggered join, no hard 3D flip; the old one read as harsh).
     tl.fromTo(
-      main,
-      { opacity: 0, y: 28, scale: 0.92 },
-      { opacity: 1, y: 0, scale: 1, duration: dur(0.5), ease: "power3.out" },
+      [main, qual],
+      { opacity: 0, y: 24, scale: 0.94 },
+      { opacity: 1, y: 0, scale: 1, duration: dur(0.55), ease: "power3.out" },
       0,
     );
-    // 2) "داخلي" slides in softly → "تصميم داخلي".
-    tl.fromTo(
-      qual,
-      { opacity: 0, x: qualFrom },
-      { opacity: 1, x: 0, duration: dur(0.4), ease: "power2.out" },
-      dur(0.65),
-    );
-    // 3) Brief hold, then the qualifier LEAVES.
+    // 2) Brief hold so it reads, then "داخلي" LEAVES.
     tl.to(
       qual,
-      { opacity: 0, x: qualFrom * 0.6, duration: dur(0.3), ease: "power2.in" },
-      dur(1.3),
+      { opacity: 0, x: qualFrom * 0.6, duration: dur(0.35), ease: "power2.in" },
+      dur(1.15),
     );
-    // 4) Hand "تصميم" off to the persistent JOURNEY breadcrumb: lift a gold clone
-    //    (it goes centre-stage + grows, then the breadcrumb's category token flies
-    //    it up into place). Hide the original group so only the clone reads — one
-    //    continuous move into the breadcrumb, no second copy of the word.
+    // 3+4) "تصميم" grows a touch (a SMALLER grow than the card lift) and flies up
+    //      into the journey breadcrumb's category token. Hide the original group
+    //      so only the clone reads — one continuous move, no second copy.
     tl.call(
       () => {
-        liftTitle(main, { color: colors.primary });
+        liftTitle(main, { color: colors.primary, centerScale: 1.18 });
         gsap.set(group, { opacity: 0 });
       },
       null,
-      dur(1.55),
+      dur(1.45),
     );
 
     return () => tl.kill();
@@ -152,8 +144,8 @@ function Word({ innerRef, text, primary = false }) {
         letterSpacing: "-0.02em",
         textShadow: "0 8px 40px rgba(0,0,0,0.55)",
         fontSize: primary
-          ? { xs: "3.4rem", sm: "4.5rem", md: "6rem" }
-          : { xs: "2.4rem", sm: "3.1rem", md: "4.2rem" },
+          ? { xs: "2.9rem", sm: "3.7rem", md: "4.6rem" }
+          : { xs: "2rem", sm: "2.5rem", md: "3.1rem" },
       }}
     >
       {text}
