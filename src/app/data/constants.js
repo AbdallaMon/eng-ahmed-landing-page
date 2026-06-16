@@ -93,20 +93,20 @@ export const enJobTitle = ["Architect", "Interior Design Specialist", "Engineer"
 // تاريخ الميلاد (4 يناير 1998) — صيغة ISO 8601
 export const personBirthDate = "1998-01-04";
 
-// محل الميلاد (دبي، الإمارات) — مطابق للويكيداتا P19 (دبي)
-export const arBirthPlace = "دبي، الإمارات العربية المتحدة";
-export const enBirthPlace = "Dubai, United Arab Emirates";
+// محل الميلاد (حماة، سوريا) — مطابق للويكيداتا P19 (حماة Q173545)
+export const arBirthPlace = "حماة، سوريا";
+export const enBirthPlace = "Hama, Syria";
 
-// الجنسية (إماراتي) — مطابق للويكيداتا P27 (دولة المواطنة: الإمارات)
-export const arNationality = "إماراتي";
-export const enNationality = "Emirati";
+// الجنسية (سوري) — مطابق للويكيداتا P27 (دولة المواطنة: سوريا Q858)
+export const arNationality = "سوري";
+export const enNationality = "Syrian";
 
-// مكان الإقامة الحالي (أبوظبي، الإمارات) — مطابق للويكيداتا P551 (أبوظبي)
+// مكان الإقامة الحالي (دبي، الإمارات) — مطابق للويكيداتا P551 (دبي Q612)
 export const livingCountryCode = "AE";
 export const arLivingCountry = "الإمارات العربية المتحدة";
 export const enLivingCountry = "United Arab Emirates";
-export const arLivingCity = "أبوظبي";
-export const enLivingCity = "Abu Dhabi";
+export const arLivingCity = "دبي";
+export const enLivingCity = "Dubai";
 
 // التعليم (alumniOf)
 export const personEducation = [
