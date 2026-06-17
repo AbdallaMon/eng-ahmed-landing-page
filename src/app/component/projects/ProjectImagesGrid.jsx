@@ -3,17 +3,18 @@ import { Box, IconButton } from "@mui/material";
 import { MdRemoveRedEye } from "react-icons/md";
 import Image from "next/image";
 import ProjectImagesLightboxClient from "./ProjectImagesLightboxClient";
+import { getProjectKind } from "@/app/seo/jsonLdHelpers";
 
-function buildImageAlt({ project, index, lng }) {
+function buildImageAlt({ project, index, lng, kindLabel }) {
   const brand = lng === "ar" ? "المهندس أحمد المبيض" : "Eng. Ahmed Almobayd";
 
   if (lng === "ar") {
-    return `صورة رقم ${index + 1} من مشروع ${project.name} في ${
+    return `صورة رقم ${index + 1} من ${kindLabel} «${project.name}» في ${
       project.location
     } – ${brand}`;
   }
 
-  return `Image ${index + 1} from ${project.name} project in ${
+  return `Image ${index + 1} of ${kindLabel} "${project.name}" in ${
     project.location
   } – ${brand}`;
 }
@@ -26,12 +27,14 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
   const DEFAULT_WIDTH = 1200;
   const DEFAULT_HEIGHT = 800;
 
+  const kindLabel = getProjectKind(project, lng).label;
+
   const imagesWithAlt = baseImages.map((img, index) => ({
     ...img,
     index, // store it explicitly
     width: img.width ?? DEFAULT_WIDTH,
     height: img.height ?? DEFAULT_HEIGHT,
-    alt: buildImageAlt({ project, index, lng }),
+    alt: buildImageAlt({ project, index, lng, kindLabel }),
   }));
 
   const sectionLabel =

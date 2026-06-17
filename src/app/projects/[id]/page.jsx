@@ -11,6 +11,7 @@ import {
 import {
   Box,
   Breadcrumbs,
+  Button,
   Card,
   CardContent,
   Container,
@@ -18,6 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "../../seo/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
@@ -189,19 +191,17 @@ export default async function page({ params, searchParams }) {
   const relatedProjects = projects.filter((project) => {
     return relatedIds.includes(project.id);
   });
+  // next/link rendered DIRECTLY (not via MUI `component` prop) — passing the
+  // Link function as a prop from a server component to a client component throws
+  // "Functions cannot be passed to Client Components" and breaks SSR.
+  const crumbStyle = { color: "inherit", textDecoration: "none" };
   const breadcrumbs = [
-    <Box component={"a"} underline="hover" key="1" color="inherit" href="/">
+    <Link key="1" href={`/?lng=${lng}`} style={crumbStyle}>
       {lng === "ar" ? "الصفحة الرئيسية" : "Home"}
-    </Box>,
-    <Box
-      component={"a"}
-      underline="hover"
-      key="2"
-      color="inherit"
-      href="/projects"
-    >
+    </Link>,
+    <Link key="2" href={`/projects?lng=${lng}`} style={crumbStyle}>
       {lng === "ar" ? "المشاريع" : "Projects"}
-    </Box>,
+    </Link>,
     <Typography key="3" sx={{ color: "text.primary" }}>
       {projectData.name}
     </Typography>,
@@ -306,6 +306,18 @@ export default async function page({ params, searchParams }) {
             >
               {getProjectSeoParagraph(projectData, lng)}
             </Typography>
+            <Box sx={{ mt: 2.5 }}>
+              <Button
+                href={`/booking?lng=${lng}`}
+                variant="contained"
+                size="large"
+                sx={{ borderRadius: 2 }}
+              >
+                {lng === "ar"
+                  ? "احجز استشارة لمشروع مماثل"
+                  : "Book a consultation for a similar project"}
+              </Button>
+            </Box>
           </Box>
           <Box>
             <ProjectRelatedSection
