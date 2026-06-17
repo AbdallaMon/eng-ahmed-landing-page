@@ -84,6 +84,18 @@ export function proxy(request) {
   if (url.pathname.startsWith("/_next")) {
     return NextResponse.next();
   }
+
+  // SEO metadata files are generated per-host by app/robots.js & app/sitemap.js.
+  // On the booking host, serve them LOCALLY (host-aware) instead of rewriting to
+  // the main domain like other static assets — so the booking domain gets its
+  // own robots.txt/sitemap.xml (that still points back to the main site).
+  if (
+    onBookingHost &&
+    (url.pathname === "/robots.txt" || url.pathname === "/sitemap.xml")
+  ) {
+    return NextResponse.next();
+  }
+
   if (isStaticAsset) {
     const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
     if (onBookingHost && SITE_URL) {

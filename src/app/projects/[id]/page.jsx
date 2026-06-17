@@ -5,6 +5,8 @@ import { getTranslation } from "@/app/i18n";
 import {
   getBreadcrumbJsonLd,
   getProjectArticleJsonLd,
+  getProfessionalServiceJsonLd,
+  getProjectSeoParagraph,
 } from "@/app/seo/jsonLdHelpers";
 import {
   Box,
@@ -253,6 +255,11 @@ export default async function page({ params, searchParams }) {
       <JsonLd id={`breadcrumb-project-${projectId}`} data={breadcrumbJsonLd} />
 
       <JsonLd id={`article-project-${projectId}`} data={articleJsonLd} />
+
+      <JsonLd
+        id={`service-project-${projectId}`}
+        data={getProfessionalServiceJsonLd(baseUrl, lng)}
+      />
       <Box>
         <Container maxWidth="xl">
           <Breadcrumbs
@@ -283,6 +290,22 @@ export default async function page({ params, searchParams }) {
           </Box>
           <Box sx={{ py: 4 }}>
             <ProjectImagesGrid project={projectData} lng={lng} />
+          </Box>
+          <Box component="section" sx={{ pb: 2 }}>
+            <Typography
+              component="h2"
+              variant="h6"
+              sx={{ mb: 1.5, fontWeight: 600 }}
+            >
+              {lng === "ar" ? "عن المشروع" : "About this project"}
+            </Typography>
+            <Typography
+              component="p"
+              variant="body1"
+              sx={{ color: "text.secondary", lineHeight: 1.9, maxWidth: 900 }}
+            >
+              {getProjectSeoParagraph(projectData, lng)}
+            </Typography>
           </Box>
           <Box>
             <ProjectRelatedSection

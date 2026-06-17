@@ -391,3 +391,242 @@ export function getProjectArticleJsonLd({
 
   return articleJsonLd;
 }
+
+// ===================================================================
+//  تقوية البحث: نوع المشروع + المنطقة + فقرة محتوى غنية بالكلمات
+// ===================================================================
+
+// نوع المشروع وكلماته المفتاحية القريبة (مجلس/شقة/صالة/عيادة/مكتب/مركز تجميل)
+export function getProjectKind(projectData, lng) {
+  const n = `${projectData?.name || ""}`;
+  const has = (re) => re.test(n);
+
+  if (has(/مجلس|majlis/i))
+    return lng === "ar"
+      ? { label: "تصميم مجلس", keywords: ["تصميم مجلس", "ديكور مجلس", "تصميم مجالس"] }
+      : { label: "majlis design", keywords: ["majlis design", "majlis decor"] };
+  if (has(/شق[ةه]|apartment/i))
+    return lng === "ar"
+      ? { label: "تصميم شقة", keywords: ["تصميم شقة", "ديكور شقة", "تصميم ديكور شقة"] }
+      : { label: "apartment design", keywords: ["apartment design", "apartment interior design"] };
+  if (has(/تجميل|سبا|beauty|spa/i))
+    return lng === "ar"
+      ? { label: "تصميم مركز تجميل", keywords: ["تصميم مركز تجميل", "تصميم سبا", "تصميم صالون تجميل"] }
+      : { label: "beauty center design", keywords: ["beauty center design", "spa design"] };
+  if (has(/عياد[ةه]|عيادات|انتظار|clinic|lounge/i))
+    return lng === "ar"
+      ? { label: "تصميم عيادة", keywords: ["تصميم عيادة", "تصميم عيادات", "تصميم صالة انتظار"] }
+      : { label: "clinic design", keywords: ["clinic design", "waiting lounge design"] };
+  if (has(/مكتب|مكاتب|office/i))
+    return lng === "ar"
+      ? { label: "تصميم مكتب", keywords: ["تصميم مكتب", "تصميم مكاتب", "تصميم مكاتب الشركات"] }
+      : { label: "office design", keywords: ["office design", "corporate office design"] };
+  if (has(/صال[ةه]|hall/i))
+    return lng === "ar"
+      ? { label: "تصميم صالة", keywords: ["تصميم صالة", "تصميم صالة مفتوحة", "تصميم صالات"] }
+      : { label: "hall design", keywords: ["open hall design", "living hall design"] };
+
+  const commercial = /تجاري|commercial/i.test(projectData?.category || "");
+  return lng === "ar"
+    ? {
+        label: commercial ? "تصميم داخلي تجاري" : "تصميم داخلي سكني",
+        keywords: commercial
+          ? ["تصميم داخلي تجاري", "تصميم محلات", "تصميم مكاتب"]
+          : ["تصميم داخلي سكني", "تصميم شقق", "تصميم فلل"],
+      }
+    : {
+        label: commercial ? "commercial interior design" : "residential interior design",
+        keywords: commercial
+          ? ["commercial interior design", "retail design"]
+          : ["residential interior design", "villa design"],
+      };
+}
+
+// المنطقة/المدينة المشتقّة من موقع المشروع (الترتيب يحسم التداخل)
+export function getProjectRegion(projectData, lng) {
+  const loc = `${projectData?.location || ""}`;
+  const rules = [
+    { re: /العراق|بغداد|iraq|baghdad/i, ar: "العراق", en: "Iraq" },
+    { re: /السعودية|saudi/i, ar: "السعودية", en: "Saudi Arabia" },
+    { re: /العين|al[\s-]?ain/i, ar: "العين، الإمارات", en: "Al Ain, UAE" },
+    { re: /رأس الخيمة|راس الخيمة|ras\s?al/i, ar: "رأس الخيمة، الإمارات", en: "Ras Al Khaimah, UAE" },
+    { re: /دبي|dubai|مارينا|marina/i, ar: "دبي، الإمارات", en: "Dubai, UAE" },
+    {
+      re: /أبو\s?ظبي|ابو\s?ظبي|abu[\s-]?dhabi|محمد بن زايد|بني ياس|baniyas/i,
+      ar: "أبوظبي، الإمارات",
+      en: "Abu Dhabi, UAE",
+    },
+  ];
+  const hit = rules.find((r) => r.re.test(loc));
+  if (hit) return lng === "ar" ? hit.ar : hit.en;
+  return lng === "ar" ? "الإمارات والخليج" : "the UAE and the Gulf";
+}
+
+// فقرة محتوى غنية وطبيعية لصفحة المشروع — تلتقط البحث القريب دون حشو
+export function getProjectSeoParagraph(projectData, lng) {
+  const kind = getProjectKind(projectData, lng);
+  const region = getProjectRegion(projectData, lng);
+  const name = projectData?.name || "";
+  const desc = `${projectData?.description || ""}`.trim().replace(/[.،,]+$/, "");
+
+  if (lng === "ar") {
+    return `يقدّم المهندس أحمد المبيض و«دريم ستوديو» خدمات تصميم داخلي وديكور وتنفيذ احترافية. «${name}» مشروع ${kind.label} في ${region}${
+      desc ? `، ${desc}` : ""
+    }. إذا كنت تبحث عن ${kind.keywords.join("، ")}، أو عن مصمم داخلي و شركة تصميم داخلي في ${region}، فهذا نموذج من أعمالنا — استعرض الصور واطلب استشارة لمعرفة الأفكار وتفاصيل وأسعار التصميم الداخلي.`;
+  }
+  return `Eng. Ahmad Almobayed and Dream Studio provide professional interior design, decor and fit-out services. "${name}" is a ${kind.label} project in ${region}${
+    desc ? `, ${desc}` : ""
+  }. If you are looking for ${kind.keywords.join(", ")}, or an interior designer and interior design company in ${region}, this is a sample of our work — browse the photos and request a consultation for ideas and interior design pricing.`;
+}
+
+// 6) ProfessionalService — كيان "شركة/مصمم تصميم داخلي" (يستهدف البحث العام)
+export function getProfessionalServiceJsonLd(baseUrl, lng = "ar") {
+  const dream = personCompanies.find((c) => c.key === "dream");
+  const serviceTypes =
+    lng === "ar"
+      ? [
+          "تصميم داخلي",
+          "ديكور",
+          "تصميم وتنفيذ",
+          "تصميم فلل",
+          "تصميم شقق",
+          "تصميم مجالس",
+          "تصميم صالات",
+          "تصميم عيادات",
+          "تصميم مكاتب",
+          "تصميم مراكز تجميل",
+        ]
+      : [
+          "interior design",
+          "decor",
+          "design and fit-out",
+          "villa design",
+          "apartment design",
+          "majlis design",
+          "hall design",
+          "clinic design",
+          "office design",
+          "beauty center design",
+        ];
+  const areas =
+    lng === "ar"
+      ? ["أبوظبي", "دبي", "العين", "الإمارات العربية المتحدة"]
+      : ["Abu Dhabi", "Dubai", "Al Ain", "United Arab Emirates"];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${baseUrl}/#designservice`,
+    name:
+      lng === "ar"
+        ? `${dream?.arName || "دريم استديو"} للتصميم الداخلي`
+        : `${dream?.enName || "Dream Studio"} Interior Design`,
+    alternateName: lng === "ar" ? arFullName : enSeoFullName,
+    description:
+      lng === "ar"
+        ? "شركة تصميم داخلي وديكور في الإمارات بقيادة المهندس أحمد المبيض، متخصّصة في تصميم وتنفيذ الفلل والشقق والمجالس والصالات والعيادات والمكاتب ومراكز التجميل."
+        : "Interior design and decor company in the UAE led by Eng. Ahmad Almobayed, specialized in designing and executing villas, apartments, majlis, halls, clinics and offices.",
+    url: baseUrl,
+    image: `${baseUrl}/hero.png`,
+    logo: `${baseUrl}${dream?.logo || "/hero.png"}`,
+    founder: { "@id": `${baseUrl}/#person` },
+    provider: { "@id": `${baseUrl}/#person` },
+    areaServed: areas.map((name) => ({ "@type": "AdministrativeArea", name })),
+    serviceType: serviceTypes,
+    knowsAbout: lng === "ar" ? arKnowsAbout : enKnowsAbout,
+    priceRange: "$$",
+    sameAs: getPersonSameAs(),
+    makesOffer: serviceTypes.map((s) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: s,
+        serviceType: s,
+        provider: { "@id": `${baseUrl}/#person` },
+        areaServed:
+          lng === "ar" ? "الإمارات العربية المتحدة" : "United Arab Emirates",
+      },
+    })),
+  };
+}
+
+// 7) CollectionPage + ItemList لصفحة /projects (تعرّف جوجل بمعرض الأعمال)
+export function getProjectsCollectionJsonLd({ baseUrl, lng, projects }) {
+  const list = Array.isArray(projects) ? projects : [];
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${baseUrl}/projects`,
+    url: `${baseUrl}/projects`,
+    name:
+      lng === "ar"
+        ? "مشاريع التصميم الداخلي والديكور – المهندس أحمد المبيض"
+        : "Interior Design & Decor Projects – Eng. Ahmad Almobayed",
+    inLanguage: lng === "ar" ? "ar" : "en",
+    about: { "@id": `${baseUrl}/#person` },
+    isPartOf: { "@id": `${baseUrl}/#organization` },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: list.length,
+      itemListElement: list.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${baseUrl}/projects/${p.id}`,
+        name: p.name,
+      })),
+    },
+  };
+}
+
+// 8) الأسئلة الشائعة — تلتقط نية البحث (سعر/مدن/أنواع/حجز) + FAQPage schema
+export function getProjectsFaq(lng) {
+  return lng === "ar"
+    ? [
+        {
+          q: "ما هي تكلفة أو سعر التصميم الداخلي؟",
+          a: "تختلف أسعار التصميم الداخلي حسب نوع المشروع (شقة، فيلا، مجلس، صالة، عيادة، مكتب) ومساحته ومستوى التشطيب. تواصل معنا عبر صفحة الحجز للحصول على عرض سعر مخصّص لمشروعك.",
+        },
+        {
+          q: "ما أنواع المشاريع التي تصممونها؟",
+          a: "نُصمّم وننفّذ الفلل والشقق والمجالس والصالات والعيادات والمراكز التجارية والمكاتب ومراكز التجميل، بأساليب كلاسيك ومودرن ومينيمال ولاكجري.",
+        },
+        {
+          q: "في أي المدن تقدّمون خدمات التصميم الداخلي؟",
+          a: "نقدّم خدمات التصميم الداخلي والديكور في أبوظبي ودبي والعين وجميع أنحاء الإمارات، بالإضافة إلى مشاريع في الخليج والعراق.",
+        },
+        {
+          q: "كيف أحجز استشارة تصميم داخلي مع المهندس أحمد المبيض؟",
+          a: "يمكنك حجز استشارة مع المهندس أحمد المبيض و«دريم ستوديو» من خلال صفحة الحجز، باختيار نوع المشروع وموقعك لبدء العمل.",
+        },
+      ]
+    : [
+        {
+          q: "How much does interior design cost?",
+          a: "Interior design pricing depends on the project type (apartment, villa, majlis, hall, clinic, office), its area and the finishing level. Contact us through the booking page for a custom quote for your project.",
+        },
+        {
+          q: "What types of projects do you design?",
+          a: "We design and execute villas, apartments, majlis, halls, clinics, commercial spaces, offices and beauty centers, in classic, modern, minimalist and luxury styles.",
+        },
+        {
+          q: "Which cities do you offer interior design services in?",
+          a: "We offer interior design and decor services in Abu Dhabi, Dubai, Al Ain and across the UAE, in addition to projects in the Gulf and Iraq.",
+        },
+        {
+          q: "How do I book an interior design consultation with Eng. Ahmad Almobayed?",
+          a: "You can book a consultation with Eng. Ahmad Almobayed and Dream Studio through the booking page by selecting your project type and location to get started.",
+        },
+      ];
+}
+
+export function getFaqJsonLd(lng) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: getProjectsFaq(lng).map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
