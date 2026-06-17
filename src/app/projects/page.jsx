@@ -1,7 +1,13 @@
 import { Box, Chip, Container, Grid, Typography } from "@mui/material";
 import { getTranslation } from "../i18n";
 import { cookies } from "next/headers";
-import { getBreadcrumbJsonLd } from "../seo/jsonLdHelpers";
+import {
+  getBreadcrumbJsonLd,
+  getProfessionalServiceJsonLd,
+  getProjectsCollectionJsonLd,
+  getProjectsFaq,
+  getFaqJsonLd,
+} from "../seo/jsonLdHelpers";
 import JsonLd from "../seo/JsonLd";
 import Image from "next/image";
 export async function generateMetadata({ params }) {
@@ -23,9 +29,34 @@ export async function generateMetadata({ params }) {
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
 export default async function page({ searchParams }) {
   const awaitedSearchParams = await searchParams;
-  const lng = awaitedSearchParams.lng;
+  const lng = awaitedSearchParams.lng || "ar";
   const { t } = await getTranslation(lng);
   const projects = t("projects", { returnObjects: true });
+  const faqs = getProjectsFaq(lng);
+  const serviceChips =
+    lng === "ar"
+      ? [
+          "تصميم فلل",
+          "تصميم شقق",
+          "تصميم مجالس",
+          "تصميم صالات",
+          "تصميم عيادات",
+          "تصميم مكاتب",
+          "تصميم مراكز تجميل",
+          "ديكور داخلي",
+          "تصميم وتنفيذ",
+        ]
+      : [
+          "Villa design",
+          "Apartment design",
+          "Majlis design",
+          "Hall design",
+          "Clinic design",
+          "Office design",
+          "Beauty center design",
+          "Interior decor",
+          "Design & fit-out",
+        ];
   const breadcrumbJsonLd = getBreadcrumbJsonLd({
     baseUrl,
     lng,
@@ -45,6 +76,15 @@ export default async function page({ searchParams }) {
   return (
     <Box>
       <JsonLd id="breadcrumb-projects" data={breadcrumbJsonLd} />
+      <JsonLd
+        id="projects-collection"
+        data={getProjectsCollectionJsonLd({ baseUrl, lng, projects })}
+      />
+      <JsonLd
+        id="projects-service"
+        data={getProfessionalServiceJsonLd(baseUrl, lng)}
+      />
+      <JsonLd id="projects-faq" data={getFaqJsonLd(lng)} />
 
       <Container maxWidth="xl">
         <Box sx={{ mb: 3, mt: 2 }}>
@@ -73,6 +113,15 @@ export default async function page({ searchParams }) {
               ? "استكشف مجموعة من مشاريع التصميم الداخلي السكنية والتجارية في الإمارات والخليج — فلل وشقق ومجالس ومكاتب وعيادات — بتصميم وتنفيذ المهندس أحمد المبيض ودريم ستوديو."
               : "Explore a selection of residential and commercial interior design projects across the UAE and the Gulf — villas, apartments, majlis, offices and clinics — designed and executed by Eng. Ahmed Almobayd and Dream Studio."}
           </Typography>
+        </Box>
+        <Box
+          component="nav"
+          aria-label={lng === "ar" ? "خدمات التصميم" : "Design services"}
+          sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 3 }}
+        >
+          {serviceChips.map((label) => (
+            <Chip key={label} label={label} variant="outlined" size="small" />
+          ))}
         </Box>
         <Box>
           <Grid container spacing={{ xs: 2, md: 3 }}>
@@ -116,6 +165,36 @@ export default async function page({ searchParams }) {
               </Grid>
             </Grid>
           </Grid>
+        </Box>
+
+        <Box component="section" sx={{ mt: 5, mb: 5 }}>
+          <Typography
+            component="h2"
+            variant="h5"
+            sx={{ mb: 2, fontWeight: 700 }}
+          >
+            {lng === "ar"
+              ? "أسئلة شائعة عن التصميم الداخلي والديكور"
+              : "Interior Design & Decor FAQ"}
+          </Typography>
+          {faqs.map((item, i) => (
+            <Box key={i} sx={{ mb: 2.5, maxWidth: 900 }}>
+              <Typography
+                component="h3"
+                variant="subtitle1"
+                sx={{ fontWeight: 600, mb: 0.5 }}
+              >
+                {item.q}
+              </Typography>
+              <Typography
+                component="p"
+                variant="body2"
+                sx={{ color: "text.secondary", lineHeight: 1.9 }}
+              >
+                {item.a}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       </Container>
     </Box>
