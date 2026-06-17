@@ -3,8 +3,8 @@ export const arBeforeAndAfter = {
   description:
     "استعرض كيف قمنا بتحويل المساحات من أفكار أولية إلى تصميمات معمارية متكاملة تجمع بين الجمالية والوظيفية. كل مشروع يروي قصة إبداعنا، مع التركيز على التفاصيل الدقيقة والإضاءة والتدفق المثالي للمساحات، ليصبح كل مكان فريدًا يعكس الذوق الرفيع والراحة العملية",
   images: {
-    before: ["./before.png", "./before-1.jpg"],
-    after: ["./after.png", "./after-1.png"],
+    before: ["./before.webp", "./before-1.webp"],
+    after: ["./after.webp", "./after-1.webp"],
   },
 };
 export const enBeforeAndAfter = {
@@ -12,7 +12,7 @@ export const enBeforeAndAfter = {
   description:
     "Explore how we transform initial ideas into fully realized architectural designs that balance beauty and function. Every project tells the story of our craft—precision details, thoughtful lighting, and perfect spatial flow—so each place becomes uniquely elegant and effortlessly livable.",
   images: {
-    before: ["./before.png", "./before-1.jpg"],
-    after: ["./after.png", "./after-1.png"],
+    before: ["./before.webp", "./before-1.webp"],
+    after: ["./after.webp", "./after-1.webp"],
   },
 };

@@ -244,7 +244,7 @@ function ProjectCard({ data, lng }) {
         }}
         width={1200}
         height={1200}
-        src={`/projects/project-${data.id}.png`}
+        src={`/projects/project-${data.id}.webp`}
         alt={
           lng === "ar"
             ? `مشروع ${data.name} – تصميم داخلي بإشراف المهندس أحمد المبيض`

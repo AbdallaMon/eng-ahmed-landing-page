@@ -1,9 +1,11 @@
 import { arFullName, enFullName } from "./constants";
 
 const heroImages = {
-  heroImage: "./hero-croped.png",
-  heroSkitchImage: "./hero-skitch-croped.png",
-  heroBackgroundImage: "./hero-bg.png",
+  heroImage: "./hero-croped.webp",
+  heroSkitchImage: "./hero-skitch-croped.webp",
+  // hero-bg was oversized (4832px wide) so it's a resized 2560px webp.
+  // hero-bg-mobile / hero-pattern stay PNG — within size, webp came out larger.
+  heroBackgroundImage: "./hero-bg.webp",
   heroMobileBackgroundImage: "./hero-bg-mobile.png",
   heroPattern: "./hero-pattern.png",
 };

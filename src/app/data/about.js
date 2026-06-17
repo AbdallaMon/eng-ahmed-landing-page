@@ -1,10 +1,12 @@
 const aboutImages = {
-  profile: "/about.png",
-  blur: "./about-blur.png",
-  lowerRightDecoration: "./about-lower-right.png",
-  lowerLeftDecoration: "./about-lower-left.png",
-  upperRightDecoration: "./about-upper-right.png",
-  upperLeftDecoration: "./about-upper-left.png",
+  profile: "/about.webp",
+  // about-blur was oversized (4656px) so it's a resized 2560px webp.
+  // The two gradients stay PNG — within size, webp came out larger.
+  blur: "./about-blur.webp",
+  lowerRightDecoration: "./about-lower-right.webp",
+  lowerLeftDecoration: "./about-lower-left.webp",
+  upperRightDecoration: "./about-upper-right.webp",
+  upperLeftDecoration: "./about-upper-left.webp",
   aboutGradientRight: "./about-gradient-right.png",
   aboutGradientLeft: "./about-gradient-left.png",
 };

@@ -9,7 +9,7 @@ function getProjectImages(project) {
 
   return Array.from({ length: totalImages }, (_, index) => ({
     src: `/projects/project-${project.id}/${index + 1}.${
-      project.imagesExtension || "jpg"
+      project.imagesExtension || "webp"
     }`,
     index,
   }));
@@ -106,7 +106,7 @@ export const arInitialProjects = [
     description: "شقة على ستايل لاكجري وابي سابي",
     homeDescription:
       "صممت شقة فاخرة في داماك هايت مع التركيز على التفاصيل المعمارية والفخامة",
-    imageSrc: "./projects/home-project-3.png",
+    imageSrc: "./projects/home-project-3.webp",
     isHome: true,
     location: "مارينا دبي",
     year: 2025,
@@ -143,7 +143,7 @@ export const arInitialProjects = [
     slug: "project-6",
 
     href: "/projects/6",
-    imagesExtension: "png",
+    imagesExtension: "webp",
 
     imagesNumbers: 6,
     images: [
@@ -158,7 +158,7 @@ export const arInitialProjects = [
     name: "صالة انتظار",
     description:
       "مشروع عيادات في ابو ظبي تم توزيع المساحات واستغلالها لتتضمن صالة انتظار مع جلسة وبار ليتمكن الزائر الأنتظار دون ملل",
-    imageSrc: "./projects/home-project-2.png",
+    imageSrc: "./projects/home-project-2.webp",
     homeDescription:
       "صممت مشروع صالة إنتظار مبتكرًا يجمع بين الجمالية والوظيفية لتجربة مريحة وفاخرة",
     isHome: true,
@@ -188,7 +188,7 @@ export const arInitialProjects = [
       "مركز مساج داخل مركز تجميل يضم حمام مغربي وغرف مساج خاصة ومشالح مع مغاسل.",
     homeDescription:
       "صممت مركز تجميل عصريًا يوازن بين الراحة والفخامة مع مراعاة تدفق الحركة بدقة هندسية",
-    imageSrc: "./projects/home-project-1.png",
+    imageSrc: "./projects/home-project-1.webp",
     isHome: true,
     location: "أبو ظبي، مدينة العين",
     year: 2025,
@@ -336,7 +336,7 @@ export const enInitialProjects = [
     description: "Apartment in a luxury and wabi-sabi style",
     homeDescription:
       "I designed a luxury apartment in Damac Heights with a focus on architectural details and opulence",
-    imageSrc: "./projects/home-project-3.png",
+    imageSrc: "./projects/home-project-3.webp",
     isHome: true,
     location: "Dubai Marina",
     year: 2025,
@@ -372,7 +372,7 @@ export const enInitialProjects = [
     relatedIds: [7, 9],
     slug: "project-6",
     href: "/projects/6",
-    imagesExtension: "png",
+    imagesExtension: "webp",
     imagesNumbers: 6,
     images: [
       "./projects/project-6/1.png",
@@ -386,7 +386,7 @@ export const enInitialProjects = [
     name: "Waiting Lounge",
     description:
       "Clinic project in Abu Dhabi where spaces were laid out and optimized to include a waiting lounge with seating and a bar so visitors can wait without boredom.",
-    imageSrc: "./projects/home-project-2.png",
+    imageSrc: "./projects/home-project-2.webp",
     homeDescription:
       "I designed an innovative waiting lounge project that combines aesthetics and functionality for a comfortable, luxurious experience",
     isHome: true,
@@ -415,7 +415,7 @@ export const enInitialProjects = [
       "Massage center inside a beauty center featuring a Moroccan bath, private massage rooms, changing rooms and wash basins.",
     homeDescription:
       "I designed a contemporary beauty center that balances comfort and luxury while carefully considering circulation flow",
-    imageSrc: "./projects/home-project-1.png",
+    imageSrc: "./projects/home-project-1.webp",
     isHome: true,
     location: "Abu Dhabi, Al Ain City",
     year: 2025,
