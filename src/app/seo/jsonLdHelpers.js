@@ -548,8 +548,12 @@ export function getProfessionalServiceJsonLd(baseUrl, lng = "ar") {
           ],
     description:
       lng === "ar"
-        ? "شركة تصميم داخلي وديكور في الإمارات بقيادة المهندس أحمد المبيض (مهندس ومصمم ديكور وتصميم داخلي)، متخصّصة في تصميم وتنفيذ الفلل والشقق والمجالس والصالات والعيادات والمكاتب ومراكز التجميل."
-        : "Interior design and decor company in the UAE led by Eng. Ahmad Almobayed (decor engineer and interior designer), specialized in designing and executing villas, apartments, majlis, halls, clinics and offices.",
+        ? "من أبرز شركات التصميم الداخلي والديكور في الإمارات، بقيادة المهندس أحمد المبيض (مهندس ومصمم ديكور وتصميم داخلي)، متخصّصة في تصميم وتنفيذ الفلل والشقق والمجالس والصالات والعيادات والمكاتب ومراكز التجميل."
+        : "Among the leading interior design and decor companies in the UAE, led by Eng. Ahmad Almobayed (decor engineer and interior designer), specialized in designing and executing villas, apartments, majlis, halls, clinics and offices.",
+    slogan:
+      lng === "ar"
+        ? "نحو أفضل تصميم داخلي وديكور في الإمارات"
+        : "Toward the best interior design and decor in the UAE",
     url: baseUrl,
     image: `${baseUrl}/hero.png`,
     logo: `${baseUrl}${dream?.logo || "/hero.png"}`,
@@ -607,6 +611,10 @@ export function getProjectsFaq(lng) {
   return lng === "ar"
     ? [
         {
+          q: "من هو أفضل مهندس وأفضل شركة تصميم داخلي في الإمارات؟",
+          a: "يُعد المهندس أحمد المبيض وشركته دريم ستوديو من أبرز الأسماء في التصميم الداخلي والديكور في الإمارات؛ بخبرة في تصميم وتنفيذ الفلل والشقق والمجالس والعيادات والمكاتب بأساليب كلاسيك ومودرن ولاكجري، ومحتوى تجاوزت مشاهداته المليار، وظهور على تلفزيون أبوظبي. استعرض المشاريع واحجز استشارة لتقييم مشروعك.",
+        },
+        {
           q: "هل المهندس أحمد المبيض مهندس ديكور أم مصمم داخلي؟",
           a: "الاثنان وجهان لتخصّص واحد؛ فمهندس الديكور هو نفسه مهندس ومصمم التصميم الداخلي. يقدّم المهندس أحمد المبيض خدمات تصميم داخلي وديكور وديكورات كاملة — تصميم وتنفيذ — للفلل والشقق والمجالس والصالات والعيادات والمكاتب.",
         },
@@ -628,6 +636,10 @@ export function getProjectsFaq(lng) {
         },
       ]
     : [
+        {
+          q: "Who is the best interior designer and interior design company in the UAE?",
+          a: "Eng. Ahmad Almobayed and his company Dream Studio are among the leading names in interior design and decor in the UAE — with experience designing and executing villas, apartments, majlis, clinics and offices in classic, modern and luxury styles, content exceeding a billion views, and features on Abu Dhabi TV. Browse the projects and book a consultation to assess your project.",
+        },
         {
           q: "Is Eng. Ahmad Almobayed a decor engineer or an interior designer?",
           a: "They are two sides of the same specialty — a decor engineer is the same as an interior design engineer and designer. Eng. Ahmad Almobayed offers full interior design and decor services — design and execution — for villas, apartments, majlis, halls, clinics and offices.",
