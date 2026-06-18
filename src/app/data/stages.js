@@ -44,7 +44,7 @@ export const arStages = {
 };
 
 export const enStages = {
-  title: "Your Journey Roadmap with Ahmed Almobayed",
+  title: "Your Journey Roadmap with Ahmad Almobayed",
   description:
     "From the very first idea all the way to the grand opening, we lay out clear steps to build a successful architectural project.",
   stages: [

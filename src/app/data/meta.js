@@ -12,7 +12,7 @@ const arAboutSeoDescription =
 
 // English SEO description for ABOUT page
 const enAboutSeoDescription =
-  "Learn about Eng. Ahmed Almobayd, an architect and interior design specialist with over one billion views, providing innovative residential and commercial solutions and leading top design companies.";
+  "Learn about Eng. Ahmad Almobayed, an architect and interior design specialist with over one billion views, providing innovative residential and commercial solutions and leading top design companies.";
 
 /* ---------------------------------------------
    META (ARABIC VERSION)
@@ -225,11 +225,11 @@ export const arMetaData = {
 
 export const enMetaData = {
   mainPage: {
-    title: `Eng. Ahmed Almobayd - Interior Design, Planning & Execution`,
+    title: `Eng. Ahmad Almobayed - Interior Design, Planning & Execution`,
     description: `Professional interior design consultation, planning, and execution services for residential and commercial projects.`,
-    keywords: `interior design, interior designer, decor, project planning, execution, home design, office design, Ahmed Almobayd`,
+    keywords: `interior design, interior designer, decor, project planning, execution, home design, office design, Ahmad Almobayed`,
     openGraph: {
-      title: `Eng. Ahmed Almobayd - Interior Design Expert`,
+      title: `Eng. Ahmad Almobayed - Interior Design Expert`,
       description: `Interior design, planning and execution for homes and businesses.`,
       url: baseUrl,
       type: "website",
@@ -238,7 +238,7 @@ export const enMetaData = {
           url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "Eng Ahmed Almobayd Interior Design",
+          alt: "Eng. Ahmad Almobayed Interior Design",
         },
       ],
     },
@@ -246,7 +246,7 @@ export const enMetaData = {
       card: "summary_large_image",
       title: "Interior Design Consultation",
       description:
-        "Get expert interior design and planning with Eng. Ahmed Almobayd.",
+        "Get expert interior design and planning with Eng. Ahmad Almobayed.",
       images: [`${baseUrl}/hero.png`],
     },
     icons: {
@@ -258,11 +258,11 @@ export const enMetaData = {
 
   /* ---------- ABOUT PAGE ---------- */
   aboutPage: {
-    title: `About Eng. Ahmed Almobayd – Architect & Interior Design Expert`,
+    title: `About Eng. Ahmad Almobayed – Architect & Interior Design Expert`,
     description: enAboutSeoDescription,
-    keywords: `About Ahmed Almobayd, architect, interior design expert, resume, Dream Studio, Decor Stores`,
+    keywords: `About Ahmad Almobayed, architect, interior design expert, resume, Dream Studio, Decor Stores`,
     openGraph: {
-      title: `About Eng. Ahmed Almobayd`,
+      title: `About Eng. Ahmad Almobayed`,
       description: enAboutSeoDescription,
       url: `${baseUrl}/about`,
       type: "website",
@@ -277,7 +277,7 @@ export const enMetaData = {
     },
     twitter: {
       card: "summary_large_image",
-      title: `About Eng. Ahmed Almobayd`,
+      title: `About Eng. Ahmad Almobayed`,
       description: enAboutSeoDescription,
       images: [`${baseUrl}/hero.png`],
     },
@@ -290,9 +290,9 @@ export const enMetaData = {
 
   /* ---------- BOOKING PAGE ---------- */
   bookingPage: {
-    title: `Book a Consultation – Eng. Ahmed Almobayd`,
-    description: `Book an interior design consultation with Eng. Ahmed Almobayd to bring your vision to life.`,
-    keywords: `book consultation, interior design, project planning, decor execution, Ahmed Almobayd`,
+    title: `Book a Consultation – Eng. Ahmad Almobayed`,
+    description: `Book an interior design consultation with Eng. Ahmad Almobayed to bring your vision to life.`,
+    keywords: `book consultation, interior design, project planning, decor execution, Ahmad Almobayed`,
     openGraph: {
       title: `Book Your Consultation`,
       description: `Professional interior design and planning consultation.`,
@@ -355,13 +355,13 @@ export const enMetaData = {
 
   /* ---------- PRIVACY PAGE ---------- */
   privacyPage: {
-    title: `Privacy Policy – Eng. Ahmed Almobayd | DreamStudiio`,
+    title: `Privacy Policy – Eng. Ahmad Almobayed | DreamStudiio`,
     description:
-      "Learn how Eng. Ahmed Almobayd (owner of DreamStudiio) collects and uses data, including the limited Google Calendar scope to create or delete events without reading calendar contents.",
+      "Learn how Eng. Ahmad Almobayed (owner of DreamStudiio) collects and uses data, including the limited Google Calendar scope to create or delete events without reading calendar contents.",
     keywords:
-      "privacy policy, Ahmed Almobayd, DreamStudiio, Google Calendar, create events, delete events, data use",
+      "privacy policy, Ahmad Almobayed, DreamStudiio, Google Calendar, create events, delete events, data use",
     openGraph: {
-      title: `Privacy Policy – Eng. Ahmed Almobayd`,
+      title: `Privacy Policy – Eng. Ahmad Almobayed`,
       description:
         "We use a limited Google Calendar scope to create or delete events you request. We do not read or sell your calendar data.",
       url: `${baseUrl}/privacy`,
@@ -371,13 +371,13 @@ export const enMetaData = {
           url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "Privacy Policy – Eng. Ahmed Almobayd",
+          alt: "Privacy Policy – Eng. Ahmad Almobayed",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Privacy Policy – Eng. Ahmed Almobayd",
+      title: "Privacy Policy – Eng. Ahmad Almobayed",
       description:
         "Limited Google Calendar scope: create/delete events you request; we do not read or sell your data.",
       images: [`${baseUrl}/hero.png`],
@@ -391,15 +391,15 @@ export const enMetaData = {
 
   /* ---------- TERMS PAGE ---------- */
   termsPage: {
-    title: `Terms of Service – Eng. Ahmed Almobayd | DreamStudiio`,
+    title: `Terms of Service – Eng. Ahmad Almobayed | DreamStudiio`,
     description:
-      "Review the terms of service and usage rules for Eng. Ahmed Almobayd's website, including booking policies, Google Calendar linking, and intellectual property.",
+      "Review the terms of service and usage rules for Eng. Ahmad Almobayed's website, including booking policies, Google Calendar linking, and intellectual property.",
     keywords:
-      "terms of service, Ahmed Almobayd, DreamStudiio, usage policy, bookings",
+      "terms of service, Ahmad Almobayed, DreamStudiio, usage policy, bookings",
     openGraph: {
-      title: `Terms of Service – Eng. Ahmed Almobayd`,
+      title: `Terms of Service – Eng. Ahmad Almobayed`,
       description:
-        "Terms and conditions for using Eng. Ahmed Almobayd's services and DreamStudiio website.",
+        "Terms and conditions for using Eng. Ahmad Almobayed's services and DreamStudiio website.",
       url: `${baseUrl}/terms`,
       type: "website",
       images: [
@@ -407,13 +407,13 @@ export const enMetaData = {
           url: `${baseUrl}/hero.png`,
           width: 1200,
           height: 630,
-          alt: "Terms of Service – Eng. Ahmed Almobayd",
+          alt: "Terms of Service – Eng. Ahmad Almobayed",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Terms of Service – Eng. Ahmed Almobayd",
+      title: "Terms of Service – Eng. Ahmad Almobayed",
       description: "Review the terms and conditions of service.",
       images: [`${baseUrl}/hero.png`],
     },
