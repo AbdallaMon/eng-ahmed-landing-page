@@ -101,7 +101,7 @@ export default async function page({ searchParams }) {
           >
             {lng === "ar"
               ? "مشاريع التصميم الداخلي – المهندس أحمد المبيض"
-              : "Interior Design Projects – Eng. Ahmed Almobayd"}
+              : "Interior Design Projects – Eng. Ahmad Almobayed"}
           </Typography>
 
           <Typography
@@ -114,7 +114,7 @@ export default async function page({ searchParams }) {
           >
             {lng === "ar"
               ? "استكشف مجموعة من مشاريع التصميم الداخلي والديكور السكنية والتجارية في الإمارات والخليج — فلل وشقق ومجالس ومكاتب وعيادات — بتصميم وتنفيذ المهندس أحمد المبيض (مهندس ومصمم ديكور وتصميم داخلي) ودريم ستوديو."
-              : "Explore a selection of residential and commercial interior design and decor projects across the UAE and the Gulf — villas, apartments, majlis, offices and clinics — designed and executed by Eng. Ahmed Almobayd (decor engineer and interior designer) and Dream Studio."}
+              : "Explore a selection of residential and commercial interior design and decor projects across the UAE and the Gulf — villas, apartments, majlis, offices and clinics — designed and executed by Eng. Ahmad Almobayed (decor engineer and interior designer) and Dream Studio."}
           </Typography>
         </Box>
         <Box
@@ -251,7 +251,7 @@ function ProjectCard({ data, lng }) {
         alt={
           lng === "ar"
             ? `مشروع ${data.name} – تصميم داخلي بإشراف المهندس أحمد المبيض`
-            : `${data.name} interior design project by Eng. Ahmed Almobayd`
+            : `${data.name} interior design project by Eng. Ahmad Almobayed`
         }
       />
     </Box>

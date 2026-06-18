@@ -1,26 +1,21 @@
 export const arName = "أحمد المبيض";
-export const enName = "Ahmed almobayd";
+export const enName = "Ahmad Almobayed";
 export const arProfession = "مهندس تصميم داخلي";
 export const enProfession = "Interior Design Eng";
 export const arProfessionSuffix = "مهندس";
 export const enProfessionSuffix = "Eng";
 export const arFullName = `${arProfessionSuffix} أحمد المبيض`;
-export const enFullName = `${enProfessionSuffix} Ahmed Almobayd`;
+export const enFullName = "Eng. Ahmad Almobayed";
 
-// ====== الاسم الإنجليزي القانوني (Canonical) المطابق للدومين والويكيداتا ======
-// يُستخدم في الميتا (titles/descriptions) وفي بيانات schema (alternateName) فقط —
-// ولا يغيّر الاسم الظاهر في واجهة الموقع (enFullName) الذي يبقى "Eng Ahmed Almobayd".
+// الاسم الإنجليزي القانوني (Canonical) — تهجئة واحدة موحّدة في كل الموقع،
+// مطابقة للدومين (ahmadmobayed.com) والويكيداتا. لا "Ahmed" ولا "Almobayd".
 export const enSeoName = "Ahmad Almobayed";
 export const enSeoFullName = "Eng. Ahmad Almobayed";
 
-// كل صيغ الاسم المعروفة (لغتين + ألقاب الويكيداتا) لمساعدة محركات البحث على ربط الكيان
+// صيغ الاسم (إنجليزي موحّد + عربي) لمساعدة محركات البحث على ربط الكيان
 export const personAlternateNames = [
-  enSeoFullName, // Eng. Ahmad Almobayed (القانوني)
+  enSeoFullName, // Eng. Ahmad Almobayed
   enSeoName, // Ahmad Almobayed
-  enFullName, // Eng Ahmed Almobayd (الظاهر في الموقع)
-  enName, // Ahmed almobayd
-  "Engineer Ahmed El-Mobayed",
-  "Engineer Ahmed",
   arFullName, // مهندس أحمد المبيض
   arName, // أحمد المبيض
   "المهندس أحمد المبيض",
