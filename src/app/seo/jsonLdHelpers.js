@@ -470,13 +470,13 @@ export function getProjectSeoParagraph(projectData, lng) {
   const desc = `${projectData?.description || ""}`.trim().replace(/[.،,]+$/, "");
 
   if (lng === "ar") {
-    return `يقدّم المهندس أحمد المبيض و«دريم ستوديو» خدمات تصميم داخلي وديكور وتنفيذ احترافية. «${name}» مشروع ${kind.label} في ${region}${
+    return `يقدّم المهندس أحمد المبيض و«دريم ستوديو» خدمات تصميم داخلي وديكور وتشطيب وتنفيذ (فيت اوت) احترافية. «${name}» مشروع ${kind.label} في ${region}${
       desc ? `، ${desc}` : ""
-    }. إذا كنت تبحث عن ${kind.keywords.join("، ")}، أو عن مصمم داخلي و شركة تصميم داخلي في ${region}، فهذا نموذج من أعمالنا — استعرض الصور واطلب استشارة لمعرفة الأفكار وتفاصيل وأسعار التصميم الداخلي.`;
+    }. إذا كنت تبحث عن ${kind.keywords.join("، ")}، أو عن مهندس ديكور أو مصمم ديكور أو مصمم داخلي أو شركة تصميم داخلي وديكور في ${region}، فهذا نموذج من أعمالنا في الديكور والتصميم الداخلي — استعرض الصور واطلب استشارة لمعرفة الأفكار وتفاصيل وأسعار التصميم الداخلي.`;
   }
   return `Eng. Ahmad Almobayed and Dream Studio provide professional interior design, decor and fit-out services. "${name}" is a ${kind.label} project in ${region}${
     desc ? `, ${desc}` : ""
-  }. If you are looking for ${kind.keywords.join(", ")}, or an interior designer and interior design company in ${region}, this is a sample of our work — browse the photos and request a consultation for ideas and interior design pricing.`;
+  }. If you are looking for ${kind.keywords.join(", ")}, or a decor engineer, decor designer, interior designer or interior design & decor company in ${region}, this is a sample of our decor and interior design work — browse the photos and request a consultation for ideas and interior design pricing.`;
 }
 
 // 6) ProfessionalService — كيان "شركة/مصمم تصميم داخلي" (يستهدف البحث العام)
@@ -487,7 +487,12 @@ export function getProfessionalServiceJsonLd(baseUrl, lng = "ar") {
       ? [
           "تصميم داخلي",
           "ديكور",
+          "تصميم ديكور",
+          "ديكورات",
           "تصميم وتنفيذ",
+          "تشطيب وتنفيذ",
+          "فيت اوت",
+          "تجديد وديكور",
           "تصميم فلل",
           "تصميم شقق",
           "تصميم مجالس",
@@ -499,7 +504,12 @@ export function getProfessionalServiceJsonLd(baseUrl, lng = "ar") {
       : [
           "interior design",
           "decor",
+          "decoration design",
+          "decorations",
           "design and fit-out",
+          "interior fit-out",
+          "office fit-out",
+          "renovation",
           "villa design",
           "apartment design",
           "majlis design",
@@ -521,11 +531,25 @@ export function getProfessionalServiceJsonLd(baseUrl, lng = "ar") {
       lng === "ar"
         ? `${dream?.arName || "دريم استديو"} للتصميم الداخلي`
         : `${dream?.enName || "Dream Studio"} Interior Design`,
-    alternateName: lng === "ar" ? arFullName : enSeoFullName,
+    alternateName:
+      lng === "ar"
+        ? [
+            arFullName,
+            "مهندس ديكور",
+            "مصمم ديكور",
+            "مهندس تصميم داخلي",
+            "مصمم داخلي",
+          ]
+        : [
+            enSeoFullName,
+            "decor engineer",
+            "decor designer",
+            "interior designer",
+          ],
     description:
       lng === "ar"
-        ? "شركة تصميم داخلي وديكور في الإمارات بقيادة المهندس أحمد المبيض، متخصّصة في تصميم وتنفيذ الفلل والشقق والمجالس والصالات والعيادات والمكاتب ومراكز التجميل."
-        : "Interior design and decor company in the UAE led by Eng. Ahmad Almobayed, specialized in designing and executing villas, apartments, majlis, halls, clinics and offices.",
+        ? "شركة تصميم داخلي وديكور في الإمارات بقيادة المهندس أحمد المبيض (مهندس ومصمم ديكور وتصميم داخلي)، متخصّصة في تصميم وتنفيذ الفلل والشقق والمجالس والصالات والعيادات والمكاتب ومراكز التجميل."
+        : "Interior design and decor company in the UAE led by Eng. Ahmad Almobayed (decor engineer and interior designer), specialized in designing and executing villas, apartments, majlis, halls, clinics and offices.",
     url: baseUrl,
     image: `${baseUrl}/hero.png`,
     logo: `${baseUrl}${dream?.logo || "/hero.png"}`,
@@ -583,12 +607,16 @@ export function getProjectsFaq(lng) {
   return lng === "ar"
     ? [
         {
+          q: "هل المهندس أحمد المبيض مهندس ديكور أم مصمم داخلي؟",
+          a: "الاثنان وجهان لتخصّص واحد؛ فمهندس الديكور هو نفسه مهندس ومصمم التصميم الداخلي. يقدّم المهندس أحمد المبيض خدمات تصميم داخلي وديكور وديكورات كاملة — تصميم وتنفيذ — للفلل والشقق والمجالس والصالات والعيادات والمكاتب.",
+        },
+        {
           q: "ما هي تكلفة أو سعر التصميم الداخلي؟",
           a: "تختلف أسعار التصميم الداخلي حسب نوع المشروع (شقة، فيلا، مجلس، صالة، عيادة، مكتب) ومساحته ومستوى التشطيب. تواصل معنا عبر صفحة الحجز للحصول على عرض سعر مخصّص لمشروعك.",
         },
         {
           q: "ما أنواع المشاريع التي تصممونها؟",
-          a: "نُصمّم وننفّذ الفلل والشقق والمجالس والصالات والعيادات والمراكز التجارية والمكاتب ومراكز التجميل، بأساليب كلاسيك ومودرن ومينيمال ولاكجري.",
+          a: "نُصمّم وننفّذ الفلل والشقق والمجالس والصالات والعيادات والمراكز التجارية والمكاتب ومراكز التجميل، بأساليب كلاسيك ومودرن ومينيمال ولاكجري، بالإضافة إلى أعمال التشطيب والتنفيذ (فيت اوت) وتجديد الديكور.",
         },
         {
           q: "في أي المدن تقدّمون خدمات التصميم الداخلي؟",
@@ -601,12 +629,16 @@ export function getProjectsFaq(lng) {
       ]
     : [
         {
+          q: "Is Eng. Ahmad Almobayed a decor engineer or an interior designer?",
+          a: "They are two sides of the same specialty — a decor engineer is the same as an interior design engineer and designer. Eng. Ahmad Almobayed offers full interior design and decor services — design and execution — for villas, apartments, majlis, halls, clinics and offices.",
+        },
+        {
           q: "How much does interior design cost?",
           a: "Interior design pricing depends on the project type (apartment, villa, majlis, hall, clinic, office), its area and the finishing level. Contact us through the booking page for a custom quote for your project.",
         },
         {
           q: "What types of projects do you design?",
-          a: "We design and execute villas, apartments, majlis, halls, clinics, commercial spaces, offices and beauty centers, in classic, modern, minimalist and luxury styles.",
+          a: "We design and execute villas, apartments, majlis, halls, clinics, commercial spaces, offices and beauty centers, in classic, modern, minimalist and luxury styles, plus full fit-out, execution and renovation works.",
         },
         {
           q: "Which cities do you offer interior design services in?",
