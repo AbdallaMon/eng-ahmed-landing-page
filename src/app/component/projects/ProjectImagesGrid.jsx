@@ -6,7 +6,7 @@ import ProjectImagesLightboxClient from "./ProjectImagesLightboxClient";
 import { getProjectKind } from "@/app/seo/jsonLdHelpers";
 
 function buildImageAlt({ project, index, lng, kindLabel }) {
-  const brand = lng === "ar" ? "المهندس أحمد المبيض" : "Eng. Ahmed Almobayd";
+  const brand = lng === "ar" ? "المهندس أحمد المبيض" : "Eng. Ahmad Almobayed";
 
   if (lng === "ar") {
     return `صورة رقم ${index + 1} من ${kindLabel} «${project.name}» في ${
