@@ -45,6 +45,8 @@ export default async function page({ searchParams }) {
           "تصميم مراكز تجميل",
           "ديكور داخلي",
           "تصميم وتنفيذ",
+          "تشطيب (فيت اوت)",
+          "تجديد ديكور",
         ]
       : [
           "Villa design",
@@ -56,6 +58,7 @@ export default async function page({ searchParams }) {
           "Beauty center design",
           "Interior decor",
           "Design & fit-out",
+          "Renovation",
         ];
   const breadcrumbJsonLd = getBreadcrumbJsonLd({
     baseUrl,
@@ -110,8 +113,8 @@ export default async function page({ searchParams }) {
             }}
           >
             {lng === "ar"
-              ? "استكشف مجموعة من مشاريع التصميم الداخلي السكنية والتجارية في الإمارات والخليج — فلل وشقق ومجالس ومكاتب وعيادات — بتصميم وتنفيذ المهندس أحمد المبيض ودريم ستوديو."
-              : "Explore a selection of residential and commercial interior design projects across the UAE and the Gulf — villas, apartments, majlis, offices and clinics — designed and executed by Eng. Ahmed Almobayd and Dream Studio."}
+              ? "استكشف مجموعة من مشاريع التصميم الداخلي والديكور السكنية والتجارية في الإمارات والخليج — فلل وشقق ومجالس ومكاتب وعيادات — بتصميم وتنفيذ المهندس أحمد المبيض (مهندس ومصمم ديكور وتصميم داخلي) ودريم ستوديو."
+              : "Explore a selection of residential and commercial interior design and decor projects across the UAE and the Gulf — villas, apartments, majlis, offices and clinics — designed and executed by Eng. Ahmed Almobayd (decor engineer and interior designer) and Dream Studio."}
           </Typography>
         </Box>
         <Box

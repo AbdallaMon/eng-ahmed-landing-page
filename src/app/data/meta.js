@@ -119,7 +119,7 @@ export const arMetaData = {
   projectsPage: {
     title: `مشاريع تصميم داخلي وديكور في الإمارات – المهندس أحمد المبيض`,
     description: `استعرض مشاريع التصميم الداخلي والديكور والتنفيذ في الإمارات والخليج: فلل، شقق، مجالس، مكاتب وعيادات، بتصميم وتنفيذ المهندس أحمد المبيض ودريم ستوديو.`,
-    keywords: `مشاريع تصميم داخلي, تصميم فلل, تصميم شقق, تصميم مجالس, ديكور داخلي, تصميم مكاتب, تصميم تجاري, تصميم سكني, مشاريع أحمد المبيض, تصميم داخلي الإمارات, دريم ستوديو`,
+    keywords: `مشاريع تصميم داخلي, مشاريع ديكور, شركة تصميم داخلي, شركة ديكور, تصميم فلل, تصميم شقق, تصميم مجالس, ديكور داخلي, ديكورات, تصميم ديكور, مهندس ديكور, مصمم ديكور, تشطيب وتنفيذ, فيت اوت, تجديد ديكور, ديكور منازل, تصميم مكاتب, تصميم داخلي دبي, تصميم داخلي أبوظبي, تصميم داخلي الإمارات, مشاريع أحمد المبيض, دريم ستوديو`,
     openGraph: {
       title: `مشاريع تصميم داخلي وديكور في الإمارات – المهندس أحمد المبيض`,
       description: `نماذج من أعمال التصميم الداخلي والديكور والتنفيذ: فلل وشقق ومجالس ومكاتب وعيادات بتوقيع المهندس أحمد المبيض ودريم ستوديو.`,
@@ -324,7 +324,7 @@ export const enMetaData = {
   projectsPage: {
     title: `Interior Design & Decor Projects in the UAE – Eng. Ahmad Almobayed`,
     description: `Browse interior design, decor and execution projects across the UAE and the Gulf: villas, apartments, majlis, offices and clinics — by Eng. Ahmad Almobayed and Dream Studio.`,
-    keywords: `interior design projects, villa design, apartment design, majlis design, office design, commercial interior design, residential interior design, interior design UAE, Ahmad Almobayed, Dream Studio, decor`,
+    keywords: `interior design projects, decor projects, interior design company, fit out company, villa design, apartment design, majlis design, office design, commercial interior design, residential interior design, interior fit out, office fit out, renovation, luxury interior design, home decor, decor engineer, decor designer, decorations, interior design Dubai, interior design Abu Dhabi, interior design UAE, Ahmad Almobayed, Dream Studio, decor`,
     openGraph: {
       title: `Interior Design & Decor Projects in the UAE – Eng. Ahmad Almobayed`,
       description: `A collection of interior design, decor and execution projects: villas, apartments, majlis, offices and clinics by Eng. Ahmad Almobayed and Dream Studio.`,
