@@ -19,7 +19,7 @@ export const arAboutData = {
 
 export const enAboutData = {
   title:
-    "Engineer Ahmed Al-Mubayyid: Creator of Innovative Spaces and Visual Beauty",
+    "Engineer Ahmed Almobayed: Creator of Innovative Spaces and Visual Beauty",
   description:
     "An architect and interior design specialist, and a content creator whose content has surpassed one billion views. He leads the companies Dream Studio and Metager & Decor Stores, and provides innovative solutions for residential and commercial projects, in addition to training engineers and authoring specialized books, which makes him one of the most prominent names in the field.",
   aboutImages,
