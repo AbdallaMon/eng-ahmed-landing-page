@@ -5,7 +5,7 @@ import ProjectImagesLightboxClient from "./ProjectImagesLightboxClient";
 
 function buildImageAlt({ project, index, lng }) {
   const engAhmedBrand =
-    lng === "ar" ? "المهندس أحمد المبيض" : "Eng Ahmed Almobayed";
+    lng === "ar" ? "المهندس أحمد المبيض" : "Eng. Ahmad Almobayed";
 
   return `${project.name} – ${project.description} – ${
     project.location

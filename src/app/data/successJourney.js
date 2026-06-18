@@ -16,7 +16,7 @@ export const enSuccessJourney = {
     secondary: "An Inspiring Success Story in Design and Decor",
   },
   description: {
-    primary: `Architect Ahmed Almobayd presents a model of an entrepreneur who turned a negative review into a launching pad. After being fired from a major consulting firm for being labeled a "failure" in design, Almobayd founded three specialized companies: "Dream Studios" (for design), "Decor Stores" (for furniture), and "VFX" (for visual effects).`,
+    primary: `Architect Ahmad Almobayed presents a model of an entrepreneur who turned a negative review into a launching pad. After being fired from a major consulting firm for being labeled a "failure" in design, Almobayed founded three specialized companies: "Dream Studios" (for design), "Decor Stores" (for furniture), and "VFX" (for visual effects).`,
     secondary: `His quantitative achievements demonstrate his broad impact, having designed over 1000 villas and achieving one billion views on social media, confirming that professional setbacks can be a catalyst for entrepreneurial success in design and creativity.`,
   },
   badges: [

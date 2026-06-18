@@ -6,7 +6,7 @@ export default function AboutImageContainer({ images, lng, aboutData }) {
   const profileAlt =
     lng === "ar"
       ? "المهندس أحمد المبيض – مهندس معماري ومتخصص في التصميم الداخلي"
-      : "Eng. Ahmed Almobayd – Architect and Interior Design Specialist";
+      : "Eng. Ahmad Almobayed – Architect and Interior Design Specialist";
 
   return (
     <Box sx={{ position: "relative" }}>

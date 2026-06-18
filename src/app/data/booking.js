@@ -32,7 +32,7 @@ export const arBooking = {
 };
 
 export const enBooking = {
-  title: "Book a Meeting with Eng. Ahmed Almobayd",
+  title: "Book a Meeting with Eng. Ahmad Almobayed",
   subTitle: "Planning - Design - Implementation - Consultation",
   inputs: [
     {
