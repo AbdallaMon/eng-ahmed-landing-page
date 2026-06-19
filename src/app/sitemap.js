@@ -74,14 +74,11 @@ export default async function sitemap() {
 
   const projectRoutes = arInitialProjects.map((project) => {
     const path = `/projects/${project.id}`;
-    // Per-project stable date from the project year, when available.
-    const projectLastModified =
-      project.year && String(project.year).length === 4
-        ? `${project.year}-01-01`
-        : lastModified;
+    // lastmod = when the PAGE was last modified (content/SEO updated), not the
+    // project's execution year — so Google sees the recent content refresh.
     return {
       url: `${base}${path}`,
-      lastModified: projectLastModified,
+      lastModified,
       changeFrequency: "monthly",
       priority: 0.64,
       alternates: { languages: altLanguages(base, path) },
