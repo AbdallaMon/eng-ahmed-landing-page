@@ -382,6 +382,23 @@ export default async function page({ params, searchParams }) {
                   sx={{ color: "text.secondary", lineHeight: 1.9 }}
                 >
                   {item.a}
+                  {item.a.includes(
+                    lng === "ar" ? "صفحة الحجز" : "booking page"
+                  ) && (
+                    <>
+                      {" "}
+                      <Link
+                        href={`/booking?lng=${lng}`}
+                        style={{
+                          color: colors.primary,
+                          fontWeight: 600,
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {lng === "ar" ? "احجز الآن ←" : "Book now →"}
+                      </Link>
+                    </>
+                  )}
                 </Typography>
               </Box>
             ))}

@@ -10,18 +10,26 @@ import {
 } from "../seo/jsonLdHelpers";
 import JsonLd from "../seo/JsonLd";
 import Image from "next/image";
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ searchParams }) {
+  const awaitedSearchParams = await searchParams;
   const cookieStore = await cookies();
-  const lng = cookieStore.get("i18next")?.value || "ar";
+  // نفضّل لغة الرابط (?lng=) ثم الكوكي حتى يطابق الـ canonical اللغة المعروضة
+  const lng =
+    awaitedSearchParams?.lng || cookieStore.get("i18next")?.value || "ar";
   const { t } = await getTranslation(lng);
   const metaData = t("meta", { returnObjects: true });
   return {
     ...metaData.projectsPage,
     alternates: {
-      canonical: `${baseUrl}/projects`,
+      // كل لغة تشير لنفسها كـ canonical عشان النسخة الإنجليزية تتفهرس لوحدها
+      canonical:
+        lng === "ar"
+          ? `${baseUrl}/projects`
+          : `${baseUrl}/projects?lng=en`,
       languages: {
-        ar: `${baseUrl}/projects?lng=ar`,
+        ar: `${baseUrl}/projects`,
         en: `${baseUrl}/projects?lng=en`,
+        "x-default": `${baseUrl}/projects`,
       },
     },
   };
