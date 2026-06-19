@@ -58,10 +58,11 @@ export default async function sitemap() {
 
   // ── Main domain ─────────────────────────────────────────────────
   // Every public page, each with its ar/en hreflang alternates.
+  // NOTE: /booking is intentionally excluded — it now 307-redirects to the
+  // register flow (NEXT_PUBLIC_REGISTER_URL), so it must not be a sitemap entry.
   const staticRoutes = [
     { path: "/", changeFrequency: "weekly", priority: 1 },
     { path: "/about", changeFrequency: "monthly", priority: 0.8 },
-    { path: "/booking", changeFrequency: "monthly", priority: 0.8 },
     { path: "/projects", changeFrequency: "weekly", priority: 0.8 },
     { path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
     { path: "/terms", changeFrequency: "yearly", priority: 0.3 },

@@ -136,6 +136,17 @@ export function proxy(request) {
     }
   }
 
+  // /booking is closed on the main site → funnel straight to the register flow
+  // (NEXT_PUBLIC_REGISTER_URL) in ONE hop, before the language redirect. The
+  // booking host is unaffected (it serves the register flow itself).
+  if (
+    !onBookingHost &&
+    (url.pathname === "/booking" || url.pathname.startsWith("/booking/"))
+  ) {
+    const registerUrl = process.env.NEXT_PUBLIC_REGISTER_URL;
+    if (registerUrl) return NextResponse.redirect(registerUrl);
+  }
+
   if (url.searchParams.has("lng")) {
     const qLng = url.searchParams.get("lng");
 
