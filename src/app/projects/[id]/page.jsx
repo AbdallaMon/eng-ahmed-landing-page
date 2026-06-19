@@ -7,6 +7,9 @@ import {
   getProjectArticleJsonLd,
   getProfessionalServiceJsonLd,
   getProjectSeoParagraph,
+  getProjectKind,
+  getProjectFaq,
+  getProjectFaqJsonLd,
 } from "@/app/seo/jsonLdHelpers";
 import {
   Box,
@@ -80,6 +83,10 @@ export async function generateMetadata({ params, searchParams }) {
         ? "Commercial Interior Design"
         : "Residential Interior Design";
 
+  // النوع الدقيق للمشروع (تصميم صالة/مجلس/شقة/عيادة/مكتب/مركز تجميل) لاستهداف
+  // نية البحث المباشرة في العنوان والكلمات المفتاحية
+  const kind = getProjectKind(projectData, lng);
+
   const keywordsList =
     lng === "ar"
       ? [
@@ -128,12 +135,16 @@ export async function generateMetadata({ params, searchParams }) {
           String(projectData.year),
         ];
 
-  const keywords = keywordsList.filter(Boolean).join(", ");
+  // نبدأ بكلمات نوع المشروع المباشرة ("تصميم صالة"...) ثم بقية الكلمات
+  const keywords = [...kind.keywords, ...keywordsList]
+    .filter(Boolean)
+    .join(", ");
 
+  // العنوان يحمل نوع المشروع المباشر ("تصميم صالة") بدل "تصميم داخلي" العام
   const title =
     lng === "ar"
-      ? `${projectData.name} – ${sectionLabel} في ${projectData.location} | المهندس أحمد المبيض`
-      : `${projectData.name} – ${sectionLabel} in ${projectData.location} | Eng. Ahmad Almobayed`;
+      ? `${projectData.name} – ${kind.label} في ${projectData.location} | المهندس أحمد المبيض`
+      : `${projectData.name} – ${kind.label} in ${projectData.location} | Eng. Ahmad Almobayed`;
 
   const description =
     lng === "ar"
@@ -170,10 +181,16 @@ export async function generateMetadata({ params, searchParams }) {
     },
 
     alternates: {
-      canonical: `${baseUrl}/projects/${projectId}`,
+      // كل لغة تشير لنفسها كـ canonical عشان النسخة الإنجليزية تتفهرس لوحدها
+      // بدل ما تتلمّ على الرابط العربي (الافتراضي). العربي = الرابط المجرّد.
+      canonical:
+        lng === "ar"
+          ? `${baseUrl}/projects/${projectId}`
+          : `${baseUrl}/projects/${projectId}?lng=en`,
       languages: {
-        ar: `${baseUrl}/projects/${projectId}?lng=ar`,
+        ar: `${baseUrl}/projects/${projectId}`,
         en: `${baseUrl}/projects/${projectId}?lng=en`,
+        "x-default": `${baseUrl}/projects/${projectId}`,
       },
     },
 
@@ -263,6 +280,9 @@ export default async function page({ params, searchParams }) {
     projectData,
     normalizedImagePath,
   });
+  // نوع المشروع + أسئلته الشائعة المخصّصة (تلتقط "تصميم صالة/مجلس/..." وتربط بالحجز)
+  const projectKind = getProjectKind(projectData, lng);
+  const projectFaq = getProjectFaq(projectData, lng);
   return (
     <>
       <JsonLd id={`breadcrumb-project-${projectId}`} data={breadcrumbJsonLd} />
@@ -272,6 +292,11 @@ export default async function page({ params, searchParams }) {
       <JsonLd
         id={`service-project-${projectId}`}
         data={getProfessionalServiceJsonLd(baseUrl, lng)}
+      />
+
+      <JsonLd
+        id={`faq-project-${projectId}`}
+        data={getProjectFaqJsonLd(projectData, lng)}
       />
       <Box>
         <Container maxWidth="xl">
@@ -289,8 +314,8 @@ export default async function page({ params, searchParams }) {
               sx={{ mb: 1, fontWeight: "bold" }}
             >
               {lng === "ar"
-                ? `${projectData.name} – تصميم داخلي في ${projectData.location}`
-                : `${projectData.name} – Interior Design in ${projectData.location}`}
+                ? `${projectData.name} – ${projectKind.label} في ${projectData.location}`
+                : `${projectData.name} – ${projectKind.label} in ${projectData.location}`}
             </Typography>
             <Typography
               component="p"
@@ -317,7 +342,7 @@ export default async function page({ params, searchParams }) {
               variant="body1"
               sx={{ color: "text.secondary", lineHeight: 1.9, maxWidth: 900 }}
             >
-              {getProjectSeoParagraph(projectData, lng)}
+              {projectData.seoContent || getProjectSeoParagraph(projectData, lng)}
             </Typography>
             <Box sx={{ mt: 2.5 }}>
               <Button
@@ -331,6 +356,35 @@ export default async function page({ params, searchParams }) {
                   : "Book a consultation for a similar project"}
               </Button>
             </Box>
+          </Box>
+          <Box component="section" sx={{ pb: 2 }}>
+            <Typography
+              component="h2"
+              variant="h6"
+              sx={{ mb: 1.5, fontWeight: 600 }}
+            >
+              {lng === "ar"
+                ? `أسئلة شائعة عن ${projectKind.label}`
+                : `FAQ about ${projectKind.label}`}
+            </Typography>
+            {projectFaq.map((item, i) => (
+              <Box key={i} sx={{ mb: 2, maxWidth: 900 }}>
+                <Typography
+                  component="h3"
+                  variant="subtitle1"
+                  sx={{ fontWeight: 600, mb: 0.5 }}
+                >
+                  {item.q}
+                </Typography>
+                <Typography
+                  component="p"
+                  variant="body2"
+                  sx={{ color: "text.secondary", lineHeight: 1.9 }}
+                >
+                  {item.a}
+                </Typography>
+              </Box>
+            ))}
           </Box>
           <Box>
             <ProjectRelatedSection

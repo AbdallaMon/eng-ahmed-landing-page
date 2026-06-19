@@ -479,6 +479,71 @@ export function getProjectSeoParagraph(projectData, lng) {
   }. If you are looking for ${kind.keywords.join(", ")}, or a decor engineer, decor designer, interior designer or interior design & decor company in ${region}, this is a sample of our decor and interior design work — browse the photos and request a consultation for ideas and interior design pricing.`;
 }
 
+// 5.c) أسئلة شائعة مخصّصة لكل مشروع حسب نوعه (صالة/مجلس/شقة/عيادة/مكتب/مركز تجميل)
+// الهدف: التقاط نية البحث القريبة — "تصميم {النوع}"، "تكلفة..."، "أفضل مهندس..."،
+// "تصميم وتنفيذ..." — مع دعوة واضحة للتواصل في كل إجابة. (٤ أسئلة فقط لتفادي الحشو)
+export function getProjectFaq(projectData, lng) {
+  const kind = getProjectKind(projectData, lng);
+  const region = getProjectRegion(projectData, lng);
+  const name = projectData?.name || "";
+
+  if (lng === "ar") {
+    return [
+      {
+        q: `هل تبحث عن ${kind.label} في ${region}؟`,
+        a: `«${name}» نموذج من أعمال المهندس أحمد المبيض و«دريم ستوديو» في ${kind.label}. إذا كنت تبحث عن ${kind.keywords.join(
+          "، "
+        )} في ${region}، تواصل معنا عبر صفحة الحجز لنصمّم وننفّذ لك مشروعاً مشابهاً.`,
+      },
+      {
+        q: `كم تكلفة ${kind.label}؟`,
+        a: `تختلف تكلفة ${kind.label} حسب المساحة ومستوى التشطيب والخامات المستخدمة. اطلب عرض سعر مخصّص لمشروعك من خلال صفحة الحجز.`,
+      },
+      {
+        q: `من هو أفضل مهندس ومصمم لـ${kind.label} في الإمارات؟`,
+        a: `يُعدّ المهندس أحمد المبيض و«دريم ستوديو» من أبرز الأسماء في التصميم الداخلي والديكور في الإمارات، بخبرة في ${kind.label} وأكثر من 220 مشروعاً منفّذاً. استعرض المشروع واحجز استشارة لتقييم فكرتك.`,
+      },
+      {
+        q: `هل تقدّمون تصميم وتنفيذ (فيت اوت) لـ${kind.label}؟`,
+        a: `نعم، نقدّم خدمة متكاملة من التصميم حتى التنفيذ والتشطيب (فيت اوت) لـ${kind.label} في أبوظبي ودبي والعين وجميع أنحاء الإمارات.`,
+      },
+    ];
+  }
+  return [
+    {
+      q: `Looking for ${kind.label} in ${region}?`,
+      a: `"${name}" is a sample of Eng. Ahmad Almobayed and Dream Studio's work in ${kind.label}. If you are looking for ${kind.keywords.join(
+        ", "
+      )} in ${region}, contact us through the booking page and we'll design and execute a similar project for you.`,
+    },
+    {
+      q: `How much does ${kind.label} cost?`,
+      a: `The cost of ${kind.label} depends on the area, finishing level and materials used. Request a custom quote for your project through the booking page.`,
+    },
+    {
+      q: `Who is the best engineer and designer for ${kind.label} in the UAE?`,
+      a: `Eng. Ahmad Almobayed and Dream Studio are among the leading names in interior design and decor in the UAE, with experience in ${kind.label} and 220+ completed projects. Browse the project and book a consultation to assess your idea.`,
+    },
+    {
+      q: `Do you offer design and fit-out for ${kind.label}?`,
+      a: `Yes — we provide an end-to-end service from design to execution and fit-out for ${kind.label} in Abu Dhabi, Dubai, Al Ain and across the UAE.`,
+    },
+  ];
+}
+
+// FAQPage schema مبني على أسئلة المشروع المخصّصة أعلاه
+export function getProjectFaqJsonLd(projectData, lng) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: getProjectFaq(projectData, lng).map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
 // 6) ProfessionalService — كيان "شركة/مصمم تصميم داخلي" (يستهدف البحث العام)
 export function getProfessionalServiceJsonLd(baseUrl, lng = "ar") {
   const dream = personCompanies.find((c) => c.key === "dream");
