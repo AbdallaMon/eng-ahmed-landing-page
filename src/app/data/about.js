@@ -1,5 +1,5 @@
 const aboutImages = {
-  profile: "/about.webp",
+  profile: "/ahmed-almobayed-interior-designer.webp",
   // about-blur was oversized (4656px) so it's a resized 2560px webp.
   // The two gradients stay PNG — within size, webp came out larger.
   blur: "./about-blur.webp",

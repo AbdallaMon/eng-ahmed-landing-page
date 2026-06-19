@@ -7,12 +7,46 @@ function getProjectImages(project) {
 
   if (!totalImages || !project.id) return [];
 
+  // SEO-friendly descriptive file prefix when a slug is set, else legacy "1.webp".
+  const prefix = project.imageSlug ? `${project.imageSlug}-` : "";
+
   return Array.from({ length: totalImages }, (_, index) => ({
-    src: `/projects/project-${project.id}/${index + 1}.${
+    src: `/projects/project-${project.id}/${prefix}${index + 1}.${
       project.imagesExtension || "webp"
     }`,
     index,
   }));
+}
+
+// Descriptive image slugs per project — used to build SEO-friendly image file
+// names (gallery, cover, card thumbnail, home thumbnail) for Google Images.
+const PROJECT_SLUGS = {
+  1: "mens-majlis-classic-abu-dhabi",
+  2: "outdoor-majlis-minimalist-abu-dhabi",
+  3: "open-hall-garden-baghdad",
+  4: "apartment-damac-heights-dubai-marina",
+  5: "open-hall-modern-rustic-abu-dhabi",
+  6: "clinic-waiting-lounge-abu-dhabi",
+  7: "beauty-center-spa-al-ain",
+  8: "majlis-reception-neoclassic-riyadh",
+  9: "private-office-aysco-baniyas-abu-dhabi",
+};
+
+// Builds the derived, SEO-named image fields shared by ar/en project lists.
+function withProjectImages(project) {
+  const imageSlug = PROJECT_SLUGS[project.id];
+  return {
+    ...project,
+    imageSlug,
+    cover: imageSlug
+      ? `/projects/project-${project.id}/${imageSlug}-cover.png`
+      : project.cover,
+    imageSrc:
+      project.imageSrc && imageSlug
+        ? `./projects/${imageSlug}-home.webp`
+        : project.imageSrc,
+    images: getProjectImages({ ...project, imageSlug }),
+  };
 }
 export const arInitialProjects = [
   {
@@ -261,10 +295,7 @@ export const arInitialProjects = [
     category: "تجاري",
   },
 ];
-export const arProjects = arInitialProjects.map((project) => ({
-  ...project,
-  images: getProjectImages(project),
-}));
+export const arProjects = arInitialProjects.map(withProjectImages);
 
 export const enInitialProjects = [
   {
@@ -505,7 +536,4 @@ export const enInitialProjects = [
     category: "Commercial",
   },
 ];
-export const enProjects = enInitialProjects.map((project) => ({
-  ...project,
-  images: getProjectImages(project),
-}));
+export const enProjects = enInitialProjects.map(withProjectImages);
