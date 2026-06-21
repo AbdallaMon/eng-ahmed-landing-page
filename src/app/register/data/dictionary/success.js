@@ -23,4 +23,13 @@ export const success = {
     en: "New registration",
     ar: "تسجيل جديد",
   },
+  // ── Design-fee notice shown after payment is confirmed ─────────────────────
+  "success.designFeeHeading": {
+    en: "Your project's design fee",
+    ar: "رسوم تصميم مشروعك",
+  },
+  "success.designFeeNote": {
+    en: "This is a starting estimate — the final details are confirmed during your consultation.",
+    ar: "هذا تقدير مبدئي، وتُؤكَّد التفاصيل النهائية خلال الاستشارة.",
+  },
 };

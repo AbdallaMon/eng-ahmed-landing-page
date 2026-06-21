@@ -118,7 +118,7 @@ export default function ProjectCard({
           {buttonText}
           <Box
             component="img"
-            src="./arrow-left-colored.png"
+            src="/arrow-left-colored.png"
             sx={{
               width: 16,
               height: 16,

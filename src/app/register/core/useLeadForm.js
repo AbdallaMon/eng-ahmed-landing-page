@@ -181,6 +181,15 @@ export function useLeadForm({ category, item, location, leadEmail }) {
       // bouncing through /register/checkout. The UI watches `phase === "paying"`
       // to show the "preparing payment" full-screen transition.
       setPhase(LEAD_FORM_PHASE.PAYING);
+      // Stash the chosen design type so /register/success can show ITS design-fee
+      // notice after payment. Same origin (the booking domain), so it survives the
+      // hosted-checkout round-trip. (We dropped the fee hint from the selection
+      // cards — this is where it now surfaces, scoped to what the client picked.)
+      try {
+        if (item) window.localStorage.setItem("register:designItem", item);
+      } catch {
+        // ignore storage failures (private mode / blocked storage)
+      }
       await pay({
         clientLeadId: completedLeadId,
         clientId: completedClientId,
