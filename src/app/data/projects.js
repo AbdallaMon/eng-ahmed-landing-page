@@ -65,7 +65,8 @@ export const arInitialProjects = [
       "./projects/project-1/6.png",
     ],
     cover: "/projects/project-1/1.png",
-    name: "مجلس رجال",
+    name: "مجلس رجال كلاسيك فاخر",
+    seoTitle: "تصميم مجلس رجال كلاسيك فاخر في أبوظبي",
     seoContent:
       "مجلس رجال بطابع كلاسيكي فاخر، صُمّم ونُفّذ بإشراف المهندس أحمد المبيض و«دريم ستوديو» بين أبوظبي ورأس الخيمة. اعتمد التصميم على تفاصيل جبسية دقيقة وإضاءة هادئة وتنجيد فخم بدرجات دافئة، ليجمع بين هيبة المجالس العربية الكلاسيكية وراحة الاستقبال اليومي. نموذج من أعمالنا في تصميم وديكور المجالس الكلاسيك في الإمارات — استعرض الصور واطلب استشارة لمجلس مماثل.",
     description: "مجلس علي ستايل كلاسيك لاكجري",
@@ -90,7 +91,8 @@ export const arInitialProjects = [
       "./projects/project-2/6.png",
     ],
     cover: "/projects/project-2/1.png",
-    name: "مجلس خارجي",
+    name: "مجلس خارجي مينيمال مع طاولة طعام",
+    seoTitle: "تصميم مجلس خارجي مينيمال مع طاولة طعام في أبوظبي",
     seoContent:
       "مجلس خارجي على ستايل مينيمال لاكجري في مدينة محمد بن زايد بأبوظبي، يجمع بين جلسة المجلس وطاولة طعام ومغاسل وحمام ضمن مساحة واحدة متناسقة. ركّز التصميم على الخطوط النظيفة والخامات الطبيعية والإضاءة الخارجية المدروسة ليكون مكاناً مريحاً لاستقبال الضيوف في الهواء الطلق طوال العام. تصميم وتنفيذ المهندس أحمد المبيض و«دريم ستوديو» — مثال على ديكور المجالس الخارجية الحديثة.",
     description:
@@ -142,7 +144,8 @@ export const arInitialProjects = [
       "./projects/project-4/6.png",
     ],
     cover: "/projects/project-4/1.png",
-    name: "شقة في داماك هايت",
+    name: "شقة فاخرة ستايل وابي سابي في داماك هايت",
+    seoTitle: "تصميم شقة فاخرة ستايل وابي سابي في داماك هايت دبي",
     seoContent:
       "شقة فاخرة في برج داماك هايت بمارينا دبي، صُمّمت على مزيج بين اللاكجري وفلسفة «وابي سابي» التي تحتفي بجمال البساطة والخامات الطبيعية. عُني التصميم بالتفاصيل المعمارية والإضاءة وتدرّجات الألوان الترابية لخلق إحساس هادئ وراقٍ داخل الشقة. تصميم وتنفيذ المهندس أحمد المبيض و«دريم ستوديو» — نموذج لتصميم وديكور الشقق الفاخرة في دبي.",
     description: "شقة على ستايل لاكجري وابي سابي",
@@ -172,7 +175,8 @@ export const arInitialProjects = [
       "./projects/project-5/6.png",
     ],
     cover: "/projects/project-5/1.png",
-    name: "صالة مفتوحة",
+    name: "صالة مفتوحة مع طعام ودرج",
+    seoTitle: "تصميم صالة مفتوحة مع طعام ودرج في أبوظبي",
     seoContent:
       "صالة مفتوحة تضم منطقة طعام ومدخلاً ودرجاً، بتصميم مودرن ريفي يوازن بين دفء الطابع الريفي ونظافة الخطوط العصرية، في مدينة الرياض بأبوظبي. اختيرت الخامات والإضاءة لتمنح المساحة إحساساً عائلياً مريحاً مع لمسة فخامة هادئة. مشروع قيد التنفيذ من المهندس أحمد المبيض و«دريم ستوديو» — مثال على تصميم الصالات والمساحات المفتوحة.",
     description: "صالة مفتوحة مع طعام ومدخل ودرج على ستايل مودرن ريفي.",
@@ -199,7 +203,8 @@ export const arInitialProjects = [
       "./projects/project-6/6.png",
     ],
     cover: "/projects/project-6/1.png",
-    name: "صالة انتظار",
+    name: "صالة انتظار عيادة مع بار",
+    seoTitle: "تصميم صالة انتظار عيادة مع بار في أبوظبي",
     seoContent:
       "صالة انتظار ضمن مشروع عيادات في أبوظبي، أُعيد توزيع مساحاته لاستغلالها بذكاء وتضمين جلسة انتظار وبار يجعل انتظار الزائر تجربة مريحة لا مملّة. وازن التصميم بين الجمالية والوظيفية وسهولة الحركة، بما يليق بالطابع الطبي الراقي. تصميم وتنفيذ المهندس أحمد المبيض و«دريم ستوديو» — نموذج لتصميم وديكور العيادات وصالات الانتظار التجارية.",
     description:
@@ -229,7 +234,8 @@ export const arInitialProjects = [
       "./projects/project-7/6.png",
     ],
     cover: "/projects/project-7/1.png",
-    name: "مركز تجميل",
+    name: "مركز تجميل وسبا مع حمام مغربي",
+    seoTitle: "تصميم مركز تجميل وسبا مع حمام مغربي في العين",
     seoContent:
       "مركز مساج داخل مركز تجميل بمدينة العين، يضم حماماً مغربياً وغرف مساج خاصة ومشالح ومغاسل، بتصميم عصري يوازن بين الراحة والفخامة. دُرس تدفّق الحركة بدقة هندسية لضمان الخصوصية والانسيابية بين الأقسام، مع إضاءة وخامات تبعث على الاسترخاء. تصميم المهندس أحمد المبيض و«دريم ستوديو» — مثال على تصميم وديكور مراكز التجميل والسبا في الإمارات.",
     description:
@@ -259,7 +265,8 @@ export const arInitialProjects = [
       "./projects/project-8/6.png",
     ],
     cover: "/projects/project-8/1.png",
-    name: "مجلس مع استقبال",
+    name: "مجلس نيو كلاسيك مع استقبال وحديقة",
+    seoTitle: "تصميم مجلس نيو كلاسيك مع استقبال وحديقة في الرياض",
     seoContent:
       "مجلس مع منطقة استقبال ومقلط وحديقة على ستايل نيو كلاسيك فاخر، في مشروع سكني بالرياض. جمع التصميم بين رُقيّ الكلاسيك الحديث والتفاصيل الفخمة والتوزيع المريح للضيوف، مع حديقة تضيف بُعداً طبيعياً للمساحة. تصميم المهندس أحمد المبيض و«دريم ستوديو» — نموذج لتصميم وديكور المجالس النيو كلاسيك في السعودية والخليج.",
     description: "مجلس مع مقلط وحديقة على ستايل نيو كلاسيك لاكجري",
@@ -284,7 +291,8 @@ export const arInitialProjects = [
     cover: "/projects/project-9/1.png",
     imagesNumbers: 24,
 
-    name: "مكتب خاص",
+    name: "مكتب شركة عصري",
+    seoTitle: "تصميم مكتب شركة عصري في أبوظبي",
     seoContent:
       "مكتب خاص لشركة «آيسكو» المتخصصة في أعمال التكييف ببني ياس في أبوظبي، يضم غرفة مدير وغرفتي عمل وغرفة اجتماعات وحمّامين وبوفيه خدمي وأرشيفاً. وُزّعت المساحات لتخدم سير العمل والخصوصية والاجتماعات بكفاءة، بهوية بصرية تعكس احترافية الشركة. تصميم وتنفيذ المهندس أحمد المبيض و«دريم ستوديو» — مثال على تصميم وديكور المكاتب والمساحات التجارية في أبوظبي.",
     description:
@@ -313,7 +321,8 @@ export const enInitialProjects = [
       "./projects/project-1/6.png",
     ],
     cover: "/projects/project-1/1.png",
-    name: "Men's Majlis",
+    name: "Classic Luxury Men's Majlis",
+    seoTitle: "Classic Luxury Men's Majlis Design in Abu Dhabi",
     seoContent:
       "A men's majlis in a refined classic style, designed and executed by Eng. Ahmad Almobayed and Dream Studio between Abu Dhabi and Ras Al Khaimah. The design relies on detailed gypsum work, soft lighting and rich upholstery in warm tones, blending the prestige of a classic Arabic majlis with everyday comfort. A sample of our work in classic majlis interior design and decor in the UAE — browse the photos and request a consultation for a similar majlis.",
     description: "Majlis in a classic luxury style",
@@ -337,7 +346,8 @@ export const enInitialProjects = [
       "./projects/project-2/6.png",
     ],
     cover: "/projects/project-2/1.png",
-    name: "Outdoor Majlis",
+    name: "Minimalist Outdoor Majlis with Dining Table",
+    seoTitle: "Minimalist Outdoor Majlis Design with Dining Table in Abu Dhabi",
     seoContent:
       "An outdoor majlis in a minimalist luxury style in Mohammed Bin Zayed City, Abu Dhabi, combining a majlis seating area, a dining table, wash basins and a bathroom within one cohesive space. The design focuses on clean lines, natural materials and considered outdoor lighting to create a comfortable place to host guests in the open air year-round. Designed and executed by Eng. Ahmad Almobayed and Dream Studio — an example of modern outdoor majlis decor.",
     description:
@@ -387,7 +397,8 @@ export const enInitialProjects = [
       "./projects/project-4/6.png",
     ],
     cover: "/projects/project-4/1.png",
-    name: "Apartment in Damac Heights",
+    name: "Luxury Wabi-Sabi Apartment in Damac Heights",
+    seoTitle: "Luxury Wabi-Sabi Apartment Design in Damac Heights, Dubai",
     seoContent:
       "A luxury apartment in Damac Heights, Dubai Marina, designed around a blend of luxury and the 'wabi-sabi' philosophy that celebrates the beauty of simplicity and natural materials. The design pays close attention to architectural details, lighting and earthy color gradients to create a calm, elegant feel throughout the apartment. Designed and executed by Eng. Ahmad Almobayed and Dream Studio — a sample of luxury apartment interior design in Dubai.",
     description: "Apartment in a luxury and wabi-sabi style",
@@ -416,7 +427,8 @@ export const enInitialProjects = [
       "./projects/project-5/6.png",
     ],
     cover: "/projects/project-5/1.png",
-    name: "Open Hall",
+    name: "Open Hall with Dining & Staircase",
+    seoTitle: "Open Hall Design with Dining & Staircase in Abu Dhabi",
     seoContent:
       "An open hall with a dining area, entrance and staircase in a modern rustic style, balancing the warmth of a rustic character with clean contemporary lines, in Riyadh City, Abu Dhabi. Materials and lighting were chosen to give the space a comfortable family feel with quiet luxury. A project under construction by Eng. Ahmad Almobayed and Dream Studio — an example of hall and open-space design.",
     description:
@@ -442,7 +454,8 @@ export const enInitialProjects = [
       "./projects/project-6/6.png",
     ],
     cover: "/projects/project-6/1.png",
-    name: "Waiting Lounge",
+    name: "Clinic Waiting Lounge with Bar",
+    seoTitle: "Clinic Waiting Lounge Design with Bar in Abu Dhabi",
     seoContent:
       "A waiting lounge within a clinic project in Abu Dhabi, whose spaces were re-planned and optimized to include a seating area and a bar that turn the visitor's wait into a comfortable, un-boring experience. The design balances aesthetics, functionality and easy circulation, befitting a refined medical setting. Designed and executed by Eng. Ahmad Almobayed and Dream Studio — a sample of clinic and commercial waiting-lounge design and decor.",
     description:
@@ -471,7 +484,8 @@ export const enInitialProjects = [
       "./projects/project-7/6.png",
     ],
     cover: "/projects/project-7/1.png",
-    name: "Beauty Center",
+    name: "Beauty Center & Spa with Moroccan Bath",
+    seoTitle: "Beauty Center & Spa Design with Moroccan Bath in Al Ain",
     seoContent:
       "A massage center inside a beauty center in Al Ain, featuring a Moroccan bath, private massage rooms, changing rooms and wash basins, with a contemporary design that balances comfort and luxury. Circulation was studied with engineering precision to ensure privacy and smooth flow between sections, with lighting and materials that invite relaxation. Designed by Eng. Ahmad Almobayed and Dream Studio — an example of beauty center and spa interior design in the UAE.",
     description:
@@ -500,7 +514,8 @@ export const enInitialProjects = [
       "./projects/project-8/6.png",
     ],
     cover: "/projects/project-8/1.png",
-    name: "Majlis with Reception",
+    name: "Neo-Classic Majlis with Reception & Garden",
+    seoTitle: "Neo-Classic Majlis Design with Reception & Garden in Riyadh",
     seoContent:
       "A majlis with a reception area, a service room and a garden in a neo-classical luxury style, in a residential project in Riyadh. The design blends the elegance of modern classic with opulent details and a comfortable layout for guests, with a garden that adds a natural dimension to the space. Designed by Eng. Ahmad Almobayed and Dream Studio — a sample of neo-classical majlis design and decor in Saudi Arabia and the Gulf.",
     description:
@@ -525,7 +540,8 @@ export const enInitialProjects = [
       "./projects/project-9/6.png",
     ],
     cover: "/projects/project-9/1.png",
-    name: "Private Office",
+    name: "Modern Corporate Office",
+    seoTitle: "Modern Corporate Office Design in Abu Dhabi",
     seoContent:
       "A private office for 'Aysco', a company specialized in HVAC works, in Baniyas, Abu Dhabi, comprising a manager's office, two work rooms, a meeting room, two bathrooms, a service pantry and an archive. Spaces were arranged to serve workflow, privacy and meetings efficiently, with a visual identity that reflects the company's professionalism. Designed and executed by Eng. Ahmad Almobayed and Dream Studio — an example of office and commercial interior design in Abu Dhabi.",
     description:

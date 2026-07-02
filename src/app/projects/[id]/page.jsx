@@ -140,11 +140,15 @@ export async function generateMetadata({ params, searchParams }) {
     .filter(Boolean)
     .join(", ");
 
-  // العنوان يحمل نوع المشروع المباشر ("تصميم صالة") بدل "تصميم داخلي" العام
-  const title =
-    lng === "ar"
-      ? `${projectData.name} – ${kind.label} في ${projectData.location} | المهندس أحمد المبيض`
-      : `${projectData.name} – ${kind.label} in ${projectData.location} | Eng. Ahmad Almobayed`;
+  // العنوان يحمل نوع المشروع المباشر ("تصميم صالة") بدل "تصميم داخلي" العام.
+  // لو المشروع معرّف له seoTitle مخصّص (يتصدّر بكلمة البحث "تصميم ...") نستخدمه؛
+  // وإلا نبنيه من الاسم + نوع المشروع + الموقع (السلوك الأصلي).
+  const brand = lng === "ar" ? "المهندس أحمد المبيض" : "Eng. Ahmad Almobayed";
+  const title = projectData.seoTitle
+    ? `${projectData.seoTitle} | ${brand}`
+    : lng === "ar"
+      ? `${projectData.name} – ${kind.label} في ${projectData.location} | ${brand}`
+      : `${projectData.name} – ${kind.label} in ${projectData.location} | ${brand}`;
 
   const description =
     lng === "ar"
