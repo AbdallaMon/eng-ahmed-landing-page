@@ -21,7 +21,7 @@ const enAboutSeoDescription =
 export const arMetaData = {
   mainPage: {
     title: `مهندس أحمد المبيض - تصميم داخلي وتخطيط وتنفيذ`,
-    description: `استشارات تصميم داخلي، تخطيط، وتنفيذ مشاريع سكنية وتجارية باحترافية عالية مع المهندس أحمد المبيض.`,
+    description: `المهندس أحمد المبيض ودريم ستوديو: استشارات وتصميم داخلي وديكور وتخطيط وتنفيذ للمشاريع السكنية والتجارية في الإمارات والخليج باحترافية عالية. احجز استشارتك الآن.`,
     keywords: `تصميم داخلي, مهندس داخلي, ديكور, تخطيط مشاريع, تنفيذ ديكور, أحمد المبيض, تصميم منازل, تصميم مكاتب`,
     openGraph: {
       title: `مهندس أحمد المبيض - تصميم داخلي وتخطيط وتنفيذ`,
@@ -226,7 +226,7 @@ export const arMetaData = {
 export const enMetaData = {
   mainPage: {
     title: `Eng. Ahmad Almobayed - Interior Design, Planning & Execution`,
-    description: `Professional interior design consultation, planning, and execution services for residential and commercial projects.`,
+    description: `Eng. Ahmad Almobayed and Dream Studio provide professional interior design, decor, planning and execution for residential and commercial projects across the UAE.`,
     keywords: `interior design, interior designer, decor, project planning, execution, home design, office design, Ahmad Almobayed`,
     openGraph: {
       title: `Eng. Ahmad Almobayed - Interior Design Expert`,

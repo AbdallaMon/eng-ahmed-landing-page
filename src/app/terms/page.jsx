@@ -12,12 +12,28 @@ import {
 import { getTranslation } from "../i18n";
 import { cookies } from "next/headers";
 
-export async function generateMetadata() {
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ahmadmobayed.com";
+
+export async function generateMetadata({ searchParams }) {
+  const awaitedSearchParams = await searchParams;
   const cookieStore = await cookies();
-  const lng = cookieStore.get("i18next")?.value || "ar";
+  // نفضّل لغة الرابط (?lng=) ثم الكوكي حتى يطابق الـ canonical اللغة المعروضة،
+  // ويتوحّد كل أشكال الرابط (http/https و ?lng=ar) على نسخة canonical واحدة.
+  const lng =
+    awaitedSearchParams?.lng || cookieStore.get("i18next")?.value || "ar";
   const { t } = await getTranslation(lng);
   const metaData = t("meta", { returnObjects: true });
-  return metaData.termsPage;
+  return {
+    ...metaData.termsPage,
+    alternates: {
+      canonical: lng === "ar" ? `${baseUrl}/terms` : `${baseUrl}/terms?lng=en`,
+      languages: {
+        ar: `${baseUrl}/terms`,
+        en: `${baseUrl}/terms?lng=en`,
+        "x-default": `${baseUrl}/terms`,
+      },
+    },
+  };
 }
 
 function Section({ section }) {
