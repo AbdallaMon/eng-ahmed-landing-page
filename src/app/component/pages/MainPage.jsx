@@ -15,6 +15,7 @@ export function MainPage({ mainData, lng }) {
           container
           sx={{
             maxWidth: "800px",
+            mx: "auto",
           }}
           spacing={{ xs: 1, md: 4 }}
         >
