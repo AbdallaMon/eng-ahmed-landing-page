@@ -11,9 +11,15 @@ export function MainPage({ mainData, lng }) {
           pt: { xs: 0, md: 12 },
         }}
       >
-        <Grid container sx={{}} spacing={{ xs: 1, md: 4 }}>
+        <Grid
+          container
+          sx={{
+            maxWidth: "800px",
+          }}
+          spacing={{ xs: 1, md: 4 }}
+        >
           {mainData.map((item, index) => (
-            <Grid size={{ xs: 12, md: 4 }} key={index}>
+            <Grid size={{ xs: 12, md: 6 }} key={index}>
               <MainPageCard data={item} lng={lng} />
             </Grid>
           ))}
