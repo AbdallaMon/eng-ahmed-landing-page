@@ -7,12 +7,7 @@ import { BOOKING_STEPS } from "./data";
 import { Success, Failed } from "@/app/register/lib/toast";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { useToastContext } from "@/app/register/providers/LoadingToastProvider";
-import {
-  createLead,
-  fireUpdateLead,
-  getLead,
-  submitFinalLead,
-} from "./api";
+import { createLead, fireUpdateLead, getLead, submitFinalLead } from "./api";
 
 /**
  * Core multi-step booking logic.
@@ -209,7 +204,8 @@ export function useBookingSteps({ onDone } = {}) {
 
         const message = err?.message;
         const isNotFound =
-          message === "Booking lead not found" || /not found|404/i.test(message);
+          message === "Booking lead not found" ||
+          /not found|404/i.test(message);
 
         if (isNotFound) {
           clearLeadAndRestart(translateRef.current("booking.progressNotFound"));

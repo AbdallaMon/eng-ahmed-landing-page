@@ -12,20 +12,25 @@ import { useGeoCountry } from "@/app/register/hooks/useGeoCountry";
 import { handleRequestSubmit } from "@/app/register/lib/request";
 import { uploadInChunks } from "@/app/register/lib/upload";
 import { Emirate } from "@/app/register/data/constants";
-import { usePayRedirect } from "@/app/register/core/usePayRedirect";
+// الدفع متوقّف مؤقتًا — بدل ما نودّي العميل لصفحة الدفع، بنعرضله شاشة "تم استلام طلبك"
+// مع رسوم التصميم. لإرجاع الدفع: فك الكومنت هنا + عن استدعاء pay() تحت.
+// import { usePayRedirect } from "@/app/register/core/usePayRedirect";
 
 /**
  * Submit phases the UI can drive a transition overlay from:
  *  - "idle":      nothing in flight
  *  - "submitting": registering / uploading / completing the lead
  *  - "paying":    complete-register succeeded → firing the pay redirect (the
- *                 "preparing your payment" full-screen transition)
+ *                 "preparing your payment" full-screen transition) — معطّل حاليًا
+ *  - "done":      complete-register succeeded → نعرض شاشة "تم استلام طلبك" +
+ *                 رسوم التصميم (بدل الدفع، طالما الدفع متوقّف)
  *  - "error":     a request failed; the flow stays on the form
  */
 export const LEAD_FORM_PHASE = {
   IDLE: "idle",
   SUBMITTING: "submitting",
   PAYING: "paying",
+  DONE: "done",
   ERROR: "error",
 };
 
@@ -60,7 +65,7 @@ export function useLeadForm({ category, item, location, leadEmail }) {
   const { loading, setLoading } = useToastContext();
   const { setProgress, setOverlay } = useUploadContext();
   const { defaultCountry } = useGeoCountry(location);
-  const { pay } = usePayRedirect();
+  // const { pay } = usePayRedirect(); // معطّل مؤقتًا — الدفع متوقّف
 
   const searchParams = useSearchParams();
   const externalLeadId = searchParams.get("leadId");
@@ -173,28 +178,25 @@ export function useLeadForm({ category, item, location, leadEmail }) {
     );
 
     if (request.status === 200 || request.status === 201) {
-      // Old server returned `data.leadId`; the migrated server returns the lead
-      // object as `data` (so the id is `data.id`). Handle old || new.
-      const completedLeadId = request.data?.leadId || request.data?.id;
-      const completedClientId = request.data?.clientId;
-      // KEY CHANGE: pay straight from the form (smooth transition) instead of
-      // bouncing through /register/checkout. The UI watches `phase === "paying"`
-      // to show the "preparing payment" full-screen transition.
-      setPhase(LEAD_FORM_PHASE.PAYING);
-      // Stash the chosen design type so /register/success can show ITS design-fee
-      // notice after payment. Same origin (the booking domain), so it survives the
-      // hosted-checkout round-trip. (We dropped the fee hint from the selection
-      // cards — this is where it now surfaces, scoped to what the client picked.)
-      try {
-        if (item) window.localStorage.setItem("register:designItem", item);
-      } catch {
-        // ignore storage failures (private mode / blocked storage)
-      }
-      await pay({
-        clientLeadId: completedLeadId,
-        clientId: completedClientId,
-        lng,
-      });
+      // الدفع متوقّف مؤقتًا: بدل ما نودّي العميل لصفحة الدفع (Stripe) بنعرضله
+      // شاشة "تم استلام طلبك — هيتواصل معاك الفريق قريبًا" + رسوم التصميم حسب
+      // النوع اللي اختاره. الـ UI بيراقب `phase === "done"` (شوف LeadSuccessOverlay).
+      //
+      // لإرجاع الدفع: فك كومنت الاستيراد + الـ pay() تحت، ورجّع setPhase(PAYING).
+      // const completedLeadId = request.data?.leadId || request.data?.id;
+      // const completedClientId = request.data?.clientId;
+      // setPhase(LEAD_FORM_PHASE.PAYING);
+      // try {
+      //   if (item) window.localStorage.setItem("register:designItem", item);
+      // } catch {
+      //   // ignore storage failures (private mode / blocked storage)
+      // }
+      // await pay({
+      //   clientLeadId: completedLeadId,
+      //   clientId: completedClientId,
+      //   lng,
+      // });
+      setPhase(LEAD_FORM_PHASE.DONE);
     } else {
       setPhase(LEAD_FORM_PHASE.ERROR);
     }
@@ -224,8 +226,12 @@ export function useLeadForm({ category, item, location, leadEmail }) {
     loading,
     phase,
     submitting:
-      phase === LEAD_FORM_PHASE.SUBMITTING || phase === LEAD_FORM_PHASE.PAYING,
+      phase === LEAD_FORM_PHASE.SUBMITTING ||
+      phase === LEAD_FORM_PHASE.PAYING ||
+      phase === LEAD_FORM_PHASE.DONE,
     isPaying: phase === LEAD_FORM_PHASE.PAYING,
+    // الدفع متوقّف — دي بتشتغل مكان الدفع: تعرض شاشة "تم استلام طلبك"
+    isDone: phase === LEAD_FORM_PHASE.DONE,
     showPriceConfirm,
     setShowPriceConfirm,
     // i18n passthrough (so field components don't each re-grab context)

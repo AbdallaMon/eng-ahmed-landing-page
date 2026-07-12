@@ -36,6 +36,11 @@ export const form = {
     en: "Proceed to Checkout",
     ar: "المتابعة للدفع",
   },
+  // الدفع متوقّف حاليًا — بنستخدم دي بدل proceedToCheckout في زرار الفورم
+  "form.buttons.register": {
+    en: "Register",
+    ar: "تسجيل",
+  },
   "form.buttons.confirm": {
     en: "Confirm",
     ar: "تأكيد",

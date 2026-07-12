@@ -29,7 +29,9 @@ import DesignIntroStage from "@/app/register/variants/v1/DesignIntroStage";
 import EmailStage from "@/app/register/variants/v1/EmailStage";
 import OptionCardsStage from "@/app/register/variants/v1/OptionCardsStage";
 import FormStage from "@/app/register/variants/v1/FormStage";
-import PayingOverlay from "@/app/register/variants/v1/PayingOverlay";
+// الدفع متوقّف حاليًا — PayingOverlay مش بتتعرض. بنعرض بدلها شاشة "تم استلام طلبك".
+// import PayingOverlay from "@/app/register/variants/v1/PayingOverlay";
+import LeadSuccessOverlay from "@/app/register/variants/v1/LeadSuccessOverlay";
 
 /**
  * V1 "Living Cards" — the GSAP + CSS-3D `/register` flow.
@@ -317,7 +319,8 @@ export default function V1Flow({ leadId } = {}) {
         </Box>
       </PerspectiveStage>
 
-      {form.isPaying && <PayingOverlay />}
+      {/* الدفع متوقّف — بدل PayingOverlay بنعرض شاشة "تم استلام طلبك" + رسوم التصميم. */}
+      {form.isDone && <LeadSuccessOverlay item={leadItem} />}
     </>
   );
 }

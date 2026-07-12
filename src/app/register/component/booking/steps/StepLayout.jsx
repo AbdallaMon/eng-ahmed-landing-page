@@ -11,22 +11,7 @@ import {
 import { StepItemGrid } from "./StepItemGrid";
 import { StepForm } from "./StepForm";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
-import { useRegister3D } from "@/app/register/three/Register3DContext";
 import colors from "@/app/register/theme/colors";
-
-// Readable glass surface used on the WebGL path so step content (progress,
-// labels, copy) stays legible over the ambient 3D scene behind it. On the 2D
-// fallback the step content stays bare on the opaque brand background.
-const glassSurface = {
-  borderRadius: 4,
-  p: { xs: 2, md: 3 },
-  // Semi-opaque brand surface + blur → legible over the live backdrop.
-  backgroundColor: "rgba(252, 251, 249, 0.72)",
-  backdropFilter: "blur(14px)",
-  WebkitBackdropFilter: "blur(14px)",
-  border: `1px solid ${colors.primary}33`,
-  boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
-};
 
 export function StepLayout({
   step,
@@ -46,20 +31,17 @@ export function StepLayout({
   onJumpToLastSubmittedStep,
 }) {
   const { translate } = useLanguage();
-  const { capability } = useRegister3D();
-  const use3D = capability.use3D;
   const progress = ((currentStepIndex + 1) / totalSteps) * 100;
 
   if (isSubmitted) {
     return (
       <Paper
-        elevation={use3D ? 0 : 4}
+        elevation={4}
         sx={{
           p: { xs: 2, md: 3 },
           borderRadius: 3,
           textAlign: "center",
-          // Glass on the 3D path so the success card reads over the live scene.
-          ...(use3D ? glassSurface : { backgroundColor: "#fff" }),
+          backgroundColor: "#fff",
         }}
       >
         {infoMessage && (
@@ -80,14 +62,7 @@ export function StepLayout({
   }
 
   return (
-    <Box
-      sx={{
-        pb: 10,
-        // Lift the whole step onto a readable glass surface over the ambient
-        // 3D scene. Bare on the 2D fallback (opaque background already covers).
-        ...(use3D ? glassSurface : null),
-      }}
-    >
+    <Box sx={{ pb: 10 }}>
       <LinearProgress
         variant="determinate"
         value={progress}

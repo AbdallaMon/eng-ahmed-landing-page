@@ -275,12 +275,6 @@ export function useLeadFlow() {
     setStep(next);
   }
 
-  function goBack(prev) {
-    setDirection(-1);
-    lockAnimation(prev);
-    setStep(prev);
-  }
-
   function handleLocationClick(value) {
     if (isAnimatingRef.current) return;
     deepLinkRef.current = null;
