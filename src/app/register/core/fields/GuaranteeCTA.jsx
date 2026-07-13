@@ -29,10 +29,10 @@ export default function GuaranteeCTA({
         textAlign: "center",
       }}
     >
-      <Typography variant="body2" sx={{ fontWeight: 600, mb: 2.5 }}>
-        {translate("guarantee.refund")}
-      </Typography>
-
+      {/* <Typography variant="body2" sx={{ fontWeight: 600, mb: 2.5 }}>
+         {translate("guarantee.refund")}
+        {" "}
+      </Typography> */}
       <Button
         variant="contained"
         onClick={handleSubmit}

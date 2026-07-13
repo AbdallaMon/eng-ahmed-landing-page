@@ -249,7 +249,6 @@ export default function CheckoutView({
           mb: { xs: 4, md: 5 },
         }}
       >
-        {/* Expanding ring (radar sweep). */}
         <Box
           data-ring
           sx={{
@@ -260,7 +259,6 @@ export default function CheckoutView({
             willChange: "transform, opacity",
           }}
         />
-        {/* Solid breathing disc. */}
         <Box
           data-motif
           sx={{
@@ -275,7 +273,6 @@ export default function CheckoutView({
             justifyContent: "center",
           }}
         >
-          {/* Inner highlight dot for a touch of depth. */}
           <Box
             sx={{
               width: "34%",
