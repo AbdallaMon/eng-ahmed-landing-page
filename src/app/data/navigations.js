@@ -38,11 +38,11 @@ export const enFooterNavigations = [...enNavigations];
 
 export const arCopyRightText = {
   title: `جميع الحقوق محفوظة © ${new Date().getFullYear()} ${arFullName}`,
-  subTitle: `تم تطوير بواسطة`,
+  developerName: "عبدالله عبدالصبور",
 };
 export const enCopyRightText = {
   title: `All rights reserved © ${new Date().getFullYear()} ${arFullName}`,
-  subTitle: `Developed by`,
+  developerName: "Abdalla Abdelsabour",
 };
 export const arFooter = {
   navigations: arFooterNavigations,

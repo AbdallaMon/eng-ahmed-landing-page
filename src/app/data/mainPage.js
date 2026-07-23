@@ -12,13 +12,11 @@ export const arMainPageData = [
     image: "/consultation.jpg",
     type: "COVER",
   },
-  // {
-  //   title: "طلب تصميم",
-  //   // href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
-  //   // image: "/whats-app-icon.png",
-  //   image: "/projects/project-2.png",
-  //   href: process.env.NEXT_PUBLIC_REGISTER_URL,
-  // },
+  {
+    title: "الدائرة المقربة",
+    href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
+    image: "/whats-app-icon.png",
+  },
 ];
 
 export const enMainPageData = [
@@ -35,12 +33,9 @@ export const enMainPageData = [
     image: "/consultation.jpg",
     type: "COVER",
   },
-  // {
-  //   title: "Design request",
-  //   // href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
-  //   // image: "/whats-app-icon.png",
-  //   image: "/projects/project-2.png",
-  //   href: process.env.NEXT_PUBLIC_REGISTER_URL,
-  //   // href: "/projects",
-  // },
+  {
+    title: "The Inner Circle",
+    href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
+    image: "/whats-app-icon.png",
+  },
 ];

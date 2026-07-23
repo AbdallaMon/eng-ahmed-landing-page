@@ -14,13 +14,13 @@ export function MainPage({ mainData, lng }) {
         <Grid
           container
           sx={{
-            maxWidth: "800px",
+            // maxWidth: "800px",
             mx: "auto",
           }}
           spacing={{ xs: 1, md: 4 }}
         >
           {mainData.map((item, index) => (
-            <Grid size={{ xs: 12, md: 6 }} key={index}>
+            <Grid size={{ xs: 12, md: 4 }} key={index}>
               <MainPageCard data={item} lng={lng} />
             </Grid>
           ))}

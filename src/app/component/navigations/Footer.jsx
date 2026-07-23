@@ -1,7 +1,6 @@
 import {
   colors,
   developerLink,
-  devloperName,
   siteEmail,
 } from "@/app/data/constants";
 import { getTranslation } from "@/app/i18n";
@@ -187,7 +186,6 @@ function CopyrightText({ copyRight }) {
         {copyRight.title}
       </Typography>
       <Typography variant="body2" sx={{ textAlign: "center", mt: 0.5 }}>
-        {copyRight.subTitle}
         <Box
           component="a"
           sx={{
@@ -197,7 +195,7 @@ function CopyrightText({ copyRight }) {
           }}
           href={developerLink}
         >
-          {devloperName}
+          {copyRight.developerName}
         </Box>
       </Typography>
     </Box>
