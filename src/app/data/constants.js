@@ -31,7 +31,7 @@ export const pageLanguages = [
     value: "en",
   },
 ];
-export const developerLink = "https://abdalla-webportfolio.vercel.app";
+export const developerLink = "https://www.abdallaabdelsabour.com";
 export const siteEmail = "info@ahmadmobayed.com";
 export const arFollowMeText = "تابعني على حساباتي الرسمية:";
 export const enFollowMeText = "Follow me on my official accounts:";
