@@ -1,8 +1,7 @@
 import { toast } from "react-toastify";
 import { Success, Failed } from "@/app/register/lib/toast";
 import { resolveServerMessage } from "@/app/register/lib/serverMessages";
-
-const BASE_URL = process.env.NEXT_PUBLIC_URL;
+import { apiUrl } from "@/app/utility/apiBase.mjs";
 
 /**
  * Submit a form request (POST / PUT / DELETE) with a loading toast.
@@ -37,7 +36,7 @@ export async function handleRequestSubmit(
   setLoading(true);
 
   try {
-    const response = await fetch(`${BASE_URL}/${path}`, {
+    const response = await fetch(apiUrl(path), {
       method,
       body,
       headers,
@@ -83,7 +82,7 @@ export async function getData({ url = "", setLoading, headers = {} }) {
   try {
     if (setLoading) setLoading(true);
 
-    const response = await fetch(`${BASE_URL}/${url}`, {
+    const response = await fetch(apiUrl(url), {
       headers: { "Content-Type": "application/json", ...headers },
       credentials: "include",
     });

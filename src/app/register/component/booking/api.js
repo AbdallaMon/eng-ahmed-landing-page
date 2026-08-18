@@ -1,11 +1,12 @@
-// Booking-wizard API client. All paths are relative to NEXT_PUBLIC_URL.
+// Booking-wizard API client. All paths are relative to the normalized /v2 API base.
 //
 // These helpers intentionally do NOT use the shared handleRequestSubmit: the
 // wizard needs structured errors (status + payload) so useBookingSteps can
 // branch on 400 / 404 / 409 and on the "not found" message. handleRequestSubmit
 // swallows errors and drives its own toast, which does not fit that contract.
 
-const BASE_URL = process.env.NEXT_PUBLIC_URL;
+import { apiUrl } from "@/app/utility/apiBase.mjs";
+
 const BOOKING_LEADS_PATH = "client/booking-leads";
 
 class ApiError extends Error {
@@ -29,7 +30,7 @@ async function request(path, method, body, funnelToken) {
     options.body = JSON.stringify(body);
   }
 
-  return fetch(`${BASE_URL}/${path}`, options);
+  return fetch(apiUrl(path), options);
 }
 
 /**

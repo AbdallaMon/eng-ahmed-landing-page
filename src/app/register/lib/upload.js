@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import { Success, Failed } from "@/app/register/lib/toast";
-
-const BASE_URL = process.env.NEXT_PUBLIC_URL;
+import { apiUrl } from "@/app/utility/apiBase.mjs";
 const CHUNK_SIZE = 1 * 1024 * 1024; // 1 MB
 
 /**
@@ -43,7 +42,7 @@ export async function uploadInChunks(
       }
 
       const res = await fetch(
-        `${BASE_URL}/files/client/chunks?purpose=${encodeURIComponent(purpose)}`,
+        apiUrl(`files/client/chunks?purpose=${encodeURIComponent(purpose)}`),
         {
           method: "POST",
           body: formData,
