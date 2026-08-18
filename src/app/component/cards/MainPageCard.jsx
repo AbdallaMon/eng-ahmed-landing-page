@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 
-export function MainPageCard({ data, lng }) {
+export function MainPageCard({ data, lng, preload = false }) {
   return (
     <Box
       component="a"
@@ -53,6 +53,7 @@ export function MainPageCard({ data, lng }) {
           }}
           src={"/card-bg.png"}
           alt="المهندس احمد المبيض"
+          preload={preload}
         />
 
         <Image

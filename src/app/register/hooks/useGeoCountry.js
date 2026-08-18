@@ -12,26 +12,28 @@ const DEFAULT_COUNTRY = "AE";
  * @returns {{ defaultCountry: string }}
  */
 export function useGeoCountry(location) {
-  const [defaultCountry, setDefaultCountry] = useState(DEFAULT_COUNTRY);
+  const [detectedCountry, setDetectedCountry] = useState(DEFAULT_COUNTRY);
 
   useEffect(() => {
-    if (location === "INSIDE_UAE") {
-      setDefaultCountry(DEFAULT_COUNTRY);
-      return;
-    }
+    if (location === "INSIDE_UAE") return;
+    const controller = new AbortController();
 
-    fetch("https://geolocation-db.com/json/")
+    fetch("https://geolocation-db.com/json/", { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         const code = data?.country_code;
         if (code && code !== "Not found") {
-          setDefaultCountry(code);
+          setDetectedCountry(code);
         }
       })
       .catch(() => {
         // Silently fall back to AE.
       });
+
+    return () => controller.abort();
   }, [location]);
 
+  const defaultCountry =
+    location === "INSIDE_UAE" ? DEFAULT_COUNTRY : detectedCountry;
   return { defaultCountry };
 }

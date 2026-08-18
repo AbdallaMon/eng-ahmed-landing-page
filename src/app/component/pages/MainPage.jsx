@@ -21,7 +21,7 @@ export function MainPage({ mainData, lng }) {
         >
           {mainData.map((item, index) => (
             <Grid size={{ xs: 12, md: 4 }} key={index}>
-              <MainPageCard data={item} lng={lng} />
+              <MainPageCard data={item} lng={lng} preload={index === 0} />
             </Grid>
           ))}
         </Grid>

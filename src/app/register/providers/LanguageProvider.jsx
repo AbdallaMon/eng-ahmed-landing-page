@@ -26,10 +26,21 @@ export default function LanguageProvider({
   }
 
   useEffect(() => {
-    if (typeof window !== "undefined" && !skipLocalStorage) {
-      setLng(window.localStorage.getItem("lng") || "ar");
-    }
-  }, [skipLocalStorage]);
+    if (typeof window === "undefined" || skipLocalStorage) return;
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      const queryLng = new URLSearchParams(window.location.search).get("lng");
+      const nextLng = ["ar", "en"].includes(queryLng)
+        ? queryLng
+        : window.localStorage.getItem("lng") || initialLng;
+      setLng(nextLng);
+      if (queryLng) window.localStorage.setItem("lng", nextLng);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [initialLng, skipLocalStorage]);
 
   return (
     <LanguageContext.Provider value={{ translate, changeLanguage, lng }}>

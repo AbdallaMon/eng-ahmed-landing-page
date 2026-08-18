@@ -14,7 +14,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_URL;
  * @param {string}   toastMessage  - Text shown while loading
  * @param {Function} [setRedirect] - Called with `prev => !prev` on success (optional)
  * @param {string}   [method]      - HTTP verb (default: "POST")
- * @param {string}   [header]      - Override the Content-Type header (optional)
+ * @param {string|object} [header] - Override Content-Type or merge request headers
  * @returns {Promise<object>}      - Response JSON with an added .status property
  */
 export async function handleRequestSubmit(
@@ -29,11 +29,10 @@ export async function handleRequestSubmit(
 ) {
   const toastId = toast.loading(toastMessage);
   const body = isFileUpload ? data : JSON.stringify(data);
-  const headers = header
-    ? { "Content-Type": header }
-    : isFileUpload
-      ? {}
-      : { "Content-Type": "application/json" };
+  const headers = {
+    ...(isFileUpload ? {} : { "Content-Type": "application/json" }),
+    ...(typeof header === "string" ? { "Content-Type": header } : header || {}),
+  };
 
   setLoading(true);
 
@@ -80,12 +79,12 @@ export async function handleRequestSubmit(
  * @param {Function} [args.setLoading] - Loading setter (optional)
  * @returns {Promise<object|undefined>} - Response JSON with an added .status property
  */
-export async function getData({ url = "", setLoading }) {
+export async function getData({ url = "", setLoading, headers = {} }) {
   try {
     if (setLoading) setLoading(true);
 
     const response = await fetch(`${BASE_URL}/${url}`, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...headers },
       credentials: "include",
     });
 

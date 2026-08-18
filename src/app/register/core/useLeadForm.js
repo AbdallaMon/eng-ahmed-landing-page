@@ -11,6 +11,17 @@ import { useGeoCountry } from "@/app/register/hooks/useGeoCountry";
 
 import { handleRequestSubmit } from "@/app/register/lib/request";
 import { uploadInChunks } from "@/app/register/lib/upload";
+import {
+  isValidPublicLeadEmail,
+  normalizePublicLeadEmail,
+} from "@/app/register/lib/email.mjs";
+import {
+  currentLeadSource,
+  FUNNEL_PURPOSES,
+  getFunnelCapability,
+  saveFunnelCompletion,
+  saveFunnelCapability,
+} from "@/app/register/lib/funnelSession";
 import { Emirate } from "@/app/register/data/constants";
 // الدفع متوقّف مؤقتًا — بدل ما نودّي العميل لصفحة الدفع، بنعرضله شاشة "تم استلام طلبك"
 // مع رسوم التصميم. لإرجاع الدفع: فك الكومنت هنا + عن استدعاء pay() تحت.
@@ -43,7 +54,8 @@ export const LEAD_FORM_PHASE = {
  * Backend contract is UNCHANGED:
  *   1. (only when no email was captured earlier) POST `client/new-lead/register`
  *      → `{ id }`. Accept 200/201.
- *   2. (optional) `uploadInChunks` → `client/upload`.
+ *   2. (optional) exchange at `files/client/capabilities`, then upload through
+ *      `files/client/chunks?purpose=PUBLIC_LEAD`.
  *   3. POST `client/new-lead/complete-register/{leadId}` with
  *      `{ ...formData, category, item, lng, location, url? }`. Accept 200/201.
  *
@@ -86,7 +98,7 @@ export function useLeadForm({ category, item, location, leadEmail }) {
   const isInsideUAE = location === "INSIDE_UAE";
   // True once an email is already captured (deep-link / earlier email step) —
   // the email field is then NOT shown and step-1 register is skipped.
-  const hasCapturedEmail = Boolean(leadEmail);
+  const hasCapturedEmail = Boolean(leadEmail || externalLeadId);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -106,14 +118,19 @@ export function useLeadForm({ category, item, location, leadEmail }) {
 
     let { name, phone, email, emirate } = formData;
     if (leadEmail) email = leadEmail;
+    email = normalizePublicLeadEmail(email);
 
     // ── Validation (exact same messages/order as the original) ──────────────
     if (!matchIsValidTel(phone)) {
       setAlertError(translate("validation.invalidPhone"));
       return;
     }
-    if (!name || !phone || !email) {
+    if (!name || !phone || (!externalLeadId && !email)) {
       setAlertError(translate("validation.fillAll"));
+      return;
+    }
+    if (!externalLeadId && !isValidPublicLeadEmail(email)) {
+      setAlertError(translate("validation.invalidEmail"));
       return;
     }
     if (isInsideUAE && !emirate) {
@@ -132,10 +149,11 @@ export function useLeadForm({ category, item, location, leadEmail }) {
     setPhase(LEAD_FORM_PHASE.SUBMITTING);
 
     // ── Step 1: initial registration (only when no email captured earlier) ──
+    const source = currentLeadSource();
     const initialRequest =
-      !email &&
+      !externalLeadId &&
       (await handleRequestSubmit(
-        formData,
+        { ...formData, email, source },
         setLoading,
         `client/new-lead/register?lng=${lng}`,
         false,
@@ -143,7 +161,7 @@ export function useLeadForm({ category, item, location, leadEmail }) {
       ));
     // Old server: 200. Migrated server: 201 (created). Accept both.
     if (
-      !email &&
+      !externalLeadId &&
       initialRequest.status !== 200 &&
       initialRequest.status !== 201
     ) {
@@ -151,16 +169,51 @@ export function useLeadForm({ category, item, location, leadEmail }) {
       return;
     }
 
-    const leadId = externalLeadId || initialRequest.data.id;
+    const leadId = externalLeadId || initialRequest?.data?.id;
+    const issuedToken = initialRequest?.data?.capabilityToken;
+    if (leadId && issuedToken) {
+      saveFunnelCapability({
+        purpose: FUNNEL_PURPOSES.PUBLIC_REGISTER,
+        leadId,
+        token: issuedToken,
+      });
+    }
+    const funnelToken =
+      issuedToken || getFunnelCapability(FUNNEL_PURPOSES.PUBLIC_REGISTER, leadId);
+    if (!leadId || !funnelToken) {
+      setAlertError(translate("validation.sessionExpired"));
+      setPhase(LEAD_FORM_PHASE.ERROR);
+      return;
+    }
 
     // ── Step 2: complete registration (with or without file) ────────────────
-    let completeData = { ...formData, category, item, lng, location };
+    let completeData = { ...formData, category, item, lng, location, source };
+    delete completeData.email;
+    delete completeData.file;
 
     if (formData.file) {
+      const capability = await handleRequestSubmit(
+        { purpose: "PUBLIC_LEAD", funnelToken },
+        setLoading,
+        "files/client/capabilities",
+        false,
+        translate("loading.submitting"),
+      );
+      const uploadToken = capability?.data?.token;
+      if (!uploadToken) {
+        setPhase(LEAD_FORM_PHASE.ERROR);
+        return;
+      }
       const fileUpload = await uploadInChunks(
         formData.file,
         setProgress,
         setOverlay,
+        { purpose: "PUBLIC_LEAD", token: uploadToken },
+        {
+          uploading: translate("upload.uploading"),
+          uploaded: translate("upload.uploaded"),
+          failed: translate("upload.failed"),
+        },
       );
       if (fileUpload.status !== 200) {
         setPhase(LEAD_FORM_PHASE.ERROR);
@@ -175,9 +228,17 @@ export function useLeadForm({ category, item, location, leadEmail }) {
       `client/new-lead/complete-register/${leadId}`,
       false,
       translate("loading.submitting"),
+      undefined,
+      "POST",
+      { "x-funnel-token": funnelToken },
     );
 
     if (request.status === 200 || request.status === 201) {
+      saveFunnelCompletion({
+        purpose: FUNNEL_PURPOSES.PUBLIC_REGISTER,
+        leadId,
+        item,
+      });
       // الدفع متوقّف مؤقتًا: بدل ما نودّي العميل لصفحة الدفع (Stripe) بنعرضله
       // شاشة "تم استلام طلبك — هيتواصل معاك الفريق قريبًا" + رسوم التصميم حسب
       // النوع اللي اختاره. الـ UI بيراقب `phase === "done"` (شوف LeadSuccessOverlay).

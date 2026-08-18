@@ -236,7 +236,7 @@ export default function LeadSuccessOverlay({ item }) {
         <Button
           variant="outlined"
           component="a"
-          href="/register"
+          href={`/register?lng=${lng}`}
           size="large"
           startIcon={<MdAppRegistration />}
           sx={{

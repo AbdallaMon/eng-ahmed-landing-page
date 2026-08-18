@@ -1,4 +1,24 @@
 export const form = {
+  "upload.uploading": { en: "Uploading", ar: "جاري الرفع" },
+  "upload.uploaded": {
+    en: "Uploaded successfully",
+    ar: "تم رفع الملف بنجاح",
+  },
+  "upload.failed": { en: "Upload failed", ar: "تعذر رفع الملف" },
+  "upload.initializing": {
+    en: "Initializing upload...",
+    ar: "جاري تجهيز رفع الملف...",
+  },
+  "upload.inProgress": { en: "Uploading file...", ar: "جاري رفع الملف..." },
+  "upload.complete": { en: "Upload complete!", ar: "اكتمل رفع الملف!" },
+  "upload.percentComplete": {
+    en: "{percent}% complete",
+    ar: "اكتمل {percent}%",
+  },
+  "upload.keepOpen": {
+    en: "Please don't close this window while uploading",
+    ar: "يرجى عدم إغلاق هذه النافذة أثناء رفع الملف",
+  },
   "form.chooseFromOptions": {
     en: "Choose from options",
     ar: "اختر من الخيارات",

@@ -2,13 +2,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { useToastContext } from "@/app/register/providers/LoadingToastProvider";
-import { handleRequestSubmit } from "@/app/register/lib/request";
+import { getData, handleRequestSubmit } from "@/app/register/lib/request";
 import { designLeadTypes } from "@/app/register/data/constants";
 import {
   getUrlSpeed,
   MOTION_SCALE,
   prefersReducedMotion,
 } from "@/app/register/lib/animations";
+import {
+  clearFunnelCapability,
+  clearFunnelCompletion,
+  currentLeadSource,
+  FUNNEL_PURPOSES,
+  getFunnelCapability,
+  getFunnelCompletion,
+  saveFunnelCapability,
+} from "@/app/register/lib/funnelSession";
 
 const VALID_LOCATIONS = ["INSIDE_UAE", "OUTSIDE_UAE"];
 
@@ -138,6 +147,7 @@ export function useLeadFlow() {
   const [leadEmail, setLeadEmail] = useState("");
   const [location, setLocation] = useState("");
   const [leadItem, setLeadItem] = useState("");
+  const [registrationCompleted, setRegistrationCompleted] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   // True while a step transition is animating — gates every user action.
   const [isAnimating, setIsAnimating] = useState(false);
@@ -197,28 +207,90 @@ export function useLeadFlow() {
   // ── Mount: play the DESIGN intro → email, or resume from a deep-link ─────────
   useEffect(() => {
     if (typeof window === "undefined") return;
+    let cancelled = false;
 
     const deepLink = readDeepLink();
     deepLinkRef.current = deepLink;
 
+    const funnelToken = deepLink.leadId
+      ? getFunnelCapability(FUNNEL_PURPOSES.PUBLIC_REGISTER, deepLink.leadId)
+      : null;
+
+    if (deepLink.leadId && funnelToken) {
+      const localCompletion = getFunnelCompletion(
+        FUNNEL_PURPOSES.PUBLIC_REGISTER,
+        deepLink.leadId,
+      );
+      if (localCompletion) {
+        queueMicrotask(() => {
+          if (cancelled) return;
+          setLeadItem(localCompletion.item || deepLink.item || "");
+          setRegistrationCompleted(true);
+          setStep("form");
+          setHydrated(true);
+        });
+        return () => {
+          cancelled = true;
+        };
+      }
+
+      // A capability-bound leadId means the email step is done. Keep a legacy
+      // deep-link email when present, but never substitute the numeric leadId
+      // as an email value; the completion endpoint does not need email again.
+      void getData({
+        url: `client/new-lead/register-status/${deepLink.leadId}`,
+        headers: { "x-funnel-token": funnelToken },
+      }).then((response) => {
+        if (cancelled) return;
+        if (response?.status === 200 && response?.data?.completed) {
+          setLeadItem(response.data.item || deepLink.item || "");
+          setRegistrationCompleted(true);
+          setStep("form");
+          setHydrated(true);
+          return;
+        }
+
+        if (response?.status === 401 || response?.status === 404) {
+          clearFunnelCapability(
+            FUNNEL_PURPOSES.PUBLIC_REGISTER,
+            deepLink.leadId,
+          );
+          const requestedLng =
+            new URLSearchParams(window.location.search).get("lng") === "en"
+              ? "en"
+              : "ar";
+          window.location.href = `/register?lng=${requestedLng}`;
+          return;
+        }
+
+        setLeadEmail(deepLink.email || "");
+        if (deepLink.location) setLocation(deepLink.location);
+        if (deepLink.item) setLeadItem(deepLink.item);
+        // Deep-links jump straight to the resolved stage — the intro + email are
+        // skipped so resuming never replays the animation.
+        setStep(resolveDeepLinkStep(deepLink));
+        setHydrated(true);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }
+
     if (deepLink.leadId) {
-      // A captured leadId implies the email step is done. Keep the captured
-      // email when present, otherwise fall back to the leadId as a truthy
-      // marker (matches the previous behaviour that unlocked later stages).
-      setLeadEmail(deepLink.email || deepLink.leadId);
-      if (deepLink.location) setLocation(deepLink.location);
-      if (deepLink.item) setLeadItem(deepLink.item);
-      // Deep-links jump straight to the resolved stage — the intro + email are
-      // skipped so resuming never replays the animation.
-      setStep(resolveDeepLinkStep(deepLink));
-      setHydrated(true);
-      return;
+      patchUrlParam("leadId", null);
+      patchUrlParam("email", null);
+      patchUrlParam("location", null);
+      patchUrlParam("item", null);
+      patchUrlParam("step", null);
+      deepLinkRef.current = null;
     }
 
     // Normal first visit: the page opens on the DESIGN intro card; after it
     // lingers (so "تصميم" reads inside the image) it expands to fill the screen
     // and the email step enters on top. Reduced-motion makes the hold 0ms.
-    setHydrated(true);
+    queueMicrotask(() => {
+      if (!cancelled) setHydrated(true);
+    });
     introTimerRef.current = setTimeout(() => {
       setDirection(1);
       // Inline lock for the auto-advance (keeps the mount effect free of
@@ -238,6 +310,7 @@ export function useLeadFlow() {
     }, introHoldMs());
 
     return () => {
+      cancelled = true;
       if (introTimerRef.current) clearTimeout(introTimerRef.current);
       if (animTimerRef.current) clearTimeout(animTimerRef.current);
       if (itemAdvanceRef.current) clearTimeout(itemAdvanceRef.current);
@@ -251,7 +324,7 @@ export function useLeadFlow() {
   async function handleEmailSubmit(email) {
     if (isAnimatingRef.current) return;
     const response = await handleRequestSubmit(
-      { email, lng },
+      { email, lng, source: currentLeadSource() },
       setLoading,
       `client/new-lead/register?lng=${lng}`,
       false,
@@ -261,7 +334,15 @@ export function useLeadFlow() {
     if (response.status === 200 || response.status === 201) {
       setLeadEmail(email);
       const leadId = response.data?.id;
-      if (leadId) patchUrlParam("leadId", leadId);
+      const capabilityToken = response.data?.capabilityToken;
+      if (leadId && capabilityToken) {
+        saveFunnelCapability({
+          purpose: FUNNEL_PURPOSES.PUBLIC_REGISTER,
+          leadId,
+          token: capabilityToken,
+        });
+        patchUrlParam("leadId", leadId);
+      }
       // The DESIGN backdrop is already filling the screen (the intro grew into
       // it before the email step), so submitting just reveals the location
       // options on top of it.
@@ -414,6 +495,9 @@ export function useLeadFlow() {
     // Clear lead state + strip deep-link params, then restart from email
     // capture via a full reload so the flow begins from a clean slate.
     deepLinkRef.current = null;
+    const leadId = new URLSearchParams(window.location.search).get("leadId");
+    clearFunnelCapability(FUNNEL_PURPOSES.PUBLIC_REGISTER, leadId);
+    clearFunnelCompletion(FUNNEL_PURPOSES.PUBLIC_REGISTER, leadId);
     if (introTimerRef.current) clearTimeout(introTimerRef.current);
     window.localStorage.removeItem("lng");
     window.location.href = `/register?lng=${lng}`;
@@ -481,6 +565,7 @@ export function useLeadFlow() {
     leadEmail,
     location,
     leadItem,
+    registrationCompleted,
     activeImage,
     backdropLayoutId,
     formExpandLayoutId,

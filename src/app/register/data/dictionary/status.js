@@ -26,6 +26,10 @@ export const status = {
     en: "This field is required",
     ar: "هذا الحقل مطلوب",
   },
+  "validation.sessionExpired": {
+    en: "Your secure registration session expired. Please start again.",
+    ar: "انتهت جلسة التسجيل الآمنة. يرجى البدء من جديد.",
+  },
 
   // Loading / status
   "loading.submitting": { en: "Submitting", ar: "جارٍ الإرسال" },

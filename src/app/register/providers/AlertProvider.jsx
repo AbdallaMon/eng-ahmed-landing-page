@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { Alert, Snackbar } from "@mui/material";
 
 const AlertContext = createContext(null);
@@ -8,16 +8,11 @@ const AlertContext = createContext(null);
 export default function AlertProvider({ children }) {
   const [error, setAlertError] = useState(null);
   const [severity, setSeverity] = useState("error");
-  const [open, setOpen] = useState(false);
+  const open = Boolean(error && error.length > 0);
 
   function handleClose() {
-    setOpen(false);
     setAlertError(null);
   }
-
-  useEffect(() => {
-    setOpen(Boolean(error && error.length > 0));
-  }, [error]);
 
   return (
     <AlertContext.Provider value={{ setAlertError, setSeverity }}>

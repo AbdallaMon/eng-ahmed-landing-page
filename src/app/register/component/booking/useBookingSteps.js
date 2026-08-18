@@ -8,6 +8,13 @@ import { Success, Failed } from "@/app/register/lib/toast";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { useToastContext } from "@/app/register/providers/LoadingToastProvider";
 import { createLead, fireUpdateLead, getLead, submitFinalLead } from "./api";
+import {
+  clearFunnelCapability,
+  currentLeadSource,
+  FUNNEL_PURPOSES,
+  getFunnelCapability,
+  saveFunnelCapability,
+} from "@/app/register/lib/funnelSession";
 
 /**
  * Core multi-step booking logic.
@@ -45,6 +52,9 @@ export function useBookingSteps({ onDone } = {}) {
   const [currentStepIndex, setCurrentStepIndex] = useState(normalizedStep - 1);
   const [formData, setFormData] = useState({});
   const [leadId, setLeadId] = useState(queryLeadId);
+  const [capabilityToken, setCapabilityToken] = useState(() =>
+    getFunnelCapability(FUNNEL_PURPOSES.BOOKING_LEAD, queryLeadId),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
@@ -117,19 +127,29 @@ export function useBookingSteps({ onDone } = {}) {
     // Don't re-set a leadId that was just cleared due to a 404.
     if (leadClearedRef.current) return;
 
+    const token = getFunnelCapability(FUNNEL_PURPOSES.BOOKING_LEAD, nextLeadId);
+    if (!token) {
+      setLeadId(null);
+      setCapabilityToken(null);
+      return;
+    }
+
     if (nextLeadId !== String(leadId || "")) {
       setLeadId(nextLeadId);
+      setCapabilityToken(token);
     }
   }, [isSubmitted, leadId, searchParams]);
 
   // Hydrate saved progress whenever we have a leadId (deep-link resume).
   useEffect(() => {
-    if (!leadId) return;
+    if (!leadId || !capabilityToken) return;
 
     let mounted = true;
 
     const clearLeadAndRestart = (message) => {
+      clearFunnelCapability(FUNNEL_PURPOSES.BOOKING_LEAD, leadId);
       setLeadId(null);
+      setCapabilityToken(null);
       setFormData({});
       setCurrentStepIndex(0);
       setSubmittedLead(null);
@@ -150,7 +170,7 @@ export function useBookingSteps({ onDone } = {}) {
       setError(null);
 
       try {
-        const lead = await getLead(leadId);
+        const lead = await getLead(leadId, capabilityToken);
         if (!mounted) return;
 
         if (lead?.status === "SUBMITTED") {
@@ -204,8 +224,7 @@ export function useBookingSteps({ onDone } = {}) {
 
         const message = err?.message;
         const isNotFound =
-          message === "Booking lead not found" ||
-          /not found|404/i.test(message);
+          err?.status === 401 || err?.status === 404 || /not found|404/i.test(message);
 
         if (isNotFound) {
           clearLeadAndRestart(translateRef.current("booking.progressNotFound"));
@@ -224,7 +243,7 @@ export function useBookingSteps({ onDone } = {}) {
     return () => {
       mounted = false;
     };
-  }, [isStepCompleted, leadId, pathname, searchParams]);
+  }, [capabilityToken, isStepCompleted, leadId, pathname, searchParams]);
 
   // Keep the URL in sync with current step + lead (so links are deep-linkable).
   useEffect(() => {
@@ -278,6 +297,8 @@ export function useBookingSteps({ onDone } = {}) {
     setError(null);
     setFormData({});
     setLeadId(null);
+    clearFunnelCapability(FUNNEL_PURPOSES.BOOKING_LEAD, leadId);
+    setCapabilityToken(null);
     setCurrentStepIndex(0);
     const params = new URLSearchParams(searchParams.toString());
     params.set("booking", "true");
@@ -285,7 +306,7 @@ export function useBookingSteps({ onDone } = {}) {
     params.delete("leadId");
     window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
     window.location.reload();
-  }, [pathname, searchParams]);
+  }, [leadId, pathname, searchParams]);
 
   const onNext = useCallback(
     async (value) => {
@@ -304,11 +325,18 @@ export function useBookingSteps({ onDone } = {}) {
           let nextLeadId = leadId;
 
           if (!nextLeadId) {
-            const result = await createLead(value);
+            const result = await createLead({ ...value, source: currentLeadSource() });
             nextLeadId = result?.id;
-            if (!nextLeadId) {
+            const nextToken = result?.capabilityToken;
+            if (!nextLeadId || !nextToken) {
               throw new Error("Lead id is missing from create response");
             }
+            saveFunnelCapability({
+              purpose: FUNNEL_PURPOSES.BOOKING_LEAD,
+              leadId: nextLeadId,
+              token: nextToken,
+            });
+            setCapabilityToken(nextToken);
           }
 
           setLeadId(String(nextLeadId));
@@ -331,8 +359,7 @@ export function useBookingSteps({ onDone } = {}) {
         const toastId = toast.loading(translate("loading.submitting"));
 
         try {
-          const response = await submitFinalLead(leadId, allData);
-          const lead = response?.lead;
+          const lead = await submitFinalLead(leadId, allData, capabilityToken);
 
           if (lead?.status === "SUBMITTED") {
             setSubmittedLead(lead);
@@ -347,7 +374,8 @@ export function useBookingSteps({ onDone } = {}) {
         } catch (err) {
           const message = err?.message || "Failed to submit";
 
-          if (message === "Booking lead not found") {
+          if (err?.status === 401 || err?.status === 404) {
+            clearFunnelCapability(FUNNEL_PURPOSES.BOOKING_LEAD, leadId);
             setLeadId(null);
             setFormData({});
             setCurrentStepIndex(0);
@@ -406,12 +434,17 @@ export function useBookingSteps({ onDone } = {}) {
       }
 
       setFormData({ ...formData, [currentStep.field]: value });
-      fireUpdateLead(leadId, { [currentStep.field]: value });
+      fireUpdateLead(
+        leadId,
+        { [currentStep.field]: value },
+        capabilityToken,
+      );
       setCurrentStepIndex((i) => i + 1);
       return true;
     },
     [
       currentStep,
+      capabilityToken,
       formData,
       isFirstStep,
       isHydratingLead,

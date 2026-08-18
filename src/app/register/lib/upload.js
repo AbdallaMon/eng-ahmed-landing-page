@@ -12,8 +12,14 @@ const CHUNK_SIZE = 1 * 1024 * 1024; // 1 MB
  * @param {Function} setOverlay  - Called with true/false to toggle the upload overlay
  * @returns {Promise<{ url: string, status: number } | undefined>}
  */
-export async function uploadInChunks(file, setProgress, setOverlay) {
-  const toastId = toast.loading("Uploading");
+export async function uploadInChunks(
+  file,
+  setProgress,
+  setOverlay,
+  publicAccess,
+  messages = {},
+) {
+  const toastId = toast.loading(messages.uploading || "Uploading");
 
   try {
     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
@@ -30,27 +36,40 @@ export async function uploadInChunks(file, setProgress, setOverlay) {
       formData.append("chunkIndex", i);
       formData.append("totalChunks", totalChunks);
 
-      const res = await fetch(`${BASE_URL}/client/upload`, {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+      const purpose = publicAccess?.purpose;
+      const token = publicAccess?.token;
+      if (purpose !== "PUBLIC_LEAD" || !token) {
+        throw new Error("PUBLIC_UPLOAD_CAPABILITY_REQUIRED");
+      }
+
+      const res = await fetch(
+        `${BASE_URL}/files/client/chunks?purpose=${encodeURIComponent(purpose)}`,
+        {
+          method: "POST",
+          body: formData,
+          headers: { "x-upload-token": token },
+          credentials: "include",
+        },
+      );
 
       const json = await res.json();
-      // Old server returned `{ url }`; the migrated server nests it as
-      // `{ data: { url } }`. Handle old || new.
-      const chunkUrl = json.url || json.data?.url;
+      if (!res.ok) throw new Error(json?.message || "FILE_UPLOAD_ERROR");
+      const chunkUrl = json.data?.url;
       if (chunkUrl) finalFileUrl = chunkUrl;
 
       setProgress(Math.round(((i + 1) / totalChunks) * 100));
     }
 
     setOverlay(false);
-    toast.update(toastId, Success("Uploaded successfully"));
+    toast.update(
+      toastId,
+      Success(messages.uploaded || "Uploaded successfully"),
+    );
 
     return { url: finalFileUrl, status: finalFileUrl ? 200 : 500 };
   } catch (err) {
     setOverlay(false);
-    toast.update(toastId, Failed("Upload failed"));
+    toast.update(toastId, Failed(messages.failed || "Upload failed"));
+    return { url: null, status: 500, message: err?.message };
   }
 }

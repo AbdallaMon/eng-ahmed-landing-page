@@ -65,6 +65,7 @@ export default function V1Flow({ leadId } = {}) {
     leadEmail,
     location,
     leadItem,
+    registrationCompleted,
     canGoBack,
     canReset,
     handleEmailSubmit,
@@ -320,7 +321,9 @@ export default function V1Flow({ leadId } = {}) {
       </PerspectiveStage>
 
       {/* الدفع متوقّف — بدل PayingOverlay بنعرض شاشة "تم استلام طلبك" + رسوم التصميم. */}
-      {form.isDone && <LeadSuccessOverlay item={leadItem} />}
+      {(registrationCompleted || form.isDone) && (
+        <LeadSuccessOverlay item={leadItem} />
+      )}
     </>
   );
 }

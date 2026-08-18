@@ -88,9 +88,9 @@ export function MobileNavDrawer({ navItems, bookingButton, lng }) {
               component="img"
               src={"/logo.png"}
               alt="Logo"
-              fill
               sx={{
                 objectFit: "contain",
+                width: "auto",
                 height: { xs: 40, md: 50 },
               }}
             />

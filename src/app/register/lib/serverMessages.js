@@ -21,6 +21,13 @@ const SERVER_MESSAGES = {
     ar: "انتهت الجلسة، يرجى تسجيل الدخول من جديد",
     en: "Your session has ended, please sign in again",
   },
+  OK: { ar: "تمت العملية بنجاح", en: "Completed successfully" },
+  CREATED: { ar: "تم الإنشاء بنجاح", en: "Created successfully" },
+  FILE_UPLOAD_ERROR: { ar: "تعذر رفع الملف", en: "File upload failed" },
+  INVALID_TOKEN: {
+    ar: "انتهت صلاحية جلسة التسجيل، يرجى البدء من جديد",
+    en: "Your registration session has expired. Please start again",
+  },
 
   // public lead funnel
   LEAD_NOT_FOUND: { ar: "العميل غير موجود", en: "Lead not found" },
@@ -31,6 +38,10 @@ const SERVER_MESSAGES = {
   CLIENT_LEAD_REGISTERED: {
     ar: "تم التسجيل بنجاح",
     en: "Registered successfully",
+  },
+  CLIENT_LEAD_REGISTRATION_STATUS_FETCHED: {
+    ar: "تم التحقق من حالة التسجيل",
+    en: "Registration status checked",
   },
   CLIENT_LEAD_REGISTER_COMPLETED: {
     ar: "تم إكمال التسجيل بنجاح",

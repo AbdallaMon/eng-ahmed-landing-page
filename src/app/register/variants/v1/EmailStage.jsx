@@ -6,8 +6,7 @@ import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { useAlertContext } from "@/app/register/providers/AlertProvider";
 import AnimatedText from "@/app/register/core/cards3d/AnimatedText";
 import { useDepthReveal } from "@/app/register/variants/v1/useDepthReveal";
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { isValidPublicLeadEmail } from "@/app/register/lib/email.mjs";
 
 /**
  * Inline email capture — NO boxed paper. The heading, the single elegant field,
@@ -24,6 +23,7 @@ export default function EmailStage({ onSubmit, direction = 1 }) {
   const isRtl = lng === "ar";
   const back = direction < 0;
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [busy, setBusy] = useState(false);
   // On BACK the email group arrives AFTER the image has eased back (staged reverse).
   const { ref } = useDepthReveal(
@@ -34,10 +34,13 @@ export default function EmailStage({ onSubmit, direction = 1 }) {
   const submit = async () => {
     if (busy) return;
     const value = email.trim();
-    if (!EMAIL_RE.test(value)) {
-      setAlertError(translate("validation.invalidEmail"));
+    if (!isValidPublicLeadEmail(value)) {
+      const message = translate("validation.invalidEmail");
+      setEmailError(message);
+      setAlertError(message);
       return;
     }
+    setEmailError("");
     try {
       setBusy(true);
       await onSubmit(value);
@@ -79,6 +82,7 @@ export default function EmailStage({ onSubmit, direction = 1 }) {
         <Box
           ref={ref}
           component="form"
+          noValidate
           onSubmit={(e) => {
             e.preventDefault();
             submit();
@@ -130,9 +134,15 @@ export default function EmailStage({ onSubmit, direction = 1 }) {
             name="email"
             autoComplete="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailError) setEmailError("");
+            }}
             placeholder={translate("register.emailLabel")}
             aria-label={translate("register.emailLabel")}
+            error={Boolean(emailError)}
+            helperText={emailError}
+            slotProps={{ formHelperText: { role: "alert" } }}
             variant="outlined"
             InputProps={{
               startAdornment: (
@@ -171,6 +181,11 @@ export default function EmailStage({ onSubmit, direction = 1 }) {
                 {
                   borderColor: "#d3ac71",
                 },
+              "& .MuiFormHelperText-root": {
+                color: "#ffb4ab",
+                fontWeight: 600,
+                textAlign: isRtl ? "right" : "left",
+              },
             }}
           />
         </Box>

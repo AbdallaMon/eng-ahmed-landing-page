@@ -3,6 +3,10 @@ import { useCallback } from "react";
 import { handleRequestSubmit } from "@/app/register/lib/request";
 import { useToastContext } from "@/app/register/providers/LoadingToastProvider";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
+import {
+  FUNNEL_PURPOSES,
+  getFunnelCapability,
+} from "@/app/register/lib/funnelSession";
 
 /**
  * Encapsulates the `client/pay` → Stripe hosted-checkout redirect.
@@ -32,14 +36,21 @@ export function usePayRedirect() {
   const { translate, lng: contextLng } = useLanguage();
 
   const pay = useCallback(
-    async ({ clientLeadId, clientId, lng, test } = {}) => {
+    async ({ clientLeadId, clientId, lng, test, funnelToken } = {}) => {
       const resolvedLng = lng || contextLng || "ar";
+      const token =
+        funnelToken ||
+        getFunnelCapability(FUNNEL_PURPOSES.PUBLIC_REGISTER, clientLeadId);
+      if (!clientLeadId || !token) return undefined;
       const data = await handleRequestSubmit(
         { clientLeadId, clientId, lng: resolvedLng, test },
         setLoading,
         "client/pay",
         false,
         translate("checkout.redirecting"),
+        undefined,
+        "POST",
+        { "x-funnel-token": token },
       );
       // Old server returned `{ url }`; the migrated server nests it as
       // `{ data: { url } }`. Handle old || new.

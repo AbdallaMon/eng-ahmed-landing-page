@@ -6,7 +6,8 @@
     "dev": "next dev -p 3003",
     "build": "next build",
     "start": "dotenv -e .env -- next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:register": "node --test src/app/register/lib/*.test.mjs"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

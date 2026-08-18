@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { MdCloud } from "react-icons/md";
+import { useLanguage } from "@/app/register/providers/LanguageProvider";
 
 const StyledBackdrop = styled(Backdrop)(() => ({
   zIndex: 9999998,
@@ -53,6 +54,7 @@ const AnimatedIcon = styled(MdCloud)(() => ({
 const UploadProgressContext = createContext(null);
 
 export default function UploadProgressProvider({ children }) {
+  const { translate } = useLanguage();
   const [progress, setProgress] = useState(0);
   const [overlay, setOverlay] = useState(false);
   const [fileName, setFileName] = useState("");
@@ -65,9 +67,9 @@ export default function UploadProgressProvider({ children }) {
   };
 
   const getStatusMessage = () => {
-    if (progress === 0) return "Initializing upload...";
-    if (progress < 100) return "Uploading file...";
-    return "Upload complete!";
+    if (progress === 0) return translate("upload.initializing");
+    if (progress < 100) return translate("upload.inProgress");
+    return translate("upload.complete");
   };
 
   return (
@@ -125,7 +127,10 @@ export default function UploadProgressProvider({ children }) {
                     color="text.secondary"
                     sx={{ fontWeight: 600 }}
                   >
-                    {Math.round(progress)}% complete
+                    {translate("upload.percentComplete").replace(
+                      "{percent}",
+                      Math.round(progress),
+                    )}
                   </Typography>
                   {uploadSpeed && (
                     <Typography
@@ -178,7 +183,7 @@ export default function UploadProgressProvider({ children }) {
                 align="center"
                 sx={{ opacity: 0.8 }}
               >
-                Please don&lsquo;t close this window while uploading
+                {translate("upload.keepOpen")}
               </Typography>
             </Stack>
           </ProgressContainer>
