@@ -14,7 +14,7 @@ export const arCompanies = {
       text: ".تصميم داخلي فاخر تنفيذ احترافي ، لمسات إبداعية ، مواد عصرية",
       buttonText: "دريم استوديوو",
       href: "http://dreamstudiio.com/ar",
-      href: `whatsapp://send?phone=${whatsAppNumber}`,
+      // href: `whatsapp://send?phone=${whatsAppNumber}`,
       type: "WHATSAPP",
     },
   ],
@@ -34,7 +34,7 @@ export const enCompanies = {
       text: "Luxury interior design, professional execution, creative touches, and modern materials.",
       buttonText: "Dream Studio",
       href: "http://dreamstudiio.com/en",
-      href: `whatsapp://send?phone=${whatsAppNumber}`,
+      // href: `whatsapp://send?phone=${whatsAppNumber}`,
 
       type: "WHATSAPP",
     },
