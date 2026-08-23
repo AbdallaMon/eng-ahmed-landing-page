@@ -15,7 +15,7 @@ export const arCompanies = {
       buttonText: "دريم استوديوو",
       href: "http://dreamstudiio.com/ar",
       // href: `whatsapp://send?phone=${whatsAppNumber}`,
-      type: "WHATSAPP",
+      // type: "WHATSAPP",
     },
   ],
 };
@@ -36,7 +36,7 @@ export const enCompanies = {
       href: "http://dreamstudiio.com/en",
       // href: `whatsapp://send?phone=${whatsAppNumber}`,
 
-      type: "WHATSAPP",
+      // type: "WHATSAPP",
     },
   ],
 };
