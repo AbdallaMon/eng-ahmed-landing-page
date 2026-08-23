@@ -13,7 +13,7 @@ export const arCompanies = {
       image: "./dream-studio-logo.webp",
       text: ".تصميم داخلي فاخر تنفيذ احترافي ، لمسات إبداعية ، مواد عصرية",
       buttonText: "دريم استوديوو",
-      // href: "http://dreamstudiio.com",
+      href: "http://dreamstudiio.com/ar",
       href: `whatsapp://send?phone=${whatsAppNumber}`,
       type: "WHATSAPP",
     },
@@ -33,7 +33,7 @@ export const enCompanies = {
       image: "./dream-studio-logo.webp",
       text: "Luxury interior design, professional execution, creative touches, and modern materials.",
       buttonText: "Dream Studio",
-      // href: "http://dreamstudiio.com",
+      href: "http://dreamstudiio.com/en",
       href: `whatsapp://send?phone=${whatsAppNumber}`,
 
       type: "WHATSAPP",
