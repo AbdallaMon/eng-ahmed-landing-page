@@ -27,6 +27,9 @@ export async function TranslatingIdeasSection({ lng }) {
               <Grid size={6} sx={{ overflow: "hidden" }}>
                 <Box
                   component="img"
+                  loading="lazy"
+                  decoding="async"
+                  alt=""
                   sx={{
                     maxWidth: "100%",
                     width: "100%",

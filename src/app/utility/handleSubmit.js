@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { apiUrl } from "@/app/utility/apiBase.mjs";
 
 export async function handleRequestSubmit(
   data,
@@ -13,7 +14,7 @@ export async function handleRequestSubmit(
   const headers = isFileUpload ? {} : { "Content-Type": "application/json" };
   setLoading(true);
   try {
-    const request = await fetch(process.env.NEXT_PUBLIC_URL + "/" + path, {
+    const request = await fetch(apiUrl(path), {
       method: method,
       body,
       headers: headers,

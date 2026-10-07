@@ -23,6 +23,9 @@ export function BooksAndCoursesCard({ cardData, lng }) {
       <Box
         component="img"
         src={cardData.image}
+        alt={cardData.title}
+        loading="lazy"
+        decoding="async"
         sx={{
           mb: 2,
           position: "absolute",

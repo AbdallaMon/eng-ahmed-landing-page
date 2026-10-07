@@ -77,6 +77,10 @@ export async function Testmonails({ lng }) {
           <Box
             component="img"
             src="./testmonials-blur.png"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
             sx={{
               position: "absolute",
               top: 0,
@@ -93,6 +97,10 @@ export async function Testmonails({ lng }) {
           <Box
             component="img"
             src="./testmonials-blur-mobile.png"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
             sx={{
               position: "absolute",
               top: 0,

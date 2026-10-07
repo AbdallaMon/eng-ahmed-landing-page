@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3003",
     "build": "next build",
-    "start": "next start -p 3005",
-    "lint": "eslint"
+    "start": "dotenv -e .env -- next start",
+    "lint": "eslint",
+    "test:register": "node --test src/app/register/lib/*.test.mjs src/app/utility/*.test.mjs"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -17,6 +18,7 @@
     "@mui/x-date-pickers": "^8.17.0",
     "accept-language": "^3.0.20",
     "dayjs": "^1.11.19",
+    "framer-motion": "^12.40.0",
     "gsap": "^3.13.0",
     "i18next": "^25.6.0",
     "i18next-browser-languagedetector": "^8.2.0",
@@ -26,6 +28,7 @@
     "react": "19.2.1",
     "react-cookie": "^8.0.1",
     "react-dom": "19.2.1",
+    "react-hook-form": "^7.56.3",
     "react-i18next": "^16.2.4",
     "react-icons": "^5.5.0",
     "react-toastify": "^11.0.5",
@@ -33,7 +36,10 @@
     "swiper": "^12.0.3"
   },
   "devDependencies": {
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.0.8"
+    "eslint-config-next": "16.0.8",
+    "i": "^0.3.7",
+    "npm": "^11.17.0"
   }
 }

@@ -220,39 +220,37 @@ export function HeroBanner({ data, lng }) {
         onMouseMove={handleMouseMove}
         sx={{ px: 0, position: "relative", pt: { xs: 2, md: 8 } }}
       >
-        {/* Desktop background */}
+        {/* Responsive background — the browser downloads ONLY the matching
+            source (desktop ≥900px, mobile below) instead of fetching both. */}
         <Box
-          component="img"
-          src={data.images.heroBackground.src}
+          component="picture"
           sx={{
             position: "absolute",
             top: 0,
             left: 0,
             width: "100%",
             height: "100%",
-            objectFit: "cover",
             zIndex: -1,
-            display: { xs: "none", md: "block" },
           }}
-          alt={data.images.heroBackground.alt}
-        />
-
-        {/* Mobile background */}
-        <Box
-          component="img"
-          src={data.images.heroMobileBackground.src}
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: -1,
-            display: { xs: "block", md: "none" },
-          }}
-          alt={data.images.heroMobileBackground.alt}
-        />
+        >
+          <source
+            media="(min-width:900px)"
+            srcSet={data.images.heroBackground.src}
+          />
+          <Box
+            component="img"
+            src={data.images.heroMobileBackground.src}
+            alt={data.images.heroMobileBackground.alt}
+            fetchPriority="high"
+            sx={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </Box>
 
         {/* Main hero box */}
         <Box

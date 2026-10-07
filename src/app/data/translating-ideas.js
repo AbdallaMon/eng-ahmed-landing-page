@@ -9,5 +9,5 @@ export const enTranslatingIdeas = {
     "15 Years of Architectural Creativity in Residential and Commercial",
 };
 
-export const pcTranslatingIdeaImage = "./mask-pc.png";
-export const mobileTranslatingIdeaImage = "./mask-mobile.png";
+export const pcTranslatingIdeaImage = "./mask-pc.webp";
+export const mobileTranslatingIdeaImage = "./mask-mobile.webp";

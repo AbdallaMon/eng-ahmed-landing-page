@@ -110,7 +110,11 @@ export default function ProjectImagesGrid({ project, lng = "ar" }) {
                   width={img.width}
                   height={img.height}
                   sizes="(max-width: 900px) 100vw, 33vw"
-                  loading="lazy"
+                  // أول صورة هي غالباً الـ LCP → نحمّلها فوراً (priority) لتحسين
+                  // Core Web Vitals، والباقي يفضل lazy.
+                  priority={img.index === 0}
+                  loading={img.index === 0 ? undefined : "lazy"}
+                  fetchPriority={img.index === 0 ? "high" : undefined}
                   placeholder={img.blurDataURL ? "blur" : "empty"}
                   blurDataURL={img.blurDataURL}
                   itemProp="image"

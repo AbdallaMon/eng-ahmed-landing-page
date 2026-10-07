@@ -7,7 +7,7 @@
     left: 0;
     right: 0;
     background-color: #d3ac71; /* Adjust as necessary */
-    z-index: 50000;
+    z-index: 2147483647; /* max — keep the initial loader above absolutely everything */
     justify-content: center;
     display: flex;
     align-items: center;

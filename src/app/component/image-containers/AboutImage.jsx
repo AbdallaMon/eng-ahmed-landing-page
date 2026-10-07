@@ -38,6 +38,8 @@ export default function AboutImageContainer({ images, lng, aboutData }) {
       {/* صورة الـ blur (خلفية ديكورية) */}
       <Box
         component="img"
+        loading="lazy"
+        decoding="async"
         sx={{
           width: { xs: "112%", md: "100%" },
           position: "absolute",

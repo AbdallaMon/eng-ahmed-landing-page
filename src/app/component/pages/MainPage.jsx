@@ -11,10 +11,17 @@ export function MainPage({ mainData, lng }) {
           pt: { xs: 0, md: 12 },
         }}
       >
-        <Grid container sx={{}} spacing={{ xs: 1, md: 4 }}>
+        <Grid
+          container
+          sx={{
+            // maxWidth: "800px",
+            mx: "auto",
+          }}
+          spacing={{ xs: 1, md: 4 }}
+        >
           {mainData.map((item, index) => (
             <Grid size={{ xs: 12, md: 4 }} key={index}>
-              <MainPageCard data={item} lng={lng} />
+              <MainPageCard data={item} lng={lng} preload={index === 0} />
             </Grid>
           ))}
         </Grid>
