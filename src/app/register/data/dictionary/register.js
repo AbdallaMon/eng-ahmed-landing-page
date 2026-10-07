@@ -51,10 +51,6 @@ export const register = {
     en: "Where is your project located?",
     ar: "أين يقع مشروعك؟",
   },
-  "register.chooseLocationSubtitle": {
-    en: "This helps us tailor pricing and the right design team for you.",
-    ar: "يساعدنا هذا في تخصيص الأسعار وفريق التصميم المناسب لك.",
-  },
   "register.chooseItemTitle": {
     en: "What would you like designed?",
     ar: "ما الذي تود تصميمه؟",

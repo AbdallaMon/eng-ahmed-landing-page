@@ -18,7 +18,7 @@ import {
   designLeadTypes,
   designLead,
   LeadType,
-  // DesignLeadPrice, // رسوم التصميم اتشالت من كروت الاختيار — بتظهر بعد تأكيد الدفع في /register/success
+  DesignLeadPrice,
 } from "@/app/register/data/constants";
 import { assets, imageForItem, imageForLocation } from "@/app/register/core/assets";
 
@@ -142,9 +142,7 @@ export default function V1Flow({ leadId } = {}) {
         value: d.value,
         image: imageForItem(d.value),
         title: translate(LeadType[d.value]),
-        // رسوم التصميم اتشالت من الكارت أثناء الاختيار — بتظهر دلوقتي بعد تأكيد الدفع
-        // في صفحة /register/success (شوف SuccessView). لإرجاعها هنا: فك الكومنت + استيراد DesignLeadPrice.
-        // note: translate(DesignLeadPrice[d.value]),
+        note: translate(DesignLeadPrice[d.value]),
       })),
     [translate],
   );
@@ -208,7 +206,6 @@ export default function V1Flow({ leadId } = {}) {
       return (
         <OptionCardsStage
           title={translate("register.chooseLocationTitle")}
-          subtitle={translate("register.chooseLocationSubtitle")}
           options={locationOptions}
           onSelect={handleLocationClick}
           disabled={isAnimating}
