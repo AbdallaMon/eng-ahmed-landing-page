@@ -9,6 +9,7 @@ import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import colors from "@/app/register/theme/colors";
 import { prefersReducedMotion } from "@/app/register/lib/animations";
 import { DesignLeadPrice, LeadType } from "@/app/register/data/constants";
+import { formatDesignFee } from "@/app/register/lib/designPricing.mjs";
 
 /**
  * شاشة "تم استلام طلبك" اللي بتظهر بدل الدفع (الدفع متوقّف حاليًا — شوف
@@ -26,14 +27,20 @@ import { DesignLeadPrice, LeadType } from "@/app/register/data/constants";
  * فيحصل فلاش (نفس منطق PayingOverlay). المحتوى جوّه بيظهر من opacity 0 بالـ GSAP
  * فأي تأخير كلاس بيتغطّى.
  */
-export default function LeadSuccessOverlay({ item }) {
+export default function LeadSuccessOverlay({ item, location, aedPerUsd }) {
   const { translate, lng } = useLanguage();
   const direction = lng === "en" ? "ltr" : "rtl";
   const rootRef = useRef(null);
 
   // رسوم التصميم + اسم النوع حسب اللي اختاره العميل. لو النوع مش في جدول الرسوم
   // (مثلاً نوع من غير سعر محدّد) بنخفي بلوك الرسوم كله.
-  const feeNotice = item && DesignLeadPrice[item] ? translate(DesignLeadPrice[item]) : null;
+  const feeNotice = formatDesignFee(
+    DesignLeadPrice[item],
+    location,
+    lng,
+    aedPerUsd,
+    translate,
+  );
   const feeTypeLabel = item && LeadType[item] ? translate(LeadType[item]) : null;
 
   // زرار "العودة للرئيسية" لازم يوصّل للموقع الأساسي — الحجز بيشتغل على دومين

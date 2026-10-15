@@ -70,7 +70,7 @@ export function useSuccessStatus() {
     lng,
     direction,
     homeHref,
-    feeNotice: designItem ? t(DesignLeadPrice[designItem], lng) : null,
+    feeNotice: designItem ? t(DesignLeadPrice[designItem].labelKey, lng) : null,
     feeTypeLabel: designItem ? t(LeadType[designItem], lng) : null,
   };
 }

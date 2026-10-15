@@ -72,9 +72,9 @@ export const designLead = [
 ];
 
 export const DesignLeadPrice = {
-  APARTMENT: "price.designFee.15k",
-  CONSTRUCTION_VILLA: "price.designFee.60k",
-  PART_OF_HOME: "price.designFee.30k",
+  APARTMENT: { amountAed: 15000, labelKey: "price.designFee.15k" },
+  CONSTRUCTION_VILLA: { amountAed: 60000, labelKey: "price.designFee.60k" },
+  PART_OF_HOME: { amountAed: 30000, labelKey: "price.designFee.30k" },
 };
 
 // ── UAE vs non-UAE location cards (for the design flow) ──────────────────────

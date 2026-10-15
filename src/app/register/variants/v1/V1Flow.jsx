@@ -9,6 +9,7 @@ import {
   progressIndexFor,
 } from "@/app/register/component/leadSelection/useLeadFlow";
 import { useLeadForm } from "@/app/register/core/useLeadForm";
+import { formatDesignFee } from "@/app/register/lib/designPricing.mjs";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
 import { RegisterHeader } from "@/app/register/component/layout/RegisterHeader";
 import { dur, prefersReducedMotion } from "@/app/register/variants/v1/v1Motion";
@@ -49,7 +50,7 @@ import LeadSuccessOverlay from "@/app/register/variants/v1/LeadSuccessOverlay";
  * live resume logic reads the URL inside `useLeadFlow`, so it's informational
  * here.
  */
-export default function V1Flow({ leadId } = {}) {
+export default function V1Flow({ leadId, aedPerUsd } = {}) {
   const { translate, lng } = useLanguage();
   const isRtl = lng === "ar";
 
@@ -142,9 +143,15 @@ export default function V1Flow({ leadId } = {}) {
         value: d.value,
         image: imageForItem(d.value),
         title: translate(LeadType[d.value]),
-        note: translate(DesignLeadPrice[d.value]),
+        note: formatDesignFee(
+          DesignLeadPrice[d.value],
+          location,
+          lng,
+          aedPerUsd,
+          translate,
+        ),
       })),
-    [translate],
+    [translate, location, lng, aedPerUsd],
   );
 
   const isForm = step === "form";
@@ -319,7 +326,11 @@ export default function V1Flow({ leadId } = {}) {
 
       {/* الدفع متوقّف — بدل PayingOverlay بنعرض شاشة "تم استلام طلبك" + رسوم التصميم. */}
       {(registrationCompleted || form.isDone) && (
-        <LeadSuccessOverlay item={leadItem} />
+        <LeadSuccessOverlay
+          item={leadItem}
+          location={location}
+          aedPerUsd={aedPerUsd}
+        />
       )}
     </>
   );
