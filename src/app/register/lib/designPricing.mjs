@@ -8,9 +8,9 @@ export function formatDesignFee(price, location, lng, aedPerUsd, translate) {
     Number.isFinite(aedPerUsd) && aedPerUsd > 0
       ? aedPerUsd
       : AED_PER_USD_FALLBACK;
-  const amount = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 0,
-  }).format(price.amountAed / rate);
+  // Starting prices are displayed at the previous whole thousand dollars.
+  const roundedUsd = Math.floor(price.amountAed / rate / 1000) * 1000;
+  const amount = new Intl.NumberFormat("en-US").format(roundedUsd);
 
   return lng === "en"
     ? `Design fees start from approximately $${amount}`

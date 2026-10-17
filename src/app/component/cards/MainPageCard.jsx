@@ -25,7 +25,7 @@ export function MainPageCard({ data, lng, preload = false }) {
           textDecoration: "none",
           overflow: "hidden",
           aspectRatio: "1 / 1",
-          maxWidth: 400,
+          maxWidth: 250,
           margin: "0 auto",
         }}
       >

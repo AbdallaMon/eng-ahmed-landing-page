@@ -1,3 +1,4 @@
+const requestDesignUrl = process.env.NEXT_PUBLIC_REGISTER_URL;
 export const arMainPageData = [
   {
     title: "من هو المهندس أحمد؟",
@@ -7,10 +8,17 @@ export const arMainPageData = [
     image: "/main-page-hero.png",
   },
   {
-    title: "طلب استشارة",
+    title: "حجز استشارة",
     href: "https://decorstores.ltd/en/products/consultation-with-engineer-ahmed",
     image: "/consultation.jpg",
     type: "COVER",
+  },
+  {
+    title: "حجز تصميم",
+    // href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
+    // image: "/whats-app-icon.png",
+    image: "/projects/project-2.png",
+    href: requestDesignUrl,
   },
   {
     title: "الدائرة المقربة",
@@ -28,10 +36,17 @@ export const enMainPageData = [
     href: "/about",
   },
   {
-    title: "Consultation with Engineer Ahmed",
+    title: "Book a Consultation",
     href: "https://decorstores.ltd/en/products/consultation-with-engineer-ahmed",
     image: "/consultation.jpg",
     type: "COVER",
+  },
+  {
+    title: "Book a Design",
+    // href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
+    // image: "/whats-app-icon.png",
+    image: "/projects/project-2.png",
+    href: requestDesignUrl,
   },
   {
     title: "The Inner Circle",

@@ -1,8 +1,4 @@
-import {
-  colors,
-  developerLink,
-  siteEmail,
-} from "@/app/data/constants";
+import { colors, developerLink, siteEmail } from "@/app/data/constants";
 import { getTranslation } from "@/app/i18n";
 import {
   Box,
@@ -47,6 +43,7 @@ export async function Footer({ lng }) {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              flexWrap: "wrap",
               gap: { xs: 3, md: 4 },
               mt: {
                 xs: 4,
@@ -59,7 +56,12 @@ export async function Footer({ lng }) {
             }}
           >
             {data.navigations.map((item, index) => (
-              <Box key={index} href={item.href} component={"a"}>
+              <Box
+                key={index}
+                href={item.href}
+                component={"a"}
+                sx={{ color: colors.text, fontSize: { xs: 12, md: 16 } }}
+              >
                 {item.label}
               </Box>
             ))}
