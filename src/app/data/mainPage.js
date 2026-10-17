@@ -18,7 +18,7 @@ export const arMainPageData = [
     // href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
     // image: "/whats-app-icon.png",
     image: "/projects/project-2.png",
-    href: requestDesignUrl,
+    href: requestDesignUrl + "?lng=ar",
   },
   {
     title: "الدائرة المقربة",
@@ -46,7 +46,7 @@ export const enMainPageData = [
     // href: "whatsapp://channel/0029Vb6IrAgFy72LBOHa7t3E",
     // image: "/whats-app-icon.png",
     image: "/projects/project-2.png",
-    href: requestDesignUrl,
+    href: requestDesignUrl + "?lng=en",
   },
   {
     title: "The Inner Circle",
