@@ -8,6 +8,10 @@
 //
 // Strings mirror the new admin app's `data/messages/*` so wording stays in sync.
 const SERVER_MESSAGES = {
+  TOO_MANY_REQUESTS: {
+    ar: "محاولات كثيرة، يرجى الانتظار قليلًا ثم المحاولة مجددًا.",
+    en: "Too many requests. Please wait a while and try again.",
+  },
   // core / general
   VALIDATION_ERROR: {
     ar: "بيانات غير صحيحة، يرجى مراجعة الحقول",

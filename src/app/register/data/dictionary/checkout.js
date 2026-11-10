@@ -1,4 +1,8 @@
 export const checkout = {
+  "checkout.tooManyRequests": {
+    en: "Too many requests. Please wait a while and try again.",
+    ar: "محاولات كثيرة، يرجى الانتظار قليلًا ثم المحاولة مجددًا.",
+  },
   "checkout.consultWithAhmed": {
     en: "A Consultation with eng Ahmed himself",
     ar: "استشارة مع المهندس احمد نفسه",

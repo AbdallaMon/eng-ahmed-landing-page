@@ -1,5 +1,5 @@
 "use client";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { handleRequestSubmit } from "@/app/register/lib/request";
 import { useToastContext } from "@/app/register/providers/LoadingToastProvider";
 import { useLanguage } from "@/app/register/providers/LanguageProvider";
@@ -34,14 +34,23 @@ import {
 export function usePayRedirect() {
   const { setLoading } = useToastContext();
   const { translate, lng: contextLng } = useLanguage();
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const pay = useCallback(
-    async ({ clientLeadId, clientId, lng, test, funnelToken } = {}) => {
+    async ({ clientLeadId, clientId, lng, test, funnelToken, onFailure } = {}) => {
+      setErrorMessage(null);
+      const fail = (message) => {
+        setErrorMessage(message);
+        onFailure?.(message);
+      };
       const resolvedLng = lng || contextLng || "ar";
       const token =
         funnelToken ||
         getFunnelCapability(FUNNEL_PURPOSES.PUBLIC_REGISTER, clientLeadId);
-      if (!clientLeadId || !token) return undefined;
+      if (!clientLeadId || !token) {
+        fail(translate("validation.sessionExpired"));
+        return undefined;
+      }
       const data = await handleRequestSubmit(
         { clientLeadId, clientId, lng: resolvedLng, test },
         setLoading,
@@ -57,13 +66,19 @@ export function usePayRedirect() {
       const checkoutUrl = data?.url || data?.data?.url;
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
+      } else {
+        const tooManyRequests =
+          data?.status === 429 ||
+          data?.code === "TOO_MANY_REQUESTS" ||
+          data?.message === "TOO_MANY_REQUESTS";
+        fail(translate(tooManyRequests ? "checkout.tooManyRequests" : "checkout.errorMessage"));
       }
       return checkoutUrl;
     },
     [setLoading, translate, contextLng],
   );
 
-  return { pay };
+  return { pay, errorMessage };
 }
 
 export default usePayRedirect;

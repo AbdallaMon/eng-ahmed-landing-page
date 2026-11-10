@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { MdErrorOutline, MdRefresh, MdArrowBack } from "react-icons/md";
 import gsap from "gsap";
 import colors from "@/app/register/theme/colors";
@@ -38,7 +38,7 @@ export default function CheckoutView({
   const activeLng = lng || language?.lng || "ar";
   const translate = language?.translate ?? ((k) => k);
 
-  const { pay } = usePayRedirect();
+  const { pay, errorMessage } = usePayRedirect();
 
   const rootRef = useRef(null);
   // Guard so the auto-pay fires exactly once even under StrictMode double-mount.
@@ -178,9 +178,9 @@ export default function CheckoutView({
           variant="body2"
           sx={{ color: colors.secondaryText, maxWidth: 440, mb: 4 }}
         >
-          {translate("checkout.errorMessage")}
+          {errorMessage || translate("checkout.errorMessage")}
         </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
           <Button
             variant="contained"
             onClick={retry}
@@ -213,7 +213,7 @@ export default function CheckoutView({
           >
             {translate("checkout.backToForm")}
           </Button>
-        </Stack>
+        </Box>
       </Box>
     );
   }
