@@ -36,7 +36,7 @@ export const status = {
 
   // Refund guarantee
   "guarantee.refund": {
-    en: "We value your time; the evaluation fee is fully refundable if no meeting with the advisor takes place.",
-    ar: "نقدّر وقتك؛ رسوم التقييم مستردة بالكامل إذا لم يتم اللقاء مع المستشار.",
+    en: "Your time and ours are valuable. If we cannot provide the right solution for you, the full amount paid will be refunded.",
+    ar: "وقتك ووقتنا ثمين، في حال لم نتمكن من تقديم الحل المناسب لك، سيتم استرجاع المبلغ المدفوع بالكامل.",
   },
 };

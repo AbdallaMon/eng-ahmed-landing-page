@@ -419,7 +419,7 @@ export default function OptionCardsStage({
                 >
                   {opt.title}
                 </Typography>
-                {opt.note && (
+                {/* {opt.note && (
                   <Typography
                     sx={{
                       mt: 0.5,
@@ -431,7 +431,7 @@ export default function OptionCardsStage({
                   >
                     {opt.note}
                   </Typography>
-                )}
+                )} */}
                 {opt.hint && (
                   <Box
                     component="span"

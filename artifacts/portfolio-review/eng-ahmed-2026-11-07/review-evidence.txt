@@ -1,0 +1,59 @@
+Eng Ahmed portfolio review — 2026-11-07
+Project: C:\coding\eng-ahmed-landing-page
+Scope: code inspection, public-interface review, publication draft and real screenshots. Review only; no publishing, uploads, payment, login or form submission.
+
+Strongest customer-facing points
+1. Large, detailed architectural portfolio with full-screen gallery and related projects.
+2. Interactive before/after comparison.
+3. Guided design enquiry that collects useful project requirements and attachments.
+4. Arabic/English presentation, responsive layouts, professional-profile content and SEO groundwork.
+
+Code evidence
+- src/app/projects/[id]/page.jsx: individual project details, imagery, related projects and JSON-LD.
+- src/app/data/projects.js: bilingual project content, location/year/status/category and image counts; 9 project IDs.
+- src/app/component/projects/ProjectImagesLightboxClient.jsx: full-screen gallery, next/previous controls, touch gestures and keyboard navigation.
+- src/app/component/BeforeAndAfterSlider.jsx: pointer/touch comparison and keyboard-adjustable divider.
+- src/app/about/page.jsx: Hero, About, Stages, Companies, OurNumbers, HomeProjects, BeforeAndAfter, BooksAndCourses, SuccessJourney, Testimonials, FAQ.
+- src/app/component/TestmonailsSlider.jsx: Swiper slides, pagination and navigation.
+- src/app/component/HeroBanner.jsx: GSAP animation.
+- src/app/register/page.jsx and variants/v1/V1Flow.jsx: current design enquiry flow, image cards, contextual fields and GSAP/CSS depth transitions.
+- src/app/register/component/leadSelection/useLeadFlow.js: intro, email, location, item, form; back/reset and guarded resumption.
+- src/app/register/core/fields/fieldOrder.js: conditional emirate/country, contact, description, source and optional attachment fields.
+- src/app/register/core/useLeadForm.js: initial registration, scoped upload capability, complete-register and success state.
+- src/app/register/lib/upload.js: chunked file upload with progress indicator. Do not claim resumable uploads; this implementation loops chunks but does not establish interrupted-upload recovery.
+- src/app/register/component/booking/data.js and useBookingSteps.js: 9-step booking workflow, incremental updates and final submission; saved-lead hydration/resumption.
+- src/app/component/form/BookingForm.jsx: required fields, phone validation, submit handling and success state.
+- src/app/i18n/settings.js and providers: Arabic/English; responsive MUI breakpoints throughout components.
+- src/app/sitemap.js, robots.js, seo/jsonLdHelpers.js and route metadata: sitemap, robots, structured data, canonicals, language alternatives and social metadata.
+- package.json: Next.js ^16.0.7, React 19.2.1, MUI ^7.3.5, Emotion, i18next, GSAP, Swiper, React Hook Form.
+
+Claims to exclude or qualify
+- Automatic payment is currently commented out in core/useLeadForm.js; completion sets LEAD_FORM_PHASE.DONE. Payment routes/helpers remain, but the active design enquiry should not be advertised as an active automated payment journey.
+- This repository is a frontend with hardcoded marketing content and external backend calls; no CMS/admin dashboard, independent database, CRM implementation or course platform was established here.
+- Books, courses and consultation links can open external services; do not describe these as a built-in shop or learning platform.
+- Do not promise search ranking, higher conversion, traffic, revenue or performance scores without measurement.
+- Public biography/business counts/testimonials describe the engineer and were not independently authenticated; the publication draft avoids repeating numerical business claims.
+- Production lead creation, file upload, saved-lead retrieval and checkout were not exercised because they can create or access real records. Code support is established; end-to-end backend success is not certified by this review.
+- The repository instructions are older than some current files; payment behavior and scripts above follow current code.
+
+Validation status
+- Repository source inspected read-only; no application files changed.
+- Local node_modules was absent, so no build or local application run was claimed.
+- Public URL opened in Chrome: https://ahmadmobayed.com/about?lng=ar. Tab listing returned the correct About-page title.
+- Browser binding then blocked by an open Chrome extension UI. A request to dismiss the extension was sent; screenshots and detailed visual review are pending until access resumes.
+- A process-list query returned Access denied; it was not retried because it was unnecessary to the public-site review.
+
+Suggested real screenshots after browser access resumes
+01-about-hero-ar.png — Arabic hero, portrait and headline.
+02-projects-grid-ar.png — portfolio overview.
+03-project-details-ar.png — selected project heading and image grid.
+04-project-gallery.png — opened full-screen gallery.
+05-before-after-ar.png — before/after comparison section.
+06-design-enquiry.png — first enquiry screen only; do not submit email.
+07-booking-start.png — first empty booking step; do not create a lead.
+08-about-en.png — English version.
+09-mobile.png — actual narrow viewport, if supported.
+
+Files prepared for review only
+- publish-ar.txt: ready-to-copy Arabic draft.
+- review-evidence.txt: internal evidence and limitations; do not publish this file as portfolio copy.

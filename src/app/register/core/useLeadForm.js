@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { matchIsValidTel } from "mui-tel-input";
 
@@ -23,18 +23,14 @@ import {
   saveFunnelCapability,
 } from "@/app/register/lib/funnelSession";
 import { Emirate } from "@/app/register/data/constants";
-// الدفع متوقّف مؤقتًا — بدل ما نودّي العميل لصفحة الدفع، بنعرضله شاشة "تم استلام طلبك"
-// مع رسوم التصميم. لإرجاع الدفع: فك الكومنت هنا + عن استدعاء pay() تحت.
-// import { usePayRedirect } from "@/app/register/core/usePayRedirect";
+import { usePayRedirect } from "@/app/register/core/usePayRedirect";
 
 /**
  * Submit phases the UI can drive a transition overlay from:
  *  - "idle":      nothing in flight
  *  - "submitting": registering / uploading / completing the lead
  *  - "paying":    complete-register succeeded → firing the pay redirect (the
- *                 "preparing your payment" full-screen transition) — معطّل حاليًا
- *  - "done":      complete-register succeeded → نعرض شاشة "تم استلام طلبك" +
- *                 رسوم التصميم (بدل الدفع، طالما الدفع متوقّف)
+ *                 "preparing your payment" full-screen transition)
  *  - "error":     a request failed; the flow stays on the form
  */
 export const LEAD_FORM_PHASE = {
@@ -77,7 +73,8 @@ export function useLeadForm({ category, item, location, leadEmail }) {
   const { loading, setLoading } = useToastContext();
   const { setProgress, setOverlay } = useUploadContext();
   const { defaultCountry } = useGeoCountry(location);
-  // const { pay } = usePayRedirect(); // معطّل مؤقتًا — الدفع متوقّف
+  const { pay } = usePayRedirect();
+  const completedPaymentRequest = useRef(null);
 
   const searchParams = useSearchParams();
   const externalLeadId = searchParams.get("leadId");
@@ -113,8 +110,27 @@ export function useLeadForm({ category, item, location, leadEmail }) {
     setFormData((prev) => ({ ...prev, emirate: event.target.value }));
   };
 
+  const startPayment = async (paymentRequest) => {
+    setPhase(LEAD_FORM_PHASE.PAYING);
+    try {
+      if (item) window.localStorage.setItem("register:designItem", item);
+    } catch {
+      // Ignore storage failures (private mode / blocked storage).
+    }
+    const checkoutUrl = await pay(paymentRequest);
+    if (!checkoutUrl) {
+      setPhase(LEAD_FORM_PHASE.ERROR);
+      setAlertError(translate("checkout.errorMessage"));
+    }
+  };
+
   const handleSubmit = async () => {
-    if (loading) return;
+    if (loading || phase === LEAD_FORM_PHASE.PAYING) return;
+    // Retry payment without submitting the completed registration again.
+    if (completedPaymentRequest.current) {
+      await startPayment(completedPaymentRequest.current);
+      return;
+    }
 
     let { name, phone, email, emirate } = formData;
     if (leadEmail) email = leadEmail;
@@ -239,25 +255,13 @@ export function useLeadForm({ category, item, location, leadEmail }) {
         leadId,
         item,
       });
-      // الدفع متوقّف مؤقتًا: بدل ما نودّي العميل لصفحة الدفع (Stripe) بنعرضله
-      // شاشة "تم استلام طلبك — هيتواصل معاك الفريق قريبًا" + رسوم التصميم حسب
-      // النوع اللي اختاره. الـ UI بيراقب `phase === "done"` (شوف LeadSuccessOverlay).
-      //
-      // لإرجاع الدفع: فك كومنت الاستيراد + الـ pay() تحت، ورجّع setPhase(PAYING).
-      // const completedLeadId = request.data?.leadId || request.data?.id;
-      // const completedClientId = request.data?.clientId;
-      // setPhase(LEAD_FORM_PHASE.PAYING);
-      // try {
-      //   if (item) window.localStorage.setItem("register:designItem", item);
-      // } catch {
-      //   // ignore storage failures (private mode / blocked storage)
-      // }
-      // await pay({
-      //   clientLeadId: completedLeadId,
-      //   clientId: completedClientId,
-      //   lng,
-      // });
-      setPhase(LEAD_FORM_PHASE.DONE);
+      completedPaymentRequest.current = {
+        clientLeadId: leadId,
+        clientId: request.data?.clientId,
+        lng,
+        funnelToken,
+      };
+      await startPayment(completedPaymentRequest.current);
     } else {
       setPhase(LEAD_FORM_PHASE.ERROR);
     }
@@ -291,7 +295,6 @@ export function useLeadForm({ category, item, location, leadEmail }) {
       phase === LEAD_FORM_PHASE.PAYING ||
       phase === LEAD_FORM_PHASE.DONE,
     isPaying: phase === LEAD_FORM_PHASE.PAYING,
-    // الدفع متوقّف — دي بتشتغل مكان الدفع: تعرض شاشة "تم استلام طلبك"
     isDone: phase === LEAD_FORM_PHASE.DONE,
     showPriceConfirm,
     setShowPriceConfirm,

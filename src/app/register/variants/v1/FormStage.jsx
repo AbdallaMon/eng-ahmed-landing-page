@@ -104,11 +104,7 @@ export default function FormStage({ form }) {
             {translate("hero.oneStepAway")}
           </Typography>
 
-          {/* The "team will contact you — a $39 fee applies" notice. It was part
-              of the original register form and got dropped in the V1 migration;
-              the owner wants it back here so the upfront fee is set before the
-              fields. */}
-          {/* <Typography
+          <Typography
             sx={{
               color: "rgba(255,255,255,0.78)",
               fontWeight: 600,
@@ -117,7 +113,7 @@ export default function FormStage({ form }) {
             }}
           >
             {translate("register.emailAnimatedNotice")}
-          </Typography> */}
+          </Typography>
         </Box>
 
         {/* Each field rises in as its OWN depth object — directly over the photo,
@@ -145,8 +141,7 @@ export default function FormStage({ form }) {
 
         {/* Submit row (refund note + CTA) — also a depth object, no Paper. */}
         <Box data-depth sx={{ opacity: 0, mt: 0.5 }}>
-          {/* الدفع متوقّف — الزرار بقى "تسجيل" بدل "المتابعة للدفع". */}
-          <GuaranteeCTA form={form} ctaLabelKey="form.buttons.register" />
+          <GuaranteeCTA form={form} />
         </Box>
       </Box>
     </Box>

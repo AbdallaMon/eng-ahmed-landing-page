@@ -29,7 +29,7 @@ export const success = {
     ar: "رسوم تصميم مشروعك",
   },
   "success.designFeeNote": {
-    en: "This is a starting estimate — the final details are confirmed during your consultation.",
-    ar: "هذا تقدير مبدئي، وتُؤكَّد التفاصيل النهائية خلال الاستشارة.",
+    en: "This is a starting estimate — the final details are confirmed after analysis and evaluation.",
+    ar: "هذا تقدير مبدئي، وتُؤكَّد التفاصيل النهائية بعد التحليل والتقييم.",
   },
 };

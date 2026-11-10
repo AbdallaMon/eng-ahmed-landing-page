@@ -190,6 +190,20 @@ export default function EmailStage({ onSubmit, direction = 1 }) {
           />
         </Box>
 
+        {/* <Typography
+          data-depth
+          sx={{
+            opacity: 0,
+            mt: 1.5,
+            color: "rgba(255,255,255,0.88)",
+            fontSize: { xs: "0.85rem", md: "0.95rem" },
+            fontWeight: 600,
+            textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+          }}
+        >
+          {translate("register.emailAnimatedNotice")}
+        </Typography> */}
+
         <Button
           data-depth
           type="submit"

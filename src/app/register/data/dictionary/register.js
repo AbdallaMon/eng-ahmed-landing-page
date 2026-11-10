@@ -12,8 +12,8 @@ export const register = {
     ar: "البريد الإلكتروني",
   },
   "register.emailAnimatedNotice": {
-    en: "Our team will contact you. A $39 fee applies.",
-    ar: "سيتواصل معك الفريق. توجد رسوم بقيمة 39 دولارًا.",
+    en: "A $39 fee applies.",
+    ar: "توجد رسوم بقيمة 39 دولارًا.",
   },
   "register.loading": {
     en: "Loading...",
