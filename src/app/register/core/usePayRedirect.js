@@ -51,8 +51,14 @@ export function usePayRedirect() {
         fail(translate("validation.sessionExpired"));
         return undefined;
       }
+      const payload = {
+        clientLeadId,
+        ...(clientId ? { clientId } : {}),
+        lng: resolvedLng,
+        ...(test !== undefined ? { test } : {}),
+      };
       const data = await handleRequestSubmit(
-        { clientLeadId, clientId, lng: resolvedLng, test },
+        payload,
         setLoading,
         "client/pay",
         false,

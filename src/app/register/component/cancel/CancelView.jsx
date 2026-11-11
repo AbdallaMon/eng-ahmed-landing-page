@@ -25,7 +25,8 @@ import { prefersReducedMotion } from "@/app/register/lib/animations";
 export default function CancelView() {
   const searchParams = useSearchParams();
   const clientLeadId = searchParams.get("clientLeadId");
-  const userId = searchParams.get("userId");
+  const clientId =
+    searchParams.get("clientId") || searchParams.get("userId") || undefined;
 
   const language = useLanguage();
   const lng = searchParams.get("lng") || language?.lng || "ar";
@@ -84,7 +85,7 @@ export default function CancelView() {
   const handleRetry = () => {
     if (clientLeadId) {
       // Re-enter the hosted checkout with the same lead (same pay contract).
-      pay({ clientLeadId, clientId: userId, lng });
+      pay({ clientLeadId, clientId, lng });
     } else {
       // No lead context — restart the flow from the beginning.
       window.location.href = "/register";
