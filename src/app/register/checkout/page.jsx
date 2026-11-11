@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
-// import { Suspense } from "react";
-// import CheckoutView from "@/app/register/component/checkout/CheckoutView";
+import { Suspense } from "react";
+import CheckoutView from "@/app/register/component/checkout/CheckoutView";
 
 // Transactional payment page — keep it out of search indexes.
 export const metadata = { robots: { index: false, follow: false } };
@@ -13,13 +12,9 @@ export const metadata = { robots: { index: false, follow: false } };
  * the view owns the full-screen brand background itself.
  */
 export default async function CheckoutPage({ searchParams }) {
-  const { lng, leadId } = await searchParams;
-  // Temporarily bypass payment for existing checkout links as well.
-  const params = new URLSearchParams({ lng: lng === "en" ? "en" : "ar" });
-  if (leadId) params.set("leadId", leadId);
-  redirect(`/register?${params}`);
+  const { lng, leadId, clientId, test } = await searchParams;
 
-  /* return (
+  return (
     <Suspense>
       <CheckoutView
         lng={lng}
@@ -28,5 +23,5 @@ export default async function CheckoutPage({ searchParams }) {
         test={test}
       />
     </Suspense>
-  ); */
+  );
 }

@@ -23,7 +23,7 @@ import {
   saveFunnelCapability,
 } from "@/app/register/lib/funnelSession";
 import { Emirate } from "@/app/register/data/constants";
-// import { usePayRedirect } from "@/app/register/core/usePayRedirect";
+import { usePayRedirect } from "@/app/register/core/usePayRedirect";
 
 /**
  * Submit phases the UI can drive a transition overlay from:
@@ -73,7 +73,7 @@ export function useLeadForm({ category, item, location, leadEmail }) {
   const { loading, setLoading } = useToastContext();
   const { setProgress, setOverlay } = useUploadContext();
   const { defaultCountry } = useGeoCountry(location);
-  // const { pay } = usePayRedirect();
+  const { pay } = usePayRedirect();
   const completedPaymentRequest = useRef(null);
 
   const searchParams = useSearchParams();
@@ -110,19 +110,17 @@ export function useLeadForm({ category, item, location, leadEmail }) {
     setFormData((prev) => ({ ...prev, emirate: event.target.value }));
   };
 
-  const startPayment = async () => {
-    // Payment is temporarily paused while the Stripe API key is corrected.
-    setPhase(LEAD_FORM_PHASE.DONE);
-    // setPhase(LEAD_FORM_PHASE.PAYING);
+  const startPayment = async (paymentRequest) => {
+    setPhase(LEAD_FORM_PHASE.PAYING);
     try {
       if (item) window.localStorage.setItem("register:designItem", item);
     } catch {
       // Ignore storage failures (private mode / blocked storage).
     }
-    // const checkoutUrl = await pay({ ...paymentRequest, onFailure: setAlertError });
-    // if (!checkoutUrl) {
-    //   setPhase(LEAD_FORM_PHASE.ERROR);
-    // }
+    const checkoutUrl = await pay({ ...paymentRequest, onFailure: setAlertError });
+    if (!checkoutUrl) {
+      setPhase(LEAD_FORM_PHASE.ERROR);
+    }
   };
 
   const handleSubmit = async () => {

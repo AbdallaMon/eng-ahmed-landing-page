@@ -30,8 +30,7 @@ import DesignIntroStage from "@/app/register/variants/v1/DesignIntroStage";
 import EmailStage from "@/app/register/variants/v1/EmailStage";
 import OptionCardsStage from "@/app/register/variants/v1/OptionCardsStage";
 import FormStage from "@/app/register/variants/v1/FormStage";
-// import PayingOverlay from "@/app/register/variants/v1/PayingOverlay";
-import LeadSuccessOverlay from "@/app/register/variants/v1/LeadSuccessOverlay";
+import PayingOverlay from "@/app/register/variants/v1/PayingOverlay";
 
 /**
  * V1 "Living Cards" — the GSAP + CSS-3D `/register` flow.
@@ -75,17 +74,16 @@ export default function V1Flow({ leadId, aedPerUsd } = {}) {
     handleReset,
   } = useLeadFlow();
 
-  // Payment is temporarily paused, including resuming completed registrations.
-  // useEffect(() => {
-  //   if (!registrationCompleted || !leadId) return;
-  //   try {
-  //     if (leadItem) window.localStorage.setItem("register:designItem", leadItem);
-  //   } catch {
-  //     // Payment can continue when browser storage is unavailable.
-  //   }
-  //   const params = new URLSearchParams({ leadId, lng });
-  //   window.location.replace(`/register/checkout?${params}`);
-  // }, [registrationCompleted, leadId, leadItem, lng]);
+  useEffect(() => {
+    if (!registrationCompleted || !leadId) return;
+    try {
+      if (leadItem) window.localStorage.setItem("register:designItem", leadItem);
+    } catch {
+      // Payment can continue when browser storage is unavailable.
+    }
+    const params = new URLSearchParams({ leadId, lng });
+    window.location.replace(`/register/checkout?${params}`);
+  }, [registrationCompleted, leadId, leadItem, lng]);
 
   // The stage-content wrapper. During the BACK exit beat it recedes (the content
   // "leaves" just after the image starts shrinking); on a step swap it resets so
@@ -337,10 +335,7 @@ export default function V1Flow({ leadId, aedPerUsd } = {}) {
         </Box>
       </PerspectiveStage>
 
-      {/* {(registrationCompleted || form.isPaying) && <PayingOverlay />} */}
-      {(registrationCompleted || form.isDone) && (
-        <LeadSuccessOverlay item={leadItem} location={location} aedPerUsd={aedPerUsd} />
-      )}
+      {(registrationCompleted || form.isPaying) && <PayingOverlay />}
     </>
   );
 }

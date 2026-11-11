@@ -141,7 +141,7 @@ export default function FormStage({ form }) {
 
         {/* Submit row (refund note + CTA) — also a depth object, no Paper. */}
         <Box data-depth sx={{ opacity: 0, mt: 0.5 }}>
-          <GuaranteeCTA form={form} ctaLabelKey="form.buttons.register" />
+          <GuaranteeCTA form={form} />
         </Box>
       </Box>
     </Box>
