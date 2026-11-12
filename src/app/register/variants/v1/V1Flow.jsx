@@ -238,7 +238,7 @@ export default function V1Flow({ leadId, aedPerUsd } = {}) {
       return (
         <OptionCardsStage
           title={translate("register.chooseItemTitle")}
-          // subtitle={translate("register.emailAnimatedNotice")}
+          subtitle={translate("register.emailAnimatedNotice")}
           options={itemOptions}
           onSelect={handleLeadItemClick}
           disabled={isAnimating}
